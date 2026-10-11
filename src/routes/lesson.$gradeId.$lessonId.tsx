@@ -36,14 +36,6 @@ function LessonPage() {
 
   return (
     <div>
-      <div className="max-w-5xl mx-auto px-4 pt-5">
-        <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 px-5 py-4 text-center shadow-sm">
-          <p className="text-lg md:text-xl font-extrabold text-ink">
-            👋 مَرْحَبًا! أَنْتَ الآنَ في دَرْسِ: {lesson.title}
-          </p>
-          <p className="mt-1 font-semibold text-ink/70">هَيَّا نَتَعَلَّمُ وَنَسْتَمْتِعُ بِالْمُوسِيقَى مَعًا!</p>
-        </div>
-      </div>
       <section className={`bg-gradient-to-br ${t.hero} text-white`}>
         <div className="max-w-5xl mx-auto px-4 pt-6 pb-16">
           <nav className="flex flex-wrap items-center gap-2 text-sm font-bold mb-5">
