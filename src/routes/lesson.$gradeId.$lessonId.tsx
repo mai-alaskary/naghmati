@@ -95,14 +95,6 @@ function LessonPage() {
         <section className="rounded-3xl bg-white p-4 shadow-chunky"><div className="flex items-center justify-between gap-2 mb-3"><h2 className="font-extrabold text-lg">⭐ تقدّمك في الدرس</h2><span className="font-bold text-violet-600">{progress.length} من 5 نجوم</span></div><div className="grid grid-cols-5 gap-2">{LESSON_STEPS.map((step,i)=><div key={step} className="text-center"><div className={`text-2xl ${progress.includes(step) ? "text-amber-400" : "text-slate-300"}`}>★</div><div className="text-xs font-bold">{["التهيئة","الفيديو","الأسئلة","النشاط","التطبيق"][i]}</div></div>)}</div></section>
         <section id="warmup" className="scroll-mt-24">
           <div onClick={() => finish("warmup")}><PreLessonActivity lesson={lesson} /></div>
-          {lesson.warmupVideoUrl && (
-            <div className="mt-5 rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky">
-              <h3 className="font-extrabold text-xl mb-3">🎬 فيديو التهيئة</h3>
-              <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: '16 / 9' }}>
-                <iframe src={lesson.warmupVideoUrl} title={`فيديو التهيئة: ${lesson.title}`} className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen loading="lazy" />
-              </div>
-            </div>
-          )}
         </section>
 
         <section id="watch" className="scroll-mt-24">
