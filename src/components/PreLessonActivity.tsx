@@ -199,8 +199,20 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
       {lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
       {lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
         <ClockWarmup />
-      ) : lesson.warmupVideoUrl ? (
-        <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky">
+
+      ) : lesson.title === 'اللعبة الشعبية (حبّوه موه تدوري)' ? (
+        <HabouhWarmup />
+      ) : isNationalAnthem ? (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {(['oman', 'japan', 'france'] as const).map((country, i) => <button key={country} onClick={() => { setChoice(i); if (lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)') { i === activity.answer ? playCorrect() : playWrong() } }} className={`rounded-2xl border-2 p-4 font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}><FlagIllustration country={country}/><span className="block mt-3">{['سلطنة عُمان', 'اليابان', 'فرنسا'][i]}</span></button>)}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {activity.options.map((option, i) => <button key={option} onClick={() => setChoice(i)} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
+        </div>
+      )}
+      {lesson.warmupVideoUrl && (
+        <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
             {lesson.warmupVideoUrl.toLowerCase().split('?')[0].endsWith('.mp4') ? (
               <video controls playsInline preload="metadata" className="absolute inset-0 w-full h-full" title={`تمهيد درس ${lesson.title}`}>
@@ -212,16 +224,6 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
             )}
           </div>
           <p className="text-sm text-center text-ink/65 mt-3">شاهد الفيديو التمهيدي، ثم انتقل إلى فيديو الشرح والنشاط التفاعلي.</p>
-        </div>
-      ) : lesson.title === 'اللعبة الشعبية (حبّوه موه تدوري)' ? (
-        <HabouhWarmup />
-      ) : isNationalAnthem ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {(['oman', 'japan', 'france'] as const).map((country, i) => <button key={country} onClick={() => { setChoice(i); if (lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)') { i === activity.answer ? playCorrect() : playWrong() } }} className={`rounded-2xl border-2 p-4 font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}><FlagIllustration country={country}/><span className="block mt-3">{['سلطنة عُمان', 'اليابان', 'فرنسا'][i]}</span></button>)}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {activity.options.map((option, i) => <button key={option} onClick={() => setChoice(i)} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
       {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? 'أحسنت! إجابة رائعة 🌟' : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
