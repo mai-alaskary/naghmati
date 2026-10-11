@@ -6,7 +6,7 @@ const COLORS = [
   { name: 'أخضر', value: '#00843d' },
 ]
 
-export default function FlagColoring() {
+export default function FlagColoring({ onComplete }: { onComplete?: () => void }) {
   const [color, setColor] = useState(COLORS[0].value)
   const [fills, setFills] = useState<Record<string, string>>({})
   const [eraser, setEraser] = useState(false)
@@ -37,7 +37,7 @@ export default function FlagColoring() {
         {parts.map((part) => <button type="button" key={part.id} aria-label={part.label} title={part.label} onClick={() => paint(part.id)} className="absolute border-0 p-0" style={{ ...part.style, backgroundColor: fills[part.id] ?? 'transparent', opacity: fills[part.id] ? 0.48 : 1, cursor: 'pointer' }} />)}
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <button type="button" onClick={() => setChecked(true)} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white shadow">تأكّد من التلوين ✓</button>
+        <button type="button" onClick={() => { setChecked(true); if (correct) onComplete?.() }} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white shadow">تأكّد من التلوين ✓</button>
         {checked && <p role="status" aria-live="polite" className={`rounded-xl px-4 py-3 font-extrabold ${correct ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}`}>{correct ? 'إجابة صحيحة! أحسنت، لوّنت العلم بالترتيب الصحيح 🎉' : 'إجابة غير صحيحة. راجع الألوان وحاول مرة أخرى.'}</p>}
       </div>
       <p className="mt-3 text-sm text-ink/60">لوّن الأجزاء الأربعة ثم اضغط «تأكّد من التلوين». الترتيب الصحيح: الشريط الرأسي أحمر، العلوي أبيض، الأوسط أحمر، والسفلي أخضر. لإعادة البداية، اضغط «مسح الكل».</p>
