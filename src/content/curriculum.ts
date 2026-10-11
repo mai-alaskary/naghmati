@@ -2,7 +2,7 @@ export type LabTool = 'piano' | 'xylophone' | 'drums' | 'rhythm'
 
 export type TeacherMedia = { url: string; title?: string }
 export type AnthemMedia = { explanationVideoUrl: string; listeningAudioUrl: string; listeningVideoUrl: string }
-export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string }
+export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string; visualOptions?: ('legato' | 'staccato')[] }
 export type Activity =
   | { type: 'lab'; tool: LabTool; title: string; description: string }
   | { type: 'musiclab' | 'wordwall' | 'genially' | 'embed'; url: string; title: string; description: string }
@@ -324,11 +324,16 @@ const grade4: Grade = {
             'هذا المحتوى مرتبط بترتيب منهج المهارات الموسيقية العماني كما ورد في دليل المعلم المرفق.',
             'شَاهِدْ شَرْحَ الدَّرْسِ، ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ، وَبَعْدَهَا انْتَقِلْ إِلَى التَّطْبِيقِ أَوِ الْمُخْتَبَرِ.',
           ],
-          teacher: { url: '' },
+          teacher: { url: 'https://www.youtube.com/embed/UaoWEr58LZk?start=70' },
+          warmupVideoUrl: 'https://www.youtube.com/embed/Iomfx2bTz2I',
           quiz: [
             {
-              question: 'أي عنوان يطابق الدرس الحالي؟', emoji: '🎯',
-              options: ['تدريبات صوتية بالتظليلات', 'درس آخر في المهارات الموسيقية', 'نشاط خارج المنهج', 'المختبر الموسيقي فقط'], answer: 0, hint: 'اقرأ عنوان الدرس أعلى الصفحة ثم اختر البطاقة المطابقة.',
+              question: 'اختر شكل الليجاتو الصحيح، ثم قم بتأدية التدريب الصوتي بالتظليلات له.', emoji: '🎼',
+              options: ['شكل الليجاتو', 'شكل الاستكاتو'], visualOptions: ['legato', 'staccato'], answer: 0, hint: 'الليجاتو يُمثَّل بقوس يصل النغمات بعضها ببعض.',
+            },
+            {
+              question: 'اختر شكل الاستكاتو الصحيح، ثم قم بتأدية التدريب الصوتي بالتظليلات له.', emoji: '🎼',
+              options: ['شكل الليجاتو', 'شكل الاستكاتو'], visualOptions: ['legato', 'staccato'], answer: 1, hint: 'الاستكاتو يُمثَّل بنقاط فوق أو تحت رؤوس النغمات.',
             },
           ],
           activities: [
