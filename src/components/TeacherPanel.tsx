@@ -22,10 +22,7 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
     return () => stopSpeaking()
   }, [lesson.id])
 
-  const lines = [
-    `مرحبًا بك في درس «${lesson.title}» على منصة نغماتي.`,
-    'شاهد شرح المعلم، ثم أجب عن الأسئلة التفاعلية، وبعدها انتقل إلى الأنشطة والتطبيق.',
-  ]
+  const lines = lesson.intro
   const toggleTalk = () => {
     if (talking) {
       stopSpeaking()
