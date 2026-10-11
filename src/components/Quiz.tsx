@@ -140,7 +140,7 @@ export default function Quiz({ questions, progressKey, onFinish }: Props) {
                 shake === i ? 'animate-wiggle' : '',
               ].join(' ')}
             >
-              {opt}
+              {q.visualOptions?.[i] ? <NotationOption kind={q.visualOptions[i]} label={opt} /> : opt}
               {isRight && <span className="absolute -top-3 -left-3 text-3xl">✅</span>}
               {isWrong && <span className="absolute -top-3 -left-3 text-3xl">❌</span>}
             </button>
@@ -183,6 +183,19 @@ function Confetti() {
           {bits[i % bits.length]}
         </span>
       ))}
+    </div>
+  )
+}
+
+
+function NotationOption({ kind, label }: { kind: 'legato' | 'staccato'; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2" aria-label={label}>
+      <svg viewBox="0 0 220 78" role="img" aria-label={kind === 'legato' ? 'أربع نغمات متصلة بقوس' : 'أربع نغمات عليها نقاط الاستكاتو'} className="w-full max-w-[260px] h-auto">
+        { [35, 82, 129, 176].map((x) => <g key={x}><line x1={x+5} y1="12" x2={x+5} y2="47" stroke="currentColor" strokeWidth="1.8"/><ellipse cx={x} cy="47" rx="7" ry="4.5" transform={`rotate(-25 ${x} 47)`} fill="currentColor"/>{kind === 'staccato' && <circle cx={x} cy="59" r="2.7" fill="currentColor"/>}</g>)}
+        {kind === 'legato' && <path d="M 28 57 Q 105 88 184 57" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>}
+      </svg>
+      <span className="text-base font-extrabold">{label}</span>
     </div>
   )
 }
