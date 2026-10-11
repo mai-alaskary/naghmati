@@ -9,7 +9,7 @@ import { img } from '@/lib/images'
  * - إن وُجد رابط فيديو (YouTube / Genially / ذكاء اصطناعي) يُعرض داخل iFrame.
  * - وإلا تظهر الشخصية الكرتونية مع فقاعات الشرح وزر الاستماع.
  */
-export default function TeacherPanel({ lesson }: { lesson: Lesson }) {
+export default function TeacherPanel({ lesson, onVideoStart }: { lesson: Lesson; onVideoStart?: () => void }) {
   const embed = toEmbedUrl(lesson.teacher.url)
   const anthemVideo = lesson.anthem?.explanationVideoUrl ? toEmbedUrl(lesson.anthem.explanationVideoUrl) : ''
   const [step, setStep] = useState(0)
@@ -104,7 +104,7 @@ export default function TeacherPanel({ lesson }: { lesson: Lesson }) {
         <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
         {embed || anthemVideo ? (
           <>
-            <div className="rounded-[1.5rem] overflow-hidden bg-black">
+            <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
               <div className="relative w-full aspect-video">
                 <iframe
                   src={embed || anthemVideo}
