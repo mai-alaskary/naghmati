@@ -121,7 +121,7 @@ function LessonPage() {
           {(lesson.title === 'النشيد الوطني' || lesson.title === 'نشيد (عَلَم بلادي)') && (
             <div className="mt-6">
               <h3 className="text-xl md:text-2xl font-extrabold mb-3">🎨 سؤال تفاعلي: لوّن علم سلطنة عُمان</h3>
-              <FlagColoring />
+              <FlagColoring onComplete={() => finish("activities")} />
             </div>
           )}
         </section>
