@@ -20,18 +20,18 @@ function Home() {
         <div className="relative max-w-6xl mx-auto px-4 pt-10 pb-6 md:pt-16 grid md:grid-cols-2 items-center gap-6">
           <div className="text-center md:text-start">
             <span className="inline-block rounded-full bg-white px-4 py-1.5 font-bold text-violet-600 shadow-sm mb-5">
-              🇴🇲 وِفْقَ مَنْهَجِ الْمَهَارَاتِ الْمُوسِيقِيَّةِ فِي سَلْطَنَةِ عُمَانَ
+              🇴🇲 وفق منهج المهارات الموسيقية في سلطنة عمان
             </span>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-4">
-              أَهْلًا بِكَ يَا صَدِيقِي
+              أهلا بك يا صديقي
               <br />
               <span className="bg-gradient-to-l from-pink-500 via-violet-500 to-sky-500 bg-clip-text text-transparent">
-                الْمُوسِيقِيِّ الصَّغِيرِ!
+                الموسيقي الصغير!
               </span>
             </h1>
-            <p className="text-lg font-extrabold text-violet-700 mb-3">🎼 إِعْدَادٌ وَتَقْدِيمٌ: أ. / مَيّ الْعَسْكَرِيُّ</p>
+            <p className="text-lg font-extrabold text-violet-700 mb-3">🎼 إعداد وتقديم: أ. / ميّ العسكري</p>
             <p className="text-xl text-ink/70 mb-8 max-w-lg mx-auto md:mx-0">
-              تَعَلَّمْ، وَالْعَبْ، وَاعْزِفْ! اِخْتَرْ صَفَّكَ الدِّرَاسِيَّ لِتَبْدَأَ رِحْلَتَكَ مَعَ النَّغَمَاتِ وَالْإِيقَاعَاتِ. لَا تَحْتَاجُ إِلَى أَيِّ تَسْجِيلٍ 🎉
+              تعلم، والعب، واعزف! اختر صفك الدراسي لتبدأ رحلتك مع النغمات والإيقاعات. لا تحتاج إلى أي تسجيل 🎉
             </p>
             <div className="flex flex-wrap gap-3 justify-center md:justify-start">
               <a
