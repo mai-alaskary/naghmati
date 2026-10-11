@@ -30,12 +30,6 @@ const warmups: Record<string, Warmup> = {
   'قراءة إيقاعية وغناء صولفائي': { question: 'ما الذي يساعدنا على قراءة الإيقاع والغناء الصولفائي؟', options: ['متابعة الرموز والنبض والنغمات', 'تجاهل الرموز', 'الغناء دون استماع', 'البدء من أي مكان عشوائيًا'], answer: 0 },
 }
 
-function FlagIllustration({ country }: { country: 'oman' | 'japan' | 'france' }) {
-  if (country === 'japan') return <svg viewBox="0 0 120 72" className="w-full max-w-[120px] mx-auto rounded-md border border-slate-200" role="img" aria-label="علم اليابان"><rect width="120" height="72" fill="white"/><circle cx="60" cy="36" r="18" fill="#bc002d"/></svg>
-  if (country === 'france') return <svg viewBox="0 0 120 72" className="w-full max-w-[120px] mx-auto rounded-md border border-slate-200" role="img" aria-label="علم فرنسا"><rect width="40" height="72" fill="#0055a4"/><rect x="40" width="40" height="72" fill="white"/><rect x="80" width="40" height="72" fill="#ef4135"/></svg>
-  return <img src="https://raw.githubusercontent.com/arnoha98-hash/naghmati/main/oman-flag.jpg" className="w-full max-w-[120px] mx-auto rounded-md border border-slate-200" role="img" aria-label="علم سلطنة عُمان الأصلي" />
-}
-
 function playPitch(frequency: number) {
   const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
   if (!AudioContextClass) return
@@ -85,7 +79,6 @@ export function PitchWarmup() {
     </div>
   )
 }
-
 
 export function DifferentSoundQuiz() {
   const [selected, setSelected] = useState<number | null>(null)
@@ -199,7 +192,6 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
       {lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
       {lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
         <ClockWarmup />
-
       ) : lesson.title === 'اللعبة الشعبية (حبّوه موه تدوري)' ? (
         <HabouhWarmup />
       ) : isNationalAnthem ? (
@@ -211,6 +203,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           {activity.options.map((option, i) => <button key={option} onClick={() => setChoice(i)} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
+      {activity.clue && <p className="text-ink/65 mt-3">{activity.clue}</p>}
       {lesson.warmupVideoUrl && (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
@@ -227,7 +220,6 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
         </div>
       )}
       {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? 'أحسنت! إجابة رائعة 🌟' : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
-      {activity.clue && <p className="text-ink/65 mt-3">{activity.clue}</p>}
     </section>
   )
 }
