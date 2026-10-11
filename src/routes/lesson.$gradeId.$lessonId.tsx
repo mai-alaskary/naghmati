@@ -141,21 +141,7 @@ function LessonPage() {
         <section id="book-activities" className="scroll-mt-24">
           <SectionTitle n={4} title="الأنشطة" emoji="📚" sub="أنشطة الكتاب وتسليم الإجابات للمعلمة" />
           <BookActivities lessonTitle={lesson.title} onSubmit={() => finish("activities")} />
-          {isSixteenthNoteLesson && (
-            <div className="mt-6 rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky">
-              <h3 className="text-xl md:text-2xl font-extrabold mb-4">🎵 نشاط تفاعلي: الشكل الإيقاعي</h3>
-              <div className="relative w-full overflow-hidden rounded-xl bg-slate-100" style={{ aspectRatio: '4 / 3', minHeight: '420px' }}>
-                <iframe
-                  src="https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html"
-                  title="النشاط التفاعلي للشكل الإيقاعي — الصف الرابع"
-                  className="absolute inset-0 h-full w-full border-0"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              </div>
-              <p className="mt-3 text-sm font-semibold text-ink/60">إذا لم يظهر النشاط داخل الصفحة، <a href="https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html" target="_blank" rel="noreferrer" className="underline text-violet-700">افتحه في نافذة جديدة</a>.</p>
-            </div>
-          )}
+
         </section>
 
         <section id="practice" className="scroll-mt-24">
