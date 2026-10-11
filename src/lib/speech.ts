@@ -110,10 +110,21 @@ export function canSpeak() {
   return typeof window !== 'undefined' && 'speechSynthesis' in window
 }
 
+// إزالة الرموز التعبيرية والرموز الموسيقية من النص المنطوق، مع إبقاء الكلمات فقط.
+function speechText(text: string) {
+  return text
+    .replace(/[♩♫♪♬♭♮♯𝄞𝄢𝄽𝄾𝄿𝅀𝅁𝅂𝅃𝅄𝅅𝅆𝅇𝅈𝅉𝅊𝅋𝅌𝅍𝅎𝅏𝅐𝅑𝅒𝅓𝅔𝅕𝅖𝅗𝅘𝅙𝅚𝅛𝅜𝅝𝅗𝅥𝅘𝅥𝅘𝅥𝅮𝅘𝅥𝅯𝅘𝅥𝅰𝅘𝅥𝅱𝅘𝅧𝅨𝅩𝅥𝅲𝅥𝅦𝅪𝅫𝅬𝅮𝅯𝅰𝅱𝅲𝅭𝅳𝅴𝅵𝅶𝅷𝅸𝅹𝅺𝅻𝅼𝅽𝅾𝅿]/gu, ' ')
+    .replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 export function speak(text: string, onEnd?: () => void) {
   if (!canSpeak()) return
+  const cleanText = speechText(text)
+  if (!cleanText) return
   window.speechSynthesis.cancel()
-  const u = new SpeechSynthesisUtterance(addTashkeel(text))
+  const u = new SpeechSynthesisUtterance(addTashkeel(cleanText))
   u.lang = 'ar-SA'
   u.rate = 0.88
   u.pitch = 1.05
