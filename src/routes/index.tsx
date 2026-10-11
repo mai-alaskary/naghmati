@@ -38,13 +38,13 @@ function Home() {
                 href="#grades"
                 className="rounded-full bg-violet-500 hover:bg-violet-600 text-white text-lg font-extrabold px-8 py-3.5 shadow-chunky transition"
               >
-                اِبْدَأِ الْآنَ 🚀
+                ابدأ الآن 🚀
               </a>
               <Link
                 to="/lab"
                 className="rounded-full bg-white text-ink text-lg font-extrabold px-8 py-3.5 shadow-chunky transition hover:bg-amber-50"
               >
-                جَرِّبِ الْمُخْتَبَرَ 🎹
+                جرّب المختبر 🎹
               </Link>
             </div>
           </div>
