@@ -89,7 +89,8 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
                 onClick={() => {
                   stopSpeaking()
                   setTalking(false)
-                  setStep((s) => s + 1)\n                  onIntroNext?.()
+                  setStep((s) => s + 1)
+                  onIntroNext?.()
                 }}
                 className="rounded-full bg-violet-500 text-white px-5 py-2.5 font-extrabold shadow-chunky disabled:opacity-40"
               >
