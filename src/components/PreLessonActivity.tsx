@@ -202,7 +202,14 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
       ) : lesson.warmupVideoUrl ? (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
-            <iframe src={lesson.warmupVideoUrl} title={`تمهيد درس ${lesson.title}`} className="absolute inset-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen loading="lazy" />
+            {lesson.warmupVideoUrl.toLowerCase().split('?')[0].endsWith('.mp4') ? (
+              <video controls playsInline preload="metadata" className="absolute inset-0 w-full h-full" title={`تمهيد درس ${lesson.title}`}>
+                <source src={lesson.warmupVideoUrl} type="video/mp4" />
+                المتصفح لا يدعم تشغيل الفيديو.
+              </video>
+            ) : (
+              <iframe src={lesson.warmupVideoUrl} title={`تمهيد درس ${lesson.title}`} className="absolute inset-0 w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen loading="lazy" />
+            )}
           </div>
           <p className="text-sm text-center text-ink/65 mt-3">شاهد الفيديو التمهيدي، ثم انتقل إلى فيديو الشرح والنشاط التفاعلي.</p>
         </div>
