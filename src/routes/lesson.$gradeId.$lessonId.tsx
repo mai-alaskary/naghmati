@@ -204,7 +204,7 @@ function SixteenthNotes({ className = '' }: { className?: string }) {
       <path d="M30 59 V13 H36 V57 Z" />
       <path d="M68 59 V13 H74 V57 Z" />
       <path d="M33 12 H74 V19 H33 Z" />
-      <path d="M33 23 H64 V30 H33 Z" />
+      <path d="M38 23 H69 V30 H38 Z" />
     </svg>
   )
 }
