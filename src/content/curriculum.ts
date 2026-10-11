@@ -2,7 +2,7 @@ export type LabTool = 'piano' | 'xylophone' | 'drums' | 'rhythm'
 
 export type TeacherMedia = { url: string; title?: string }
 export type AnthemMedia = { explanationVideoUrl: string; listeningAudioUrl: string; listeningVideoUrl: string }
-export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string; visualOptions?: ('legato' | 'staccato')[] }
+export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string; visualOptions?: ('legato' | 'staccato' | 'piano' | 'forte' | 'crescendo' | 'diminuendo')[] }
 export type Activity =
   | { type: 'lab'; tool: LabTool; title: string; description: string }
   | { type: 'musiclab' | 'wordwall' | 'genially' | 'embed'; url: string; title: string; description: string }
@@ -334,6 +334,22 @@ const grade4: Grade = {
             {
               question: 'اختر شكل الاستكاتو الصحيح، ثم قم بتأدية التدريب الصوتي بالتظليلات له.', emoji: '🎼',
               options: ['شكل الليجاتو', 'شكل الاستكاتو'], visualOptions: ['legato', 'staccato'], answer: 1, hint: 'الاستكاتو يُمثَّل بنقاط فوق أو تحت رؤوس النغمات.',
+            },
+            {
+              question: 'اختر الرمز الصحيح للتعبير القوي (فورتي).', emoji: '🎼',
+              options: ['بيانو (p)', 'فورتي (f)', 'كريشيندو', 'ديمينويندو'], visualOptions: ['piano', 'forte', 'crescendo', 'diminuendo'], answer: 1, hint: 'الفورتي يُرمز إليه بالحرف f ويعني العزف بقوة.',
+            },
+            {
+              question: 'اختر الرمز الصحيح للتعبير الضعيف (بيانو).', emoji: '🎼',
+              options: ['بيانو (p)', 'فورتي (f)', 'كريشيندو', 'ديمينويندو'], visualOptions: ['piano', 'forte', 'crescendo', 'diminuendo'], answer: 0, hint: 'البيانو يُرمز إليه بالحرف p ويعني العزف برقة.',
+            },
+            {
+              question: 'اختر الشكل الصحيح للتدرّج من الصوت الضعيف إلى القوي (كريشيندو).', emoji: '🎼',
+              options: ['بيانو (p)', 'فورتي (f)', 'كريشيندو', 'ديمينويندو'], visualOptions: ['piano', 'forte', 'crescendo', 'diminuendo'], answer: 2, hint: 'الكريشيندو يُمثَّل بخطين يتباعدان تدريجيًا باتجاه اليمين.',
+            },
+            {
+              question: 'اختر الشكل الصحيح للتدرّج من الصوت القوي إلى الضعيف (ديمينويندو).', emoji: '🎼',
+              options: ['بيانو (p)', 'فورتي (f)', 'كريشيندو', 'ديمينويندو'], visualOptions: ['piano', 'forte', 'crescendo', 'diminuendo'], answer: 3, hint: 'الديمينويندو يُمثَّل بخطين يقتربان تدريجيًا باتجاه اليمين.',
             },
           ],
           activities: [
