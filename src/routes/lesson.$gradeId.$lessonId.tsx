@@ -98,7 +98,7 @@ function LessonPage() {
 
         <section id="watch" className="scroll-mt-24">
           <SectionTitle n={2} title="شاهد وتعلّم مع المعلم" emoji="🎬" />
-          <div onClick={() => finish("watch")}><TeacherPanel lesson={lesson} /></div>
+          <TeacherPanel lesson={lesson} onVideoStart={() => finish("watch")} />
         </section>
 
         <section id="quiz" className="scroll-mt-24">
@@ -127,7 +127,7 @@ function LessonPage() {
 
         <section id="book-activities" className="scroll-mt-24">
           <SectionTitle n={4} title="الأنشطة" emoji="📚" sub="أنشطة الكتاب وتسليم الإجابات للمعلمة" />
-          <div onClick={() => finish("activities")}><BookActivities lessonTitle={lesson.title} /></div>
+          <BookActivities lessonTitle={lesson.title} onSubmit={() => finish("activities")} />
         </section>
 
         <section id="practice" className="scroll-mt-24">
