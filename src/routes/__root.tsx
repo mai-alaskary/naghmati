@@ -42,6 +42,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     const handleClick = (event: MouseEvent) => {
       const target = event.target
       if (!(target instanceof Element)) return
+      if (target.closest('[data-no-click-sound]')) return
       if (target.closest('button, a, input, select, textarea, [role="button"], summary, label')) playClick()
     }
     document.addEventListener('click', handleClick, true)
