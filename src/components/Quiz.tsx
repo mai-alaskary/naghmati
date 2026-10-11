@@ -198,8 +198,8 @@ function NotationOption({ kind, label }: { kind: 'legato' | 'staccato' | 'piano'
           {kind === 'legato' && <path d="M 28 57 Q 105 88 184 57" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>}
         </>}
         {(kind === 'piano' || kind === 'forte') && <text x="110" y="59" textAnchor="middle" fontFamily="serif" fontStyle="italic" fontWeight="bold" fontSize="64" fill="currentColor">{kind === 'piano' ? 'p' : 'f'}</text>}
-        {kind === 'crescendo' && <path d="M 30 28 L 190 48 M 30 58 L 190 38" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>}
-        {kind === 'diminuendo' && <path d="M 30 38 L 190 28 M 30 48 L 190 58" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>}
+        {kind === 'crescendo' && <path d="M 30 40 L 190 20 M 30 40 L 190 60" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>}
+        {kind === 'diminuendo' && <path d="M 30 20 L 190 40 M 30 60 L 190 40" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"/>}
       </svg>
       <span className="text-base font-extrabold">{label}</span>
     </div>
