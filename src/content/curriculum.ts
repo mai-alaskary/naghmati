@@ -369,7 +369,7 @@ const grade4: Grade = {
             'شَاهِدْ شَرْحَ الدَّرْسِ، ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ، وَبَعْدَهَا انْتَقِلْ إِلَى التَّطْبِيقِ أَوِ الْمُخْتَبَرِ.',
           ],
           teacher: { url: 'https://www.youtube.com/embed/HFhJQOZMvK8' },
-          warmupVideoUrl: '',
+          warmupVideoUrl: 'https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_Love_country_p1.mp4',
           anthem: { explanationVideoUrl: '', listeningAudioUrl: '', listeningVideoUrl: '' },
           quiz: [
             {
