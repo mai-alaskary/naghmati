@@ -138,7 +138,7 @@ export default function Piano() {
                 key={i}
                 className={`rounded-xl px-2.5 py-1 font-bold text-sm ${i < pos ? 'bg-emerald-300' : i === pos ? 'bg-amber-300 animate-pulse' : 'bg-white'}`}
               >
-                {SOLFEGE[n % 12]}
+                {n % 12 === 10 ? 'سي' : SOLFEGE[n % 12]}
               </span>
             ))}
           </div>
