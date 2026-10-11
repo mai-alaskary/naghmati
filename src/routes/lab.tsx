@@ -74,9 +74,9 @@ function LabPage() {
             <h2 className="text-3xl font-extrabold">{meta.name}</h2>
           </div>
           <p className="text-lg text-ink/65 mb-6">{intro[tool]}</p>
-          {tool === 'piano' && <Piano />}
-          {tool === 'xylophone' && <Xylophone />}
-          {tool === 'drums' && <DrumPad />}
+          {tool === 'piano' && <div data-no-click-sound><Piano /></div>}
+          {tool === 'xylophone' && <div data-no-click-sound><Xylophone /></div>}
+          {tool === 'drums' && <div data-no-click-sound><DrumPad /></div>}
           {tool === 'rhythm' && <RhythmMaker />}
         </section>
       </div>
