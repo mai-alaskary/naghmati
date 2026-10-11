@@ -32,6 +32,7 @@ function LessonPage() {
   const { gradeId, lessonId } = Route.useLoaderData()
   const { grade, unit, lesson, prev, prevUnit, next, nextUnit } = getLesson(gradeId, lessonId)!
   const t = gradeTheme[grade.theme]
+  const isSixteenthNoteLesson = grade.id === 'grade-4' && unit.id === 'u1' && lesson.id === 'lesson3'
   const progressKey = lessonKey(grade.id, `${unit.id}-${lesson.id}`)
   const progress = useLessonSteps()[progressKey] ?? []
   const finish = (step: 'warmup' | 'watch' | 'quiz' | 'activities' | 'practice') => completeLessonStep(progressKey, step)
@@ -58,9 +59,12 @@ function LessonPage() {
           </nav>
           <div className="flex items-center gap-4">
             <span className="grid place-items-center w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white/25 text-5xl md:text-6xl shrink-0">
-              {lesson.emoji}
+              {isSixteenthNoteLesson ? <SixteenthNotes className="w-14 h-14 text-white" /> : lesson.emoji}
             </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-sm">{lesson.title}</h1>
+            <h1 className="flex items-center gap-3 text-4xl md:text-5xl font-extrabold drop-shadow-sm">
+              {isSixteenthNoteLesson ? 'الشكل الإيقاعي' : lesson.title}
+              {isSixteenthNoteLesson && <SixteenthNotes className="w-12 h-12 text-white" />}
+            </h1>
           </div>
           <div className="mt-6 flex flex-wrap gap-2">
             {lesson.objectives.map((o) => (
@@ -189,6 +193,19 @@ function LessonPage() {
         </nav>
       </div>
     </div>
+  )
+}
+
+function SixteenthNotes({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 100 76" aria-label="علامة نغمتين ست عشريتين" role="img" className={className} fill="currentColor">
+      <ellipse cx="20" cy="61" rx="12" ry="8" transform="rotate(-25 20 61)" />
+      <ellipse cx="58" cy="61" rx="12" ry="8" transform="rotate(-25 58 61)" />
+      <path d="M30 59 V13 H36 V57 Z" />
+      <path d="M68 59 V13 H74 V57 Z" />
+      <path d="M33 12 H74 V19 H33 Z" />
+      <path d="M33 23 H64 V30 H33 Z" />
+    </svg>
   )
 }
 
