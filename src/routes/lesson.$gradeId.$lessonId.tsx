@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getLesson } from '@/content/curriculum'
 import { gradeTheme } from '@/lib/theme'
-import { lessonKey } from '@/lib/progress'
+import { lessonKey, completeLessonStep, useLessonSteps, LESSON_STEPS } from '@/lib/progress'
 import TeacherPanel from '@/components/TeacherPanel'
 import PreLessonActivity, { DifferentSoundQuiz, PitchWarmup } from '@/components/PreLessonActivity'
 import FlagColoring from '@/components/FlagColoring'
@@ -32,6 +32,9 @@ function LessonPage() {
   const { gradeId, lessonId } = Route.useLoaderData()
   const { grade, unit, lesson, prev, prevUnit, next, nextUnit } = getLesson(gradeId, lessonId)!
   const t = gradeTheme[grade.theme]
+  const progressKey = lessonKey(grade.id, `${unit.id}-${lesson.id}`)
+  const progress = useLessonSteps()[progressKey] ?? []
+  const finish = (step: 'warmup' | 'watch' | 'quiz' | 'activities' | 'practice') => completeLessonStep(progressKey, step)
   const activities = lesson.activities.filter(isActivityReady).sort((a, b) => (a.type === 'wordwall' ? 0 : 1) - (b.type === 'wordwall' ? 0 : 1))
 
   return (
@@ -88,14 +91,14 @@ function LessonPage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-10 space-y-14">
+      <div className="max-w-5xl mx-auto px-4 py-10 space-y-14">\n        <section className="rounded-3xl bg-white p-4 shadow-chunky"><div className="flex items-center justify-between gap-2 mb-3"><h2 className="font-extrabold text-lg">⭐ تقدّمك في الدرس</h2><span className="font-bold text-violet-600">{progress.length} من 5 نجوم</span></div><div className="grid grid-cols-5 gap-2">{LESSON_STEPS.map((step,i)=><div key={step} className="text-center"><div className={`text-2xl ${progress.includes(step) ? "text-amber-400" : "text-slate-300"}`}>★</div><div className="text-xs font-bold">{["التهيئة","الفيديو","الأسئلة","النشاط","التطبيق"][i]}</div></div>)}</div></section>
         <section id="warmup" className="scroll-mt-24">
-          <PreLessonActivity lesson={lesson} />
+          <div onClick={() => finish("warmup")}><PreLessonActivity lesson={lesson} /></div>
         </section>
 
         <section id="watch" className="scroll-mt-24">
           <SectionTitle n={2} title="شاهد وتعلّم مع المعلم" emoji="🎬" />
-          <TeacherPanel lesson={lesson} />
+          <div onClick={() => finish("watch")}><TeacherPanel lesson={lesson} /></div>
         </section>
 
         <section id="quiz" className="scroll-mt-24">
@@ -107,7 +110,7 @@ function LessonPage() {
                 <iframe src="https://wordwall.net/embed/cd8de31fc2c6471fb356bd654f053838?themeId=65&templateId=30&fontStackId=0" title="سؤال تفاعلي: حبّوه موه تدوري" className="absolute inset-0 h-full w-full border-0" allowFullScreen loading="lazy" />
               </div>
             </div>
-          ) : lesson.quiz.length > 0 && <Quiz key={`${unit.id}-${lesson.id}`} questions={lesson.quiz} progressKey={lessonKey(grade.id, `${unit.id}-${lesson.id}`)} />}
+          ) : lesson.quiz.length > 0 && <Quiz key={`${unit.id}-${lesson.id}`} questions={lesson.quiz} progressKey={progressKey} onFinish={() => finish("quiz")} />}
           {lesson.title === 'الحِدّة والغلظة – السرعة والبطء' && (
             <div className="mt-6">
               <PitchWarmup />
@@ -124,7 +127,7 @@ function LessonPage() {
 
         <section id="book-activities" className="scroll-mt-24">
           <SectionTitle n={4} title="الأنشطة" emoji="📚" sub="أنشطة الكتاب وتسليم الإجابات للمعلمة" />
-          <BookActivities lessonTitle={lesson.title} />
+          <div onClick={() => finish("activities")}><BookActivities lessonTitle={lesson.title} /></div>
         </section>
 
         <section id="practice" className="scroll-mt-24">
@@ -132,14 +135,14 @@ function LessonPage() {
           {activities.length > 0 ? (
             <div className="space-y-4">
               {activities.map((a, i) => (
-                <ActivityCard key={i} activity={a} />
+                <ActivityCard key={i} activity={a} onStart={() => finish("practice")} />
               ))}
             </div>
           ) : (
             <div className="rounded-[2rem] bg-white p-8 text-center shadow-chunky">
               <div className="text-6xl mb-3">🎤</div>
               <p className="text-xl font-bold">نشاط هذا الدرس يكون معاً في الفصل مع معلمك!</p>
-              <Link to="/lab" className="inline-block mt-5 rounded-full bg-amber-400 px-6 py-3 font-extrabold shadow-chunky">
+              <Link onClick={() => finish("practice")} to="/lab" className="inline-block mt-5 rounded-full bg-amber-400 px-6 py-3 font-extrabold shadow-chunky">
                 أو جرّب المختبر الموسيقي 🎹
               </Link>
             </div>
