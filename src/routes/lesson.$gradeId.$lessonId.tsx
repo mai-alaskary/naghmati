@@ -99,7 +99,7 @@ function LessonPage() {
 
         <section id="watch" className="scroll-mt-24">
           <SectionTitle n={2} title="شاهد وتعلّم مع المعلم" emoji="🎬" />
-          <TeacherPanel lesson={lesson} onVideoStart={() => finish("watch")} />
+          <TeacherPanel lesson={lesson} onVideoStart={() => finish("watch")} onIntroNext={() => finish("watch")} />
         </section>
 
         <section id="quiz" className="scroll-mt-24">
