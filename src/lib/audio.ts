@@ -188,22 +188,7 @@ export function playWrong() {
 }
 
 
-/** نقرة خفيفة عند التفاعل مع عناصر المنصة */
+/** تم تعطيل صوت النقر حتى لا يتداخل مع أصوات الآلات والعزف في المختبر. */
 export function playClick() {
-  const a = getAudio()
-  if (!a) return
-  const { ctx, out } = a
-  const t = ctx.currentTime
-  const osc = ctx.createOscillator()
-  const gain = ctx.createGain()
-  osc.type = 'sine'
-  osc.frequency.setValueAtTime(1050, t)
-  osc.frequency.exponentialRampToValueAtTime(620, t + 0.035)
-  gain.gain.setValueAtTime(0.0001, t)
-  gain.gain.exponentialRampToValueAtTime(0.12, t + 0.004)
-  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045)
-  osc.connect(gain)
-  gain.connect(out)
-  osc.start(t)
-  osc.stop(t + 0.05)
+  // Silent by design.
 }
