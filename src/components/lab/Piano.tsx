@@ -22,13 +22,13 @@ const SONGS = [
     65, 65, 65, 65, 67, 69, 65, 67,
     60, 60, 60, 60, 60, 60, 60, 60,
     // صول صول صول صول لا، ثم المفتاح الأسود بين لا وسي (سي بيمول)، صول لا، ثم خمس فا.
-    67, 67, 67, 67, 69, 71, 67, 69, 65, 65, 65, 65, 65,
+    67, 67, 67, 67, 69, 70, 67, 69, 65, 65, 65, 65, 65,
     // دو دو دو، ثم خمس نغمات صول.
     60, 60, 60, 67, 67, 67, 67, 67,
-    // دو دو دو، ثم ست نغمات لا.
-    60, 60, 60, 69, 69, 69, 69, 69, 69,
+    // دو دو دو، ثم خمس نغمات لا.
+    60, 60, 60, 69, 69, 69, 69, 69,
     // دو دو دو صول لا، المفتاح الأسود، لا صول فا، ثم فا فا فا.
-    60, 60, 60, 67, 69, 71, 69, 67, 65, 65, 65, 65,
+    60, 60, 60, 67, 69, 70, 69, 67, 65, 65, 65, 65,
   ] },
 ]
 
@@ -170,7 +170,7 @@ export default function Piano() {
                   }}
                 >
                   {showNames && (
-                    <span className={`pointer-events-none font-extrabold text-base ${on ? 'text-white' : 'text-ink'}`}>{SOLFEGE[m % 12]}</span>
+                    <span className={`pointer-events-none font-extrabold text-base ${on ? 'text-white' : 'text-ink'}`}>{target === 70 && m === 70 ? 'سي' : SOLFEGE[m % 12]}</span>
                   )}
                   {target === m && <span className="pointer-events-none absolute top-2 text-xl animate-bounce">⬇️</span>}
                 </button>
