@@ -9,7 +9,7 @@ import { img } from '@/lib/images'
  * - إن وُجد رابط فيديو (YouTube / Genially / ذكاء اصطناعي) يُعرض داخل iFrame.
  * - وإلا تظهر الشخصية الكرتونية مع فقاعات الشرح وزر الاستماع.
  */
-export default function TeacherPanel({ lesson, onVideoStart }: { lesson: Lesson; onVideoStart?: () => void }) {
+export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { lesson: Lesson; onVideoStart?: () => void; onIntroNext?: () => void }) {
   const embed = toEmbedUrl(lesson.teacher.url)
   const anthemVideo = lesson.anthem?.explanationVideoUrl ? toEmbedUrl(lesson.anthem.explanationVideoUrl) : ''
   const [step, setStep] = useState(0)
@@ -89,7 +89,7 @@ export default function TeacherPanel({ lesson, onVideoStart }: { lesson: Lesson;
                 onClick={() => {
                   stopSpeaking()
                   setTalking(false)
-                  setStep((s) => s + 1)
+                  setStep((s) => s + 1)\n                  onIntroNext?.()
                 }}
                 className="rounded-full bg-violet-500 text-white px-5 py-2.5 font-extrabold shadow-chunky disabled:opacity-40"
               >
