@@ -410,7 +410,7 @@ const grade4: Grade = {
           ],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
-            { type: 'wordwall', url: '', title: 'لعبة Wordwall للدرس', description: 'مكان مخصص لإضافة لعبة Wordwall الخاصة بالدرس.' },
+            { type: 'wordwall', url: 'https://wordwall.net/ar/embed/f2e2cd7603584205a4afc6e979d77280?themeId=21&templateId=3&fontStackId=0', title: 'تطبيق Wordwall: الشكل الإيقاعي', description: 'تدرّب على الشكل الإيقاعي من خلال هذا التطبيق التفاعلي.' },
           ],
         },
       ],
