@@ -38,7 +38,6 @@ function playPitch(frequency: number) {
   const gain = context.createGain()
   oscillator.type = 'triangle'
   oscillator.frequency.setValueAtTime(frequency, context.currentTime)
-  // Resume suspended audio contexts (common on mobile browsers) after the user's tap.
   void context.resume().then(() => {
     const startAt = context.currentTime
     gain.gain.setValueAtTime(0.0001, startAt)
@@ -196,14 +195,14 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
         <HabouhWarmup />
       ) : isNationalAnthem ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {(['oman', 'japan', 'france'] as const).map((country, i) => <button key={country} onClick={() => { setChoice(i); if (lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)') { i === activity.answer ? playCorrect() : playWrong() } }} className={`rounded-2xl border-2 p-4 font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}><FlagIllustration country={country}/><span className="block mt-3">{['سلطنة عُمان', 'اليابان', 'فرنسا'][i]}</span></button>)}
+          {(['oman', 'japan', 'france'] as const).map((country, i) => <button key={country} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}><FlagIllustration country={country}/><span className="block mt-3">{['سلطنة عُمان', 'اليابان', 'فرنسا'][i]}</span></button>)}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {activity.options.map((option, i) => <button key={option} onClick={() => setChoice(i)} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
+          {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
-      {activity.clue && <p className="text-ink/65 mt-3">{activity.clue}</p>}
+      {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
       {lesson.warmupVideoUrl && (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
@@ -219,7 +218,6 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           <p className="text-sm text-center text-ink/65 mt-3">شاهد الفيديو التمهيدي، ثم انتقل إلى فيديو الشرح والنشاط التفاعلي.</p>
         </div>
       )}
-      {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? 'أحسنت! إجابة رائعة 🌟' : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
     </section>
   )
 }
