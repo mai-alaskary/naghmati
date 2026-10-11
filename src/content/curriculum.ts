@@ -387,7 +387,7 @@ const grade4: Grade = {
           ],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
-            { type: 'wordwall', url: '', title: 'لعبة Wordwall للدرس', description: 'مكان مخصص لإضافة لعبة Wordwall الخاصة بالدرس.' },
+            { type: 'wordwall', url: 'https://wordwall.net/embed/97d5ae3b9e954d8ba5b07c9169462071?themeId=1&templateId=5&fontStackId=0', title: 'تطبيق Wordwall: عَلَم بلادي', description: 'جرّب التطبيق التفاعلي الخاص بدرس عَلَم بلادي.' },
           ],
         },
         {
