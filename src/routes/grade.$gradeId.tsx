@@ -3,7 +3,6 @@ import { getGrade } from '@/content/curriculum'
 import { gradeTheme, unitColors } from '@/lib/theme'
 import { img } from '@/lib/images'
 import { lessonKey, useStars, useLessonSteps } from '@/lib/progress'
-import StarRow from '@/components/StarRow'
 
 export const Route = createFileRoute('/grade/$gradeId')({
   loader: ({ params }) => {
