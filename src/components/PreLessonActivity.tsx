@@ -181,13 +181,11 @@ function FlagIllustration({ country }: { country: 'oman' | 'japan' | 'france' })
   const common = { width: '100%', viewBox: '0 0 180 108', role: 'img' as const, className: 'mx-auto w-full max-w-[180px] rounded-lg border border-ink/10 shadow-sm' }
   if (country === 'oman') {
     return (
-      <svg {...common} aria-label="علم سلطنة عُمان">
-        <rect width="180" height="36" fill="#fff" />
-        <rect y="36" width="180" height="36" fill="#d8232a" />
-        <rect y="72" width="180" height="36" fill="#00843d" />
-        <rect width="34" height="108" fill="#d8232a" />
-        <path d="M13 31 L21 31 L26 47 L20 58 L14 53 L18 46 Z M10 27 L23 27 L23 31 L10 31 Z M14 57 L25 57 L25 61 L14 61 Z" fill="#fff" />
-      </svg>
+      <img
+        src="https://raw.githubusercontent.com/arnoha98-hash/naghmati/main/oman-flag.jpg"
+        alt="علم سلطنة عُمان"
+        className="mx-auto w-full max-w-[180px] aspect-[5/3] object-contain rounded-lg border border-ink/10 shadow-sm"
+      />
     )
   }
   if (country === 'japan') {
