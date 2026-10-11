@@ -22,29 +22,6 @@ export default function TeacherPanel({ lesson }: { lesson: Lesson }) {
     return () => stopSpeaking()
   }, [lesson.id])
 
-  if (embed) {
-    return (
-      <div className="space-y-4">
-        <div className="rounded-[2rem] bg-white p-4 md:p-5 shadow-chunky">
-          <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
-          <div className="rounded-[1.5rem] overflow-hidden bg-black">
-            <div className="relative w-full aspect-video">
-              <iframe
-                src={embed}
-                title={lesson.teacher.title || `شرح ${lesson.title}`}
-                className="absolute inset-0 w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                allowFullScreen
-                loading="lazy"
-              />
-            </div>
-          </div>
-          <p className="text-ink/60 text-sm text-center pt-2">🎬 {providerName(embed)}</p>
-        </div>
-      </div>
-    )
-  }
-
   const lines = lesson.intro
   const toggleTalk = () => {
     if (talking) {
