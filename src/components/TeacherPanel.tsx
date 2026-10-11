@@ -100,32 +100,28 @@ export default function TeacherPanel({ lesson }: { lesson: Lesson }) {
         </div>
       </div>
       </div>
-      {embed && (
-        <div className="rounded-[2rem] bg-white p-4 md:p-5 shadow-chunky">
-          <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
-          <div className="rounded-[1.5rem] overflow-hidden bg-black">
-            <div className="relative w-full aspect-video">
-              <iframe
-                src={embed}
-                title={lesson.teacher.title || `شرح ${lesson.title}`}
-                className="absolute inset-0 w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                allowFullScreen
-                loading="lazy"
-              />
+      <div className="rounded-[2rem] bg-white p-4 md:p-5 shadow-chunky">
+        <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
+        {embed || anthemVideo ? (
+          <>
+            <div className="rounded-[1.5rem] overflow-hidden bg-black">
+              <div className="relative w-full aspect-video">
+                <iframe
+                  src={embed || anthemVideo}
+                  title={lesson.teacher.title || `شرح ${lesson.title}`}
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  loading="lazy"
+                />
+              </div>
             </div>
-          </div>
-          <p className="text-ink/60 text-sm text-center pt-2">🎬 {providerName(embed)}</p>
-        </div>
-      )}
-      <div className="rounded-[2rem] bg-white p-5 shadow-chunky">
-        <div className="font-extrabold text-lg mb-2">🎬 فيديو شرح الدرس من YouTube</div>
-        {anthemVideo ? (
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-ink/5">
-            <iframe src={anthemVideo} title={`شرح ${lesson.title}`} className="absolute inset-0 w-full h-full" allow="autoplay; encrypted-media; fullscreen" allowFullScreen />
-          </div>
+            <p className="text-ink/60 text-sm text-center pt-2">🎬 {providerName(embed || anthemVideo)}</p>
+          </>
         ) : (
-          <div className="rounded-2xl bg-cream p-5 text-ink/65">مكان مخصص لفيديو شرح «{lesson.title}». سيظهر الفيديو هنا عند إضافة رابط YouTube من لوحة المعلمة.</div>
+          <div className="rounded-2xl bg-cream p-5 text-ink/65">
+            مكان مخصص لفيديو شرح «{lesson.title}». سيظهر الفيديو هنا عند إضافة رابط YouTube من لوحة المعلمة.
+          </div>
         )}
       </div>
     </div>
