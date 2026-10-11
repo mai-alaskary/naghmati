@@ -2,7 +2,7 @@ import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getGrade } from '@/content/curriculum'
 import { gradeTheme, unitColors } from '@/lib/theme'
 import { img } from '@/lib/images'
-import { lessonKey, useStars } from '@/lib/progress'
+import { lessonKey, useStars, useLessonSteps } from '@/lib/progress'
 import StarRow from '@/components/StarRow'
 
 export const Route = createFileRoute('/grade/$gradeId')({
@@ -22,8 +22,9 @@ function GradePage() {
   const grade = getGrade(gradeId)!
   const t = gradeTheme[grade.theme]
   const stars = useStars()
+  const lessonSteps = useLessonSteps()
   const all = grade.units.flatMap((unit) => unit.lessons.map((lesson) => ({ unit, lesson })))
-  const done = all.filter(({ unit, lesson }) => (stars[lessonKey(grade.id, `${unit.id}-${lesson.id}`)] ?? 0) > 0).length
+  const done = all.filter(({ unit, lesson }) => (lessonSteps[lessonKey(grade.id, `${unit.id}-${lesson.id}`)]?.length ?? 0) > 0 || (stars[lessonKey(grade.id, `${unit.id}-${lesson.id}`)] ?? 0) > 0).length
 
   return (
     <div>
@@ -79,7 +80,8 @@ function GradePage() {
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {unit.lessons.map((lesson, li) => {
-                  const s = stars[lessonKey(grade.id, `${unit.id}-${lesson.id}`)] ?? 0
+                  const key = lessonKey(grade.id, `${unit.id}-${lesson.id}`)
+                  const s = Math.min(5, lessonSteps[key]?.length ?? 0)
                   return (
                     <Link
                       key={lesson.id}
@@ -96,7 +98,7 @@ function GradePage() {
                       <h3 className="text-xl font-extrabold mt-3 mb-1">{lesson.title}</h3>
                       <p className="text-ink/60 text-sm flex-1">{lesson.objectives[0]}</p>
                       <div className="flex items-center justify-between mt-4">
-                        <StarRow value={s} />
+                        <div className="flex gap-0.5 text-lg" aria-label={`${s} من 5 نجوم`}>{[1,2,3,4,5].map(n=><span key={n} className={n <= s ? 'text-amber-400' : 'text-slate-200'}>★</span>)}</div>
                         <span className={`font-bold ${t.text}`}>{s > 0 ? 'راجع ↺' : 'ابدأ ←'}</span>
                       </div>
                     </Link>
