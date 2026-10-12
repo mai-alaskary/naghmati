@@ -70,7 +70,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const shading=lessonTitle==='تدريبات صوتية بالتظليلات'
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
- const dynamicsActivity=/الحدة والغلظة/.test(lessonTitle)
+ const dynamicsActivity=/الحِدّة والغلظة|الحدة والغلظة|السرعة والبطء/.test(lessonTitle)
  const noteBalloons=[
   {id:0,type:'rest',left:25.9,top:20.6,width:13.0,height:18.2},
   {id:1,type:'note',left:47.5,top:11.1,width:12.3,height:17.8},
