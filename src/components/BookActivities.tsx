@@ -38,26 +38,6 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  function send(){onSubmit?.();const msg=['تسليم أنشطة الكتاب - نغماتي','الدرس: '+lessonTitle,'الاسم الرباعي: '+name.trim(),'الصف: '+grade.trim(),...(rhythmActivity?['النشاط التفاعلي للشكل الإيقاعي: '+(rhythmActivityDone?'أفادت الطالبة بإكماله':'غير مكتمل'),'رابط النشاط: https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html']:[]),...(noteColoringActivity?['تلوين البالونات: النوار '+notesColored+'/'+noteBalloons.filter(b=>b.type==='note').length+'، السكتة '+restsColored+'/'+noteBalloons.filter(b=>b.type==='rest').length]:[]),...(anthem?[(flagActivity?'النشاط الثاني':'النشاط الأول')+' - تركيب العلم: '+(puzzleDone?'مكتمل':'غير مكتمل'),...(!flagActivity?['النشاط الثاني - توصيل الصور بالجمل: '+PROMPTS.map(p=>p.text+' ← '+(PICTURES.find(c=>c.id===matches[p.id])?.label||'لم تُجب')).join('؛ ')]:[])]:[]),...(flagActivity?['نشاط معاني ألوان ورموز العلم: '+flagClueItems.map(x=>x.meaning+' ← '+(flagClues[x.id]===x.id?x.label:'غير مكتمل')).join('؛ ')]:[]),...(shading?['توصيل أسماء التظليلات بالرموز: '+shadingItems.map(x=>x.name+' ← '+(shadingMatches[x.id]===x.id?'صحيح':'غير مكتمل')).join('؛ ')]:[])].join('\n');window.open('https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
  {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
- <h4 className="font-extrabold text-lg">النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️</h4>
- <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div className="rounded-xl border-2 border-amber-300 bg-white p-3"><p className="font-extrabold mb-2">١. خط مستقيم ومسار دائري</p>
- <svg viewBox="0 0 220 230" className="w-full" role="img" aria-label="خط مستقيم بسهم إلى الأسفل ومسار دائري متقطع للتتبع">
- <path d="M160 18 V128 M152 115 L160 132 L168 115" stroke="#111" strokeWidth="2.5" fill="none"/>
- <path d="M145 18 V126" stroke="#777" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" fill="none"/>
- <path d="M108 145 C70 146 35 170 43 194 C51 220 100 215 126 191 C150 169 130 151 108 158 C81 166 63 186 75 197 C86 208 113 195 130 177" stroke="#777" strokeWidth="3" strokeDasharray="5 8" fill="none" strokeLinecap="round"/>
- <path d="M122 178 L133 172 L131 185" fill="#111"/>
- </svg></div>
- <div className="rounded-xl border-2 border-amber-300 bg-white p-3"><p className="font-extrabold mb-2">٢. مسارات منحنية متتابعة</p>
- <svg viewBox="0 0 220 230" className="w-full" role="img" aria-label="مسارات متعرجة ومنحنية متقطعة مع أسهم لاتجاه التتبع">
- <path d="M35 20 V205 M27 193 L35 209 L43 193" stroke="#111" strokeWidth="2.5" fill="none"/>
- <path d="M64 25 L111 90 Q88 111 77 128 Q67 147 112 177 Q132 191 147 202" stroke="#777" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" fill="none"/>
- <path d="M72 25 L120 89 M108 84 L123 94 L119 77" stroke="#111" strokeWidth="2.5" fill="none"/>
- <path d="M126 102 C88 125 99 146 134 164 M126 153 L139 167 L122 164" stroke="#111" strokeWidth="2.5" fill="none"/>
- </svg></div></div>
- <p className="mt-3 text-sm text-slate-600">تذكير: السكتة الموسيقية لها رمز خاص بها؛ هذا النشاط لتدريب حركة اليد وتتبع الأسهم، وليس لرسم رمز السكتة.</p>
- </div>}
- {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط: لوّن بالونات النوار والسكتة 🎈</h4>
  <p className="my-2">اضغط على كل بالونة لتلوينها: لوّن البالونات التي تحتوي على علامة النوار باللون الأحمر، والبالونات التي تحتوي على سكتة النوار باللون الأخضر. اضغط مرة أخرى لتغيير اللون أو مسح التلوين.</p>
  <div className="rounded-2xl border-2 border-slate-200 bg-[#f0eeee] p-2 sm:p-4">
@@ -79,6 +59,26 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  <div className="rounded-xl bg-green-50 border border-green-200 p-3 text-center"><span className="font-extrabold text-green-700">سكتة النوار</span><p className="mt-1 text-sm">البالونات الخضراء: <strong>{restsColored} / {noteBalloons.filter(b=>b.type==='rest').length}</strong></p></div>
  </div>
  <div className="flex flex-wrap gap-2 mt-3"><button type="button" onClick={()=>setBalloonColors({})} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة التلوين</button>{coloringDone&&<span className="rounded-full bg-green-100 px-4 py-2 font-extrabold text-green-800">أحسنت! لوّنت كل البالونات بشكل صحيح 🎉</span>}</div>
+ </div>}
+ {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
+ <h4 className="font-extrabold text-lg">النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️</h4>
+ <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+ <div className="rounded-xl border-2 border-amber-300 bg-white p-3"><p className="font-extrabold mb-2">١. خط مستقيم ومسار دائري</p>
+ <svg viewBox="0 0 220 230" className="w-full" role="img" aria-label="خط مستقيم بسهم إلى الأسفل ومسار دائري متقطع للتتبع">
+ <path d="M160 18 V128 M152 115 L160 132 L168 115" stroke="#111" strokeWidth="2.5" fill="none"/>
+ <path d="M145 18 V126" stroke="#777" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" fill="none"/>
+ <path d="M108 145 C70 146 35 170 43 194 C51 220 100 215 126 191 C150 169 130 151 108 158 C81 166 63 186 75 197 C86 208 113 195 130 177" stroke="#777" strokeWidth="3" strokeDasharray="5 8" fill="none" strokeLinecap="round"/>
+ <path d="M122 178 L133 172 L131 185" fill="#111"/>
+ </svg></div>
+ <div className="rounded-xl border-2 border-amber-300 bg-white p-3"><p className="font-extrabold mb-2">٢. مسارات منحنية متتابعة</p>
+ <svg viewBox="0 0 220 230" className="w-full" role="img" aria-label="مسارات متعرجة ومنحنية متقطعة مع أسهم لاتجاه التتبع">
+ <path d="M35 20 V205 M27 193 L35 209 L43 193" stroke="#111" strokeWidth="2.5" fill="none"/>
+ <path d="M64 25 L111 90 Q88 111 77 128 Q67 147 112 177 Q132 191 147 202" stroke="#777" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" fill="none"/>
+ <path d="M72 25 L120 89 M108 84 L123 94 L119 77" stroke="#111" strokeWidth="2.5" fill="none"/>
+ <path d="M126 102 C88 125 99 146 134 164 M126 153 L139 167 L122 164" stroke="#111" strokeWidth="2.5" fill="none"/>
+ </svg></div></div>
+ <p className="mt-3 text-sm text-slate-600">تذكير: السكتة الموسيقية لها رمز خاص بها؛ هذا النشاط لتدريب حركة اليد وتتبع الأسهم، وليس لرسم رمز السكتة.</p>
  </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
