@@ -3,6 +3,7 @@ import type { Lesson } from '@/content/curriculum'
 import { toEmbedUrl, providerName } from '@/lib/embed'
 import { canSpeak, speak, stopSpeaking } from '@/lib/speech'
 import { img } from '@/lib/images'
+import RhythmFigure from '@/components/RhythmFigure'
 
 /**
  * مساحة المعلم الافتراضي:
@@ -51,7 +52,13 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
           <div className="relative rounded-3xl bg-white p-5 md:p-6 shadow-sm min-h-36">
             <span className="hidden md:block absolute top-10 -right-3 w-6 h-6 rotate-45 bg-white" />
             <p key={step} className="text-xl md:text-2xl font-semibold leading-relaxed animate-bounce-in">
-              {lines[step]}
+              {lesson.title === 'الشكل الإيقاعي (♫)' && step === 0 ? (
+                <>
+                  مرحباً! أنت الآن في درس «الشكل الإيقاعي»{' '}
+                  <RhythmFigure className="inline-block w-10 h-8 align-middle text-ink" />
+                  .
+                </>
+              ) : lines[step]}
             </p>
           </div>
 
