@@ -102,6 +102,31 @@ function LessonPage() {
         <section className="rounded-3xl bg-white p-4 shadow-chunky"><div className="flex items-center justify-between gap-2 mb-3"><h2 className="font-extrabold text-lg">⭐ تقدّمك في الدرس</h2><span className="font-bold text-violet-600">{progress.length} من 5 نجوم</span></div><div className="grid grid-cols-5 gap-2">{LESSON_STEPS.map((step,i)=><div key={step} className="text-center"><div className={`text-2xl ${progress.includes(step) ? "text-amber-400" : "text-slate-300"}`}>★</div><div className="text-xs font-bold">{["التهيئة","الفيديو","الأسئلة","النشاط","التطبيق"][i]}</div></div>)}</div></section>
         <section id="warmup" className="scroll-mt-24">
           <div onClick={() => finish("warmup")}><PreLessonActivity lesson={lesson} /></div>
+          {grade.id === 'grade-4' && lesson.title === 'نشيد (سلامتي)' && (
+            <div className="mt-6 max-w-xl rounded-3xl bg-white p-4 shadow-chunky">
+              <a
+                href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
+                target="_blank"
+                rel="noreferrer"
+                className="block overflow-hidden rounded-2xl"
+                aria-label="اقرأ كتاب سلامتي هي مهمتي على StoryJumper"
+              >
+                <img
+                  src="https://www.storyjumper.com/book/coverImage/170652271/65f75d977891f/480"
+                  alt="غلاف كتاب سلامتي هي مهمتي"
+                  className="h-auto w-full transition-transform duration-300 hover:-translate-y-1"
+                />
+              </a>
+              <a
+                href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-3 block text-center text-sm font-bold text-violet-700 underline underline-offset-4"
+              >
+                اقرأ كتاب «سلامتي هي مهمتي»
+              </a>
+            </div>
+          )}
         </section>
 
         <section id="watch" className="scroll-mt-24">
