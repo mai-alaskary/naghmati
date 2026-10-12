@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getLesson } from '@/content/curriculum'
 import { gradeTheme } from '@/lib/theme'
@@ -233,64 +233,32 @@ const rhythmVideos = [
 
 
 function StoryJumperBook() {
-  useEffect(() => {
-    const w = window as any
-    let attempts = 0
-    let timer: ReturnType<typeof setTimeout> | undefined
-
-    const initializeBook = () => {
-      if (typeof w.SJMakeBookOpenLightBox === 'function') {
-        w.SJMakeBookOpenLightBox()
-        return
-      }
-      if (attempts < 80) {
-        attempts += 1
-        timer = setTimeout(initializeBook, 100)
-      }
-    }
-
-    if (!w.SJScriptLoaded) {
-      w.SJScriptLoaded = true
-      const script = document.createElement('script')
-      script.src = 'https://www.storyjumper.com/script/storyjumper-embed.js'
-      script.async = true
-      script.defer = true
-      script.onload = initializeBook
-      document.head.appendChild(script)
-    } else {
-      initializeBook()
-    }
-
-    return () => {
-      if (timer) clearTimeout(timer)
-    }
-  }, [])
-
   return (
-    <div className="mt-6 max-w-xl rounded-3xl bg-white p-4 shadow-chunky">
+    <div className="mt-6 rounded-3xl bg-white p-4 shadow-chunky">
       <h3 className="mb-3 text-xl font-extrabold">📖 اقرأ قصة «سلامتي هي مهمتي»</h3>
-      <div className="mx-auto w-full max-w-[480px]">
-        <a
-          href="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
-          rel="nofollow"
-          className="storyjumper-book block"
-          aria-label="افتح كتاب سلامتي هي مهمتي"
-        >
-          <img
-            src="https://www.storyjumper.com/book/coverImage/170652271/65f75d977891f/480"
-            alt="غلاف كتاب سلامتي هي مهمتي"
-            className="h-auto w-full border-0 transition-transform duration-300 hover:-translate-y-1"
-          />
-        </a>
+      <div className="w-full overflow-hidden rounded-2xl bg-slate-50" style={{ minHeight: '600px' }}>
+        <iframe
+          src="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
+          title="كتاب سلامتي هي مهمتي"
+          className="block w-full border-0"
+          style={{ height: 'min(75vh, 760px)', minHeight: '600px' }}
+          allow="fullscreen"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
+      <p className="mt-3 text-center text-sm text-ink/60">
+        لو مساحة الكتاب ما ظهرتش، فممكن StoryJumper يكون مانع العرض داخل مواقع خارجية.
+        {' '}
         <a
           href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
           target="_blank"
           rel="noreferrer"
-          className="mt-3 block text-center text-sm font-bold text-violet-700 underline underline-offset-4"
+          className="font-bold text-violet-700 underline underline-offset-4"
         >
-          لو ما فتحش الكتاب داخل الصفحة، افتحه مباشرة
+          افتح الكتاب في StoryJumper
         </a>
-      </div>
+      </p>
     </div>
   )
 }
