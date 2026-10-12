@@ -306,11 +306,12 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
     answer: 0,
   }
   const isNationalAnthem = lesson.title === 'النشيد الوطني'
+  const isShadingLesson = lesson.title === 'تدريبات صوتية بالتظليلات'
   const isRhythmFigure = lesson.title === 'الشكل الإيقاعي (♫)'
   return (
     <section className="rounded-[2rem] bg-gradient-to-br from-amber-100 via-white to-sky-100 border-2 border-white p-5 md:p-7 shadow-chunky">
-      <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">{lesson.title === 'الشكل الإيقاعي (♫)' ? <RhythmFigure className="w-12 h-12 text-ink" /> : '💡'}</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2><p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p></div></div>
-      {lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
+      <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">{lesson.title === 'الشكل الإيقاعي (♫)' ? <RhythmFigure className="w-12 h-12 text-ink" /> : '💡'}</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2>{!isShadingLesson && <p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p>}</div></div>
+      {!isShadingLesson && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
       {isRhythmFigure ? (
         <RhythmBlocksWarmup />
       ) : lesson.title === 'الحِدّة والغلظة – السرعة والبطء' ? null : lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
@@ -321,12 +322,12 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {(['oman', 'japan', 'france'] as const).map((country, i) => <button key={country} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}><FlagIllustration country={country}/><span className="block mt-3">{['سلطنة عُمان', 'اليابان', 'فرنسا'][i]}</span></button>)}
         </div>
-      ) : (
+      ) : isShadingLesson ? null : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
-      {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
+      {choice !== null && !isShadingLesson && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
       {lesson.warmupVideoUrl && (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
