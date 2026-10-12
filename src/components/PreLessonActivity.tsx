@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Lesson } from '@/content/curriculum'
 import { playCorrect, playWrong } from '@/lib/audio'
 import { canSpeak, speak } from '@/lib/speech'
+import RhythmFigure from '@/components/RhythmFigure'
 
 type Warmup = { question: string; options: string[]; answer: number; clue?: string }
 const warmups: Record<string, Warmup> = {
@@ -215,7 +216,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   const isNationalAnthem = lesson.title === 'النشيد الوطني'
   return (
     <section className="rounded-[2rem] bg-gradient-to-br from-amber-100 via-white to-sky-100 border-2 border-white p-5 md:p-7 shadow-chunky">
-      <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">💡</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2><p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p></div></div>
+      <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">{lesson.title === 'الشكل الإيقاعي (♫)' ? <RhythmFigure className="w-12 h-12 text-ink" /> : '💡'}</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2><p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p></div></div>
       {lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
       {lesson.title === 'الحِدّة والغلظة – السرعة والبطء' ? null : lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
         <ClockWarmup />
