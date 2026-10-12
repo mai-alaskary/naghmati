@@ -103,28 +103,20 @@ function LessonPage() {
         <section id="warmup" className="scroll-mt-24">
           <div onClick={() => finish("warmup")}><PreLessonActivity lesson={lesson} /></div>
           {grade.id === 'grade-4' && lesson.title === 'نشيد (سلامتي)' && (
-            <div className="mt-6 max-w-xl rounded-3xl bg-white p-4 shadow-chunky">
-              <a
-                href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
-                target="_blank"
-                rel="noreferrer"
-                className="block overflow-hidden rounded-2xl"
-                aria-label="اقرأ كتاب سلامتي هي مهمتي على StoryJumper"
-              >
-                <img
-                  src="https://www.storyjumper.com/book/coverImage/170652271/65f75d977891f/480"
-                  alt="غلاف كتاب سلامتي هي مهمتي"
-                  className="h-auto w-full transition-transform duration-300 hover:-translate-y-1"
+            <div className="mt-6 rounded-3xl bg-white p-4 md:p-6 shadow-chunky">
+              <h3 className="mb-3 text-xl font-extrabold">📖 اقرأ قصة «سلامتي هي مهمتي»</h3>
+              <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ height: 'min(75vh, 680px)', minHeight: '420px' }}>
+                <iframe
+                  src="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
+                  title="كتاب سلامتي هي مهمتي على StoryJumper"
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  allowFullScreen
                 />
-              </a>
-              <a
-                href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 block text-center text-sm font-bold text-violet-700 underline underline-offset-4"
-              >
-                اقرأ كتاب «سلامتي هي مهمتي»
-              </a>
+              </div>
+              <p className="mt-3 text-center text-sm font-semibold text-ink/65">
+                لو الكتاب لم يظهر داخل الصفحة، <a href="https://www.storyjumper.com/book/read/170652271/65f75d977891f" target="_blank" rel="noreferrer" className="text-violet-700 underline underline-offset-4">افتح الكتاب مباشرة</a>.
+              </p>
             </div>
           )}
         </section>
