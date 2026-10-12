@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getLesson } from '@/content/curriculum'
 import { gradeTheme } from '@/lib/theme'
@@ -30,6 +31,7 @@ const steps = [
 ]
 
 function LessonPage() {
+  const [rhythmVideoIndex, setRhythmVideoIndex] = useState(0)
   const { gradeId, lessonId } = Route.useLoaderData()
   const { grade, unit, lesson, prev, prevUnit, next, nextUnit } = getLesson(gradeId, lessonId)!
   const t = gradeTheme[grade.theme]
@@ -125,6 +127,9 @@ function LessonPage() {
               </div>
             </div>
           ) : lesson.title !== 'الشكل الإيقاعي (♫)' && lesson.quiz.length > 0 && <Quiz key={`${unit.id}-${lesson.id}`} questions={lesson.quiz} progressKey={progressKey} onFinish={() => finish("quiz")} />}
+          {lesson.title === 'تدريبات صوتية بالتظليلات' && (
+            <RhythmVideoActivity index={rhythmVideoIndex} onIndexChange={setRhythmVideoIndex} />
+          )}
           {lesson.title === 'الحِدّة والغلظة – السرعة والبطء' && (
             <div className="mt-6">
               <PitchWarmup />
@@ -201,6 +206,53 @@ function LessonPage() {
             </Link>
           )}
         </nav>
+      </div>
+    </div>
+  )
+}
+
+
+
+const rhythmVideos = [
+  {
+    title: 'استمع إلى تمرين الكريشيندو والديمينويندو',
+    src: 'https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_Crescendo_%20domino_p1.mp4',
+    type: 'video/mp4',
+  },
+  {
+    title: 'استمع إلى تمرين الفورتي والبيانو',
+    src: 'https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_Forte_piano_p1.mov',
+    type: 'video/quicktime',
+  },
+  {
+    title: 'استمع إلى تمرين الجاتو والاستكاتو',
+    src: 'https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_gateau_stacato_p1.mp4',
+    type: 'video/mp4',
+  },
+]
+
+function RhythmVideoActivity({ index, onIndexChange }: { index: number; onIndexChange: (index: number) => void }) {
+  const video = rhythmVideos[index]
+  return (
+    <div className="mt-6 rounded-[2rem] border-2 border-violet-200 bg-white p-4 md:p-6 shadow-chunky">
+      <h3 className="text-xl md:text-2xl font-extrabold mb-2">🎧 نشاط تفاعلي: استمع إلى التمرين الإيقاعي وقم بالترديد معه!</h3>
+      <p className="mb-4 text-ink/65">استمع إلى الفيديو، وردّد التمرين معه. استخدم السابق والتالي للتنقّل بين الفيديوهات.</p>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <span className="rounded-full bg-violet-100 px-4 py-2 font-extrabold text-violet-700">الفيديو {index + 1} من {rhythmVideos.length}</span>
+        <span className="font-bold">{video.title}</span>
+      </div>
+      <video key={video.src} controls playsInline preload="metadata" className="w-full rounded-xl bg-black" title={video.title}>
+        <source src={video.src} type={video.type} />
+        المتصفح لا يدعم تشغيل الفيديو. يمكنك تجربة فتح الرابط مباشرة.
+      </video>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <button type="button" onClick={() => onIndexChange(Math.max(0, index - 1))} disabled={index === 0} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold disabled:cursor-not-allowed disabled:opacity-40">→ السابق</button>
+        <div className="flex gap-2" aria-label="اختيار الفيديو">
+          {rhythmVideos.map((item, i) => (
+            <button key={item.src} type="button" onClick={() => onIndexChange(i)} aria-label={'الفيديو ' + (i + 1)} aria-current={i === index ? 'step' : undefined} className={'h-3 w-3 rounded-full ' + (i === index ? 'bg-violet-600 ring-4 ring-violet-100' : 'bg-slate-300')} />
+          ))}
+        </div>
+        <button type="button" onClick={() => onIndexChange(Math.min(rhythmVideos.length - 1, index + 1))} disabled={index === rhythmVideos.length - 1} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-40">التالي ←</button>
       </div>
     </div>
   )
