@@ -12,6 +12,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const [name,setName]=useState(''),[grade,setGrade]=useState('')
  const [rhythmActivityDone,setRhythmActivityDone]=useState(false)
  const [balloonColors,setBalloonColors]=useState<Record<number,string>>({})
+ const [selectedBalloonColor,setSelectedBalloonColor]=useState('#ef4444')
  const [noteCount,setNoteCount]=useState('')
  const [restCount,setRestCount]=useState('')
  const [tiles,setTiles]=useState(()=>[3,0,7,2,5,1,8,4,6]),[selected,setSelected]=useState<number|null>(null)
@@ -41,22 +42,29 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
  {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط: لوّن بالونات النوار والسكتة 🎈</h4>
- <p className="my-2">اضغط على كل بالونة لتلوينها: لوّن البالونات التي تحتوي على علامة النوار باللون الأحمر، والبالونات التي تحتوي على سكتة النوار باللون الأخضر. اضغط مرة أخرى لتغيير اللون أو مسح التلوين.</p>
- <div className="rounded-2xl border-2 border-slate-200 bg-white p-3 sm:p-4">
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
- {noteBalloons.map(balloon=><button key={balloon.id} type="button" onClick={()=>setBalloonColors(old=>({...old,[balloon.id]:!old[balloon.id]?(balloon.type==='note'?'#ef4444':'#22c55e'):old[balloon.id]==='#ef4444'?'#22c55e':old[balloon.id]==='#22c55e'?'':'#ef4444'}))} aria-label={balloon.type==='note'?'بالونة النوار':'بالونة السكتة'} className="flex min-h-32 flex-col items-center justify-center rounded-2xl border-2 p-3 transition hover:scale-105 focus:outline-none focus:ring-4 focus:ring-violet-300" style={{backgroundColor:balloonColors[balloon.id]||'#ffffff',borderColor:balloonColors[balloon.id]||'#cbd5e1'}}>
- <span className="text-5xl">🎈</span><span className="mt-1 text-3xl font-black text-slate-900">{balloon.type==='note'?'♩':'𝄽'}</span><span className="mt-1 text-xs font-bold text-slate-700">{balloonColors[balloon.id]==='#ef4444'?'أحمر':balloonColors[balloon.id]==='#22c55e'?'أخضر':'اضغط للتلوين'}</span>
- </button>)}
+ <p className="my-2">اختَر اللون من لوحة الألوان، ثم اضغط داخل البالونة في الصورة لتلوينها. يمكنك تغيير اللون في أي وقت.</p>
+ <div className="flex flex-wrap items-center justify-center gap-3 rounded-xl border-2 border-slate-200 bg-white p-3 mb-3">
+ <span className="font-extrabold">اختَر لون التلوين:</span>
+ {[{value:'#ef4444',label:'أحمر'},{value:'#22c55e',label:'أخضر'},{value:'#3b82f6',label:'أزرق'},{value:'#facc15',label:'أصفر'},{value:'#a855f7',label:'بنفسجي'},{value:'#f97316',label:'برتقالي'},{value:'#ec4899',label:'وردي'},{value:'#ffffff',label:'مسح اللون'}].map(color=><button key={color.value} type="button" onClick={()=>setSelectedBalloonColor(color.value)} aria-label={color.label} title={color.label} className={'h-10 w-10 rounded-full border-2 '+(selectedBalloonColor===color.value?'ring-4 ring-violet-300 ring-offset-2':'border-slate-300')} style={{backgroundColor:color.value}} />)}
+ <span className="font-bold text-sm">{[{value:'#ef4444',label:'أحمر'},{value:'#22c55e',label:'أخضر'},{value:'#3b82f6',label:'أزرق'},{value:'#facc15',label:'أصفر'},{value:'#a855f7',label:'بنفسجي'},{value:'#f97316',label:'برتقالي'},{value:'#ec4899',label:'وردي'},{value:'#ffffff',label:'مسح اللون'}].find(x=>x.value===selectedBalloonColor)?.label}</span>
  </div>
- <p className="mt-3 text-center text-sm text-slate-500">اضغط على البالونة لتلوينها. الضغطة التالية تغيّر اللون، والضغطة الثالثة تمسح التلوين.</p>
+ <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-xl border-2 border-amber-200 bg-white">
+ <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-balloons.jpg" alt="ورقة نشاط بالونات النوار والسكتة للتلوين" className="block w-full h-auto" />
+ <svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute inset-0 h-full w-full" role="group" aria-label="بالونات قابلة للتلوين">
+ {noteBalloons.map(balloon=><g key={balloon.id} onClick={()=>setBalloonColors(old=>({...old,[balloon.id]:selectedBalloonColor==='#ffffff'?'':selectedBalloonColor}))} style={{cursor:'pointer'}}>
+ <ellipse cx={balloon.x} cy={balloon.y} rx="23" ry="29" fill={balloonColors[balloon.id]||'transparent'} fillOpacity={balloonColors[balloon.id]?'.78':'0.01'} stroke={balloonColors[balloon.id]||'transparent'} strokeWidth="1.5" />
+ <path d={`M ${balloon.x-3} ${balloon.y+28} L ${balloon.x} ${balloon.y+34} L ${balloon.x+3} ${balloon.y+28}`} fill={balloonColors[balloon.id]||'transparent'} />
+ <title>{balloon.type==='note'?'بالونة النوار':'بالونة السكتة'}</title>
+ </g>)}
+ </svg>
  </div>
+ <p className="mt-2 text-center text-sm text-slate-600">اضغط على البالونات في الصورة بعد اختيار اللون. زر «مسح اللون» يعيد البالونة إلى شكلها الأصلي.</p>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
- <label className="rounded-xl bg-red-50 border border-red-200 p-3 text-center"><span className="block font-extrabold text-red-700">اكتب عدد بالونات النوار</span><p className="mt-1 text-sm">العدد الصحيح: {noteBalloons.filter(b=>b.type==='note').length}</p><input type="number" min="0" max="4" step="1" inputMode="numeric" value={noteCount} onChange={e=>setNoteCount(e.target.value)} aria-label="عدد بالونات النوار" className="mx-auto mt-2 block w-24 rounded-lg border-2 border-red-300 bg-white p-2 text-center text-xl font-extrabold" placeholder="العدد" /></label>
- <label className="rounded-xl bg-green-50 border border-green-200 p-3 text-center"><span className="block font-extrabold text-green-700">اكتب عدد بالونات السكتة</span><p className="mt-1 text-sm">العدد الصحيح: {noteBalloons.filter(b=>b.type==='rest').length}</p><input type="number" min="0" max="4" step="1" inputMode="numeric" value={restCount} onChange={e=>setRestCount(e.target.value)} aria-label="عدد بالونات السكتة" className="mx-auto mt-2 block w-24 rounded-lg border-2 border-green-300 bg-white p-2 text-center text-xl font-extrabold" placeholder="العدد" /></label>
+ <label className="rounded-xl bg-red-50 border border-red-200 p-3 text-center"><span className="block font-extrabold text-red-700">اكتب عدد بالونات النوار</span><input type="number" min="0" max="4" step="1" inputMode="numeric" value={noteCount} onChange={e=>setNoteCount(e.target.value)} aria-label="عدد بالونات النوار" className="mx-auto mt-2 block w-24 rounded-lg border-2 border-red-300 bg-white p-2 text-center text-xl font-extrabold" placeholder="العدد" /></label>
+ <label className="rounded-xl bg-green-50 border border-green-200 p-3 text-center"><span className="block font-extrabold text-green-700">اكتب عدد بالونات السكتة</span><input type="number" min="0" max="4" step="1" inputMode="numeric" value={restCount} onChange={e=>setRestCount(e.target.value)} aria-label="عدد بالونات السكتة" className="mx-auto mt-2 block w-24 rounded-lg border-2 border-green-300 bg-white p-2 text-center text-xl font-extrabold" placeholder="العدد" /></label>
  </div>
- <div className="flex flex-wrap gap-2 mt-3"><button type="button" onClick={()=>{setBalloonColors({});setNoteCount('');setRestCount('')}} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة التلوين</button>{coloringDone&&<span className="rounded-full bg-green-100 px-4 py-2 font-extrabold text-green-800">أحسنت! لوّنت كل البالونات بشكل صحيح 🎉</span>}</div>
- </div>}
- {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
+ <div className="flex flex-wrap gap-2 mt-3"><button type="button" onClick={()=>{setBalloonColors({});setNoteCount('');setRestCount('');setSelectedBalloonColor('#ef4444')}} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة التلوين</button>{coloringDone&&<span className="rounded-full bg-green-100 px-4 py-2 font-extrabold text-green-800">أحسنت! لوّنت كل البالونات بشكل صحيح 🎉</span>}</div>
+ </div>} {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️</h4>
  <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
  <div className="rounded-2xl border-2 border-amber-200 bg-white p-2 sm:p-4">
