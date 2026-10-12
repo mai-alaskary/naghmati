@@ -208,8 +208,8 @@ function FlagIllustration({ country }: { country: 'oman' | 'japan' | 'france' })
 
 
 function RhythmBlocksWarmup() {
-  const [pieces, setPieces] = useState([{ id: 1, kind: 'whole', x: 0, y: 0 }])
-  const [selected, setSelected] = useState<number | null>(1)
+  const [pieces, setPieces] = useState<{ id: number; kind: string; x: number; y: number }[]>([])
+  const [selected, setSelected] = useState<number | null>(null)
   const [message, setMessage] = useState('اسحب قطعة إلى مساحة العمل، ثم فكّكها أو ادمج القطع المتساوية.')
   const [nextId, setNextId] = useState(2)
   const [dragId, setDragId] = useState<number | null>(null)
@@ -248,7 +248,7 @@ function RhythmBlocksWarmup() {
     setWorkspace(prev => [...prev.filter(n => !chosen.some(q => q.id === n)), id])
     setNextId(v => v + 1); setSelected(id); setMessage(kind === 'whole' ? 'ممتاز! رأيتَ قطعتَي كروش جنبًا إلى جنب، ثم اندمجتا لتكوّنا نوارًا واحدًا.' : 'أحسنت! رأيتَ قطعتَي دوبل كروش جنبًا إلى جنب، ثم اندمجتا لتكوّنا كروشًا واحدًا.'); playCorrect()
   }
-  const reset = () => { setPieces([{id: nextId,kind:'whole',x:0,y:0}]); setWorkspace([nextId]); setSelected(nextId); setNextId(v=>v+1); setMessage('بدأنا من جديد! اسحب القطعة الخضراء إلى مساحة العمل.'); }
+  const reset = () => { setPieces([]); setWorkspace([]); setSelected(null); setMessage('بدأنا من جديد! اختر قطعة من القطع المتاحة لإضافتها إلى مساحة العمل.'); }
   const dragStart = (id: number) => setDragId(id)
   const dropAt = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
