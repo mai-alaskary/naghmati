@@ -28,8 +28,8 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
  const noteBalloons=[
-  {id:0,type:'rest',left:25.9,top:17.6,width:13.0,height:18.2},
-  {id:1,type:'note',left:47.5,top:8.1,width:12.3,height:17.8},
+  {id:0,type:'rest',left:25.9,top:20.6,width:13.0,height:18.2},
+  {id:1,type:'note',left:47.5,top:11.1,width:12.3,height:17.8},
   {id:2,type:'note',left:41.4,top:21.9,width:13.0,height:22.6},
   {id:3,type:'rest',left:61.2,top:25.0,width:13.0,height:20.6},
   {id:4,type:'note',left:27.5,top:38.4,width:13.0,height:20.7},
