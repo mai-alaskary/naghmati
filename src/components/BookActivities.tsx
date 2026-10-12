@@ -11,7 +11,9 @@ const PICTURES = [{id:'sky',label:'السماء',emoji:'☁️🌤️'},{id:'peo
 export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:string;onSubmit?:()=>void}) {
  const [name,setName]=useState(''),[grade,setGrade]=useState('')
  const [rhythmActivityDone,setRhythmActivityDone]=useState(false)
- const [balloonColors,setBalloonColors]=useState<Record<number,string>>({})\n const [noteCount,setNoteCount]=useState('')\n const [restCount,setRestCount]=useState('')
+ const [balloonColors,setBalloonColors]=useState<Record<number,string>>({})
+ const [noteCount,setNoteCount]=useState('')
+ const [restCount,setRestCount]=useState('')
  const [tiles,setTiles]=useState(()=>[3,0,7,2,5,1,8,4,6]),[selected,setSelected]=useState<number|null>(null)
  const [matches,setMatches]=useState<Record<string,string>>({}),[dragged,setDragged]=useState<string|null>(null)
  const [shadingMatches,setShadingMatches]=useState<Record<string,string>>({})
