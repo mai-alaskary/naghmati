@@ -208,45 +208,86 @@ function FlagIllustration({ country }: { country: 'oman' | 'japan' | 'france' })
 
 
 function RhythmBlocksWarmup() {
-  const [stage, setStage] = useState(0)
-  const steps = [
-    { title: '١. لاحظ الوحدة الأساسية', description: 'الوحدة الخضراء تمثّل وحدة كاملة، وتتكوّن هنا من أربع وحدات صغيرة.', groups: [4] },
-    { title: '٢. اقسمها إلى حزمتين متساويتين', description: 'كل حزمة حمراء تضم وحدتين، والحزمتان معًا تساويان الوحدة الخضراء.', groups: [2, 2] },
-    { title: '٣. قسّم كل حزمة إلى وحدتين أصغر', description: 'كل جزء أزرق يمثّل وحدة صغيرة واحدة؛ أربع وحدات صغيرة تكوّن الوحدة الكاملة.', groups: [1, 1, 1, 1] },
-    { title: '٤. اجمع الأجزاء من جديد', description: 'عند جمع الأجزاء الأربعة نحصل على وحدة كاملة مثل الوحدة الخضراء.', groups: [4] },
-  ]
-  const current = steps[stage]
-  const colors = ['#e84b32', '#4c8ed9', '#b79bc9', '#8fc96c']
+  const [pieces, setPieces] = useState([{ id: 1, kind: 'whole', x: 0, y: 0 }])
+  const [selected, setSelected] = useState<number | null>(1)
+  const [message, setMessage] = useState('اسحب قطعة إلى مساحة العمل، ثم فكّكها أو ادمج القطع المتساوية.')
+  const [nextId, setNextId] = useState(2)
+  const [dragId, setDragId] = useState<number | null>(null)
+  const [workspace, setWorkspace] = useState<number[]>([1])
+  const names: Record<string, string> = { whole: 'وحدة كاملة', half: 'نصف الوحدة', quarter: 'ربع الوحدة' }
+  const colors: Record<string, string> = { whole: '#8fc96c', half: '#e84b32', quarter: '#4c8ed9', result: '#c5a6d7' }
+  const makePiece = (kind: string, x: number, y: number, id: number) => ({ id, kind, x, y })
+  const splitPiece = (id: number) => {
+    const piece = pieces.find(p => p.id === id)
+    if (!piece) return
+    if (piece.kind === 'whole') {
+      const a = makePiece('half', piece.x - 48, piece.y + 72, nextId)
+      const b = makePiece('half', piece.x + 48, piece.y + 72, nextId + 1)
+      setPieces(prev => [...prev.filter(p => p.id !== id), a, b]); setWorkspace(prev => [...prev.filter(n => n !== id), a.id, b.id]); setNextId(v => v + 2); setSelected(null); setMessage('أحسنت! الوحدة الكاملة انقسمت إلى نصفين متساويين. يمكنك تقسيم كل نصف إلى جزأين أصغر.'); playCorrect()
+    } else if (piece.kind === 'half') {
+      const a = makePiece('quarter', piece.x - 30, piece.y + 65, nextId)
+      const b = makePiece('quarter', piece.x + 30, piece.y + 65, nextId + 1)
+      setPieces(prev => [...prev.filter(p => p.id !== id), a, b]); setWorkspace(prev => [...prev.filter(n => n !== id), a.id, b.id]); setNextId(v => v + 2); setSelected(null); setMessage('رائع! كل نصف أصبح جزأين متساويين. أربعة أجزاء صغيرة تساوي وحدة كاملة.'); playCorrect()
+    } else setMessage('هذه أصغر قطعة في النشاط؛ جرّب دمج أربع قطع زرقاء أو قطعتين حمراوين.')
+  }
+  const mergePieces = () => {
+    const selectedPieces = pieces.filter(p => workspace.includes(p.id) && (selected === null || p.id === selected))
+    const ids = selectedPieces.map(p => p.id)
+    const quarters = pieces.filter(p => workspace.includes(p.id) && p.kind === 'quarter')
+    const halves = pieces.filter(p => workspace.includes(p.id) && p.kind === 'half')
+    let kind = ''
+    let chosen: typeof pieces = []
+    if (halves.length >= 2) { kind = 'whole'; chosen = halves.slice(0, 2) }
+    else if (quarters.length >= 2) { kind = 'half'; chosen = quarters.slice(0, 2) }
+    if (!kind || chosen.length < 2) { setMessage('لدمج القطع: ضع قطعتين حمراوين لتكوين وحدة خضراء، أو قطعتين زرقاوين لتكوين قطعة حمراء.'); playWrong(); return }
+    const id = nextId
+    const x = chosen.reduce((sum,p)=>sum+p.x,0)/chosen.length
+    const y = chosen.reduce((sum,p)=>sum+p.y,0)/chosen.length
+    const merged = makePiece(kind,x,y,id)
+    setPieces(prev => [...prev.filter(p => !chosen.some(q => q.id === p.id)), merged])
+    setWorkspace(prev => [...prev.filter(n => !chosen.some(q => q.id === n)), id])
+    setNextId(v => v + 1); setSelected(id); setMessage(kind === 'whole' ? 'ممتاز! قطعتان حمراوان كوّنتا وحدة كاملة خضراء.' : 'أحسنت! قطعتان زرقاوان كوّنتا نصف وحدة أحمر.'); playCorrect()
+  }
+  const reset = () => { setPieces([{id: nextId,kind:'whole',x:0,y:0}]); setWorkspace([nextId]); setSelected(nextId); setNextId(v=>v+1); setMessage('بدأنا من جديد! اسحب القطعة الخضراء إلى مساحة العمل.'); }
+  const dragStart = (id: number) => setDragId(id)
+  const dropAt = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    if (dragId === null) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = Math.max(-125, Math.min(125, event.clientX - rect.left - rect.width / 2))
+    const y = Math.max(-55, Math.min(65, event.clientY - rect.top - 65))
+    setPieces(prev => prev.map(p => p.id === dragId ? {...p,x,y} : p))
+    setWorkspace(prev => prev.includes(dragId) ? prev : [...prev, dragId])
+    setSelected(dragId); setDragId(null)
+  }
+  const displayPieces = pieces.filter(p => workspace.includes(p.id))
   return (
     <div className="rounded-3xl bg-white p-4 md:p-6">
-      <p className="text-lg font-extrabold mb-2">نشاط عملي: قسّم الوحدة الإيقاعية ثم اجمعها</p>
-      <p className="text-ink/75 mb-4">شاهد كيف تتحوّل الوحدة الكاملة إلى أجزاء متساوية، ثم كيف نعيد جمعها.</p>
-      <div className="rounded-2xl bg-[#f1eefb] p-3 md:p-5 mb-4">
-        <svg viewBox="0 0 340 150" role="img" aria-label="مكعبات ملوّنة توضّح تقسيم الوحدة الإيقاعية وتجميعها" className="w-full max-w-xl mx-auto">
-          <g transform="translate(16 18)">
-            <rect x="0" y="14" width="308" height="40" rx="4" fill="#8fc96c" stroke="#467b37" strokeWidth="1.5"/>
-            {[0,1,2,3].map(i => <g key={i}><rect x={i*77+7} y="4" width="63" height="13" rx="2" fill="#a8d98b" stroke="#467b37"/><line x1={i*77+77} y1="14" x2={i*77+77} y2="54" stroke="#467b37" strokeDasharray="3 3"/></g>)}
-            <text x="154" y="39" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#173b16">وحدة كاملة</text>
-          </g>
-          <path d="M170 78 V91 M164 85 L170 91 L176 85" stroke="#6750a4" strokeWidth="2" fill="none"/>
-          {current.groups.map((n, i) => {
-            const count = current.groups.length
-            const w = Math.min(308 / count - 5, 303)
-            const x = 16 + i * (308 / count)
-            const color = stage === 1 ? colors[0] : stage === 2 ? colors[1] : stage === 3 ? colors[3] : colors[2]
-            return <g key={i}><rect x={x} y="103" width={w} height="27" rx="3" fill={color} stroke="#663b45" strokeWidth="1.2"/>{Array.from({length:Math.min(n,4)},(_,j)=><rect key={j} x={x+4+j*(w-8)/n} y="96" width={(w-12)/n} height="8" rx="1" fill={color} stroke="#663b45" strokeWidth=".8"/>)}<text x={x+w/2} y="120" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#fff">{n===4?'كاملة':String(n)+' من ٤'}</text></g>
-          })}
-        </svg>
+      <p className="text-lg font-extrabold mb-2">ورشة المكعبات الإيقاعية</p>
+      <p className="text-ink/75 mb-4">اسحب القطع إلى اللوحة. اختر قطعة ثم فكّكها، أو ادمج القطع الصغيرة لتكوين قطعة أكبر.</p>
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        {(['whole','half','quarter'] as const).map(kind => <button key={kind} type="button" draggable onDragStart={() => dragStart(nextId)} onClick={() => { const id=nextId; setPieces(prev=>[...prev,makePiece(kind,0,0,id)]); setWorkspace(prev=>[...prev,id]); setSelected(id); setNextId(v=>v+1); setMessage('تمت إضافة قطعة إلى مساحة العمل. اخترها لتفكيكها أو ادمج القطع.'); }} className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-2 text-center font-extrabold hover:border-amber-300">
+          <svg viewBox="0 0 100 58" className="mx-auto w-full max-w-[100px]" aria-hidden="true"><rect x={kind==='whole'?8:kind==='half'?20:31} y="20" width={kind==='whole'?84:kind==='half'?60:38} height="29" rx="2" fill={colors[kind]} stroke="#374151" strokeWidth="1.5"/>{Array.from({length:kind==='whole'?4:kind==='half'?2:1},(_,i)=><rect key={i} x={(kind==='whole'?10:kind==='half'?22:33)+i*(kind==='whole'?20:kind==='half'?28:34)} y="12" width={kind==='whole'?18:kind==='half'?24:34} height="9" rx="2" fill={colors[kind]} stroke="#374151" strokeWidth="1"/>)}</svg>
+          <span className="block text-sm">{names[kind]}</span>
+          <span className="block text-xs text-ink/60">اضغط للإضافة</span>
+        </button>)}
       </div>
-      <div className="rounded-2xl bg-amber-50 p-4 mb-4">
-        <p className="font-extrabold text-lg">{current.title}</p>
-        <p className="mt-1">{current.description}</p>
-        <p className="mt-2 text-sm text-ink/65">الخطوة {stage + 1} من {steps.length}</p>
+      <div onDragOver={e=>e.preventDefault()} onDrop={dropAt} className="relative min-h-[250px] overflow-hidden rounded-2xl border-2 border-dashed border-violet-300 bg-[#f1eefb] p-3">
+        <p className="text-sm font-extrabold text-violet-900">مساحة العمل — اسحب القطع ورتّبها هنا</p>
+        <div className="relative mt-3 min-h-[185px]">
+          {displayPieces.map(piece => <button key={piece.id} type="button" draggable onDragStart={()=>dragStart(piece.id)} onClick={()=>setSelected(piece.id)} style={{left:`calc(50% + ${piece.x}px)`,top:`${piece.y}px`,transform:'translateX(-50%)',backgroundColor:colors[piece.kind],zIndex:selected===piece.id?3:1}} className={`absolute w-24 rounded-lg border-2 p-2 shadow-md transition ring-offset-2 ${selected===piece.id?'ring-4 ring-amber-400':'border-slate-600'}`} aria-label={names[piece.kind]}>
+            <svg viewBox="0 0 100 46" className="w-full" aria-hidden="true"><path d="M5 13 L18 3 H94 L82 13Z" fill="#ffffff" fillOpacity=".3" stroke="#374151" strokeWidth="1.2"/><rect x="5" y="13" width="77" height="28" fill={colors[piece.kind]} stroke="#374151" strokeWidth="1.2"/><path d="M82 13 L94 3 V31 L82 41Z" fill="#000" fillOpacity=".08" stroke="#374151" strokeWidth="1.2"/>{Array.from({length:piece.kind==='whole'?4:piece.kind==='half'?2:1},(_,i)=><rect key={i} x={10+i*(piece.kind==='whole'?18:piece.kind==='half'?35:0)} y="7" width={piece.kind==='whole'?16:piece.kind==='half'?30:60} height="7" rx="1" fill={colors[piece.kind]} stroke="#374151" strokeWidth=".8"/>)}</svg>
+            <span className="block text-xs font-extrabold text-slate-900">{names[piece.kind]}</span>
+          </button>)}
+        </div>
       </div>
-      <div className="flex flex-wrap gap-3">
-        <button type="button" disabled={stage === 0} onClick={() => setStage(s => s - 1)} className="rounded-full border-2 border-ink/15 px-5 py-3 font-extrabold disabled:opacity-40">السابق</button>
-        {stage < steps.length - 1 ? <button type="button" onClick={() => setStage(s => s + 1)} className="rounded-full bg-amber-400 px-6 py-3 font-extrabold hover:bg-amber-500">الخطوة التالية ←</button> : <button type="button" onClick={() => setStage(0)} className="rounded-full bg-emerald-500 px-6 py-3 font-extrabold text-white hover:bg-emerald-600">أعد النشاط ↻</button>}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" disabled={selected===null} onClick={()=>selected!==null&&splitPiece(selected)} className="rounded-full bg-amber-400 px-4 py-3 font-extrabold disabled:opacity-40">فكّك القطعة المحددة</button>
+        <button type="button" onClick={mergePieces} className="rounded-full bg-emerald-500 px-4 py-3 font-extrabold text-white">ادمج القطع المتساوية</button>
+        <button type="button" onClick={reset} className="rounded-full border-2 border-slate-200 px-4 py-3 font-extrabold">إعادة النشاط ↻</button>
       </div>
+      <p className="mt-4 rounded-2xl bg-emerald-50 p-3 font-extrabold text-emerald-900" aria-live="polite">{message}</p>
+      <p className="mt-2 text-xs text-ink/60">تعمل اللوحة باللمس أو الفأرة؛ ويمكن استخدام أزرار الإضافة والتفكيك والدمج عند الأجهزة التي لا تدعم السحب.</p>
     </div>
   )
 }
