@@ -11,6 +11,7 @@ const PICTURES = [{id:'sky',label:'السماء',emoji:'☁️🌤️'},{id:'peo
 export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:string;onSubmit?:()=>void}) {
  const [name,setName]=useState(''),[grade,setGrade]=useState('')
  const [rhythmActivityDone,setRhythmActivityDone]=useState(false)
+ const [balloonColors,setBalloonColors]=useState<Record<number,string>>({})
  const [tiles,setTiles]=useState(()=>[3,0,7,2,5,1,8,4,6]),[selected,setSelected]=useState<number|null>(null)
  const [matches,setMatches]=useState<Record<string,string>>({}),[dragged,setDragged]=useState<string|null>(null)
  const [shadingMatches,setShadingMatches]=useState<Record<string,string>>({})
@@ -22,15 +23,41 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const anthem=lessonTitle==='النشيد الوطني'||lessonTitle==='نشيد (عَلَم بلادي)'
  const shading=lessonTitle==='تدريبات صوتية بالتظليلات'
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
+ const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
+ const noteBalloons=[{id:0,type:'note',x:105,y:85},{id:1,type:'rest',x:178,y:53},{id:2,type:'note',x:250,y:83},{id:3,type:'rest',x:315,y:110},{id:4,type:'rest',x:145,y:165},{id:5,type:'note',x:220,y:175},{id:6,type:'rest',x:285,y:190},{id:7,type:'note',x:85,y:185}] as const
+ const notesColored=noteBalloons.filter(b=>b.type==='note'&&balloonColors[b.id]==='#ef4444').length
+ const restsColored=noteBalloons.filter(b=>b.type==='rest'&&balloonColors[b.id]==='#22c55e').length
+ const coloringDone=notesColored===noteBalloons.filter(b=>b.type==='note').length&&restsColored===noteBalloons.filter(b=>b.type==='rest').length
  const shadingItems=[{id:'legato',name:'الليجاتو'},{id:'staccato',name:'الاستكاتو'},{id:'forte',name:'الفورتي (f)'},{id:'piano',name:'البيانو (p)'},{id:'crescendo',name:'الكريشيندو'},{id:'diminuendo',name:'الديمينويندو'}]
  const shadingDone=shadingItems.every(x=>shadingMatches[x.id]===x.id)
  const full=name.trim().split(/\s+/).filter(Boolean).length>=4
  const puzzleDone=tiles.every((v,i)=>v===i)
  const matchDone=PROMPTS.every(p=>matches[p.id]===p.answer)
- const ready=full&&!!grade.trim()&&(!anthem||(puzzleDone&&(!flagActivity?matchDone:true)))&&(!shading||shadingDone)&&(!flagActivity||flagCluesDone)&&(!rhythmActivity||rhythmActivityDone)
+ const ready=full&&!!grade.trim()&&(!anthem||(puzzleDone&&(!flagActivity?matchDone:true)))&&(!shading||shadingDone)&&(!flagActivity||flagCluesDone)&&(!rhythmActivity||rhythmActivityDone)&&(!noteColoringActivity||coloringDone)
  function swap(a:number,b:number){setTiles(old=>{const next=[...old];[next[a],next[b]]=[next[b],next[a]];return next});setSelected(null)}
- function send(){onSubmit?.();const msg=['تسليم أنشطة الكتاب - نغماتي','الدرس: '+lessonTitle,'الاسم الرباعي: '+name.trim(),'الصف: '+grade.trim(),...(rhythmActivity?['النشاط التفاعلي للشكل الإيقاعي: '+(rhythmActivityDone?'أفادت الطالبة بإكماله':'غير مكتمل'),'رابط النشاط: https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html']:[]),...(anthem?[(flagActivity?'النشاط الثاني':'النشاط الأول')+' - تركيب العلم: '+(puzzleDone?'مكتمل':'غير مكتمل'),...(!flagActivity?['النشاط الثاني - توصيل الصور بالجمل: '+PROMPTS.map(p=>p.text+' ← '+(PICTURES.find(c=>c.id===matches[p.id])?.label||'لم تُجب')).join('؛ ')]:[])]:[]),...(flagActivity?['نشاط معاني ألوان ورموز العلم: '+flagClueItems.map(x=>x.meaning+' ← '+(flagClues[x.id]===x.id?x.label:'غير مكتمل')).join('؛ ')]:[]),...(shading?['توصيل أسماء التظليلات بالرموز: '+shadingItems.map(x=>x.name+' ← '+(shadingMatches[x.id]===x.id?'صحيح':'غير مكتمل')).join('؛ ')]:[])].join('\n');window.open('https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
+ function send(){onSubmit?.();const msg=['تسليم أنشطة الكتاب - نغماتي','الدرس: '+lessonTitle,'الاسم الرباعي: '+name.trim(),'الصف: '+grade.trim(),...(rhythmActivity?['النشاط التفاعلي للشكل الإيقاعي: '+(rhythmActivityDone?'أفادت الطالبة بإكماله':'غير مكتمل'),'رابط النشاط: https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html']:[]),...(noteColoringActivity?['تلوين البالونات: النوار '+notesColored+'/'+noteBalloons.filter(b=>b.type==='note').length+'، السكتة '+restsColored+'/'+noteBalloons.filter(b=>b.type==='rest').length]:[]),...(anthem?[(flagActivity?'النشاط الثاني':'النشاط الأول')+' - تركيب العلم: '+(puzzleDone?'مكتمل':'غير مكتمل'),...(!flagActivity?['النشاط الثاني - توصيل الصور بالجمل: '+PROMPTS.map(p=>p.text+' ← '+(PICTURES.find(c=>c.id===matches[p.id])?.label||'لم تُجب')).join('؛ ')]:[])]:[]),...(flagActivity?['نشاط معاني ألوان ورموز العلم: '+flagClueItems.map(x=>x.meaning+' ← '+(flagClues[x.id]===x.id?x.label:'غير مكتمل')).join('؛ ')]:[]),...(shading?['توصيل أسماء التظليلات بالرموز: '+shadingItems.map(x=>x.name+' ← '+(shadingMatches[x.id]===x.id?'صحيح':'غير مكتمل')).join('؛ ')]:[])].join('\n');window.open('https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
+ {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
+ <h4 className="font-extrabold text-lg">النشاط: لوّن بالونات النوار والسكتة 🎈</h4>
+ <p className="my-2">اضغط على كل بالونة لتلوينها: لوّن البالونات التي تحتوي على علامة النوار باللون الأحمر، والبالونات التي تحتوي على سكتة النوار باللون الأخضر. اضغط مرة أخرى لتغيير اللون أو مسح التلوين.</p>
+ <div className="rounded-2xl border-2 border-slate-200 bg-[#f0eeee] p-2 sm:p-4">
+ <svg viewBox="0 0 400 300" role="img" aria-label="ثماني بالونات تحمل علامات النوار وسكتة النوار، اضغط على كل بالونة لتلوينها" className="mx-auto w-full max-w-2xl">
+ <rect x="3" y="3" width="394" height="294" rx="12" fill="none" stroke="#fff" strokeWidth="5"/>
+ {noteBalloons.map(b=><g key={b.id} onClick={()=>setBalloonColors(old=>({...old,[b.id]:old[b.id]?'':b.type==='note'?'#ef4444':'#22c55e'}))} className="cursor-pointer" role="button" tabIndex={0} aria-label={b.type==='note'?'بالونة النوار':'بالونة سكتة النوار'}>
+ <ellipse cx={b.x} cy={b.y} rx="29" ry="35" fill={balloonColors[b.id]||'#fff'} stroke={balloonColors[b.id]?'#475569':'#6b6868'} strokeWidth="2.2"/>
+ <path d={`M ${b.x-2} ${b.y+34} l 5 8 l 4 -7`} fill={balloonColors[b.id]||'#fff'} stroke="#6b6868" strokeWidth="1.5"/>
+ <path d={`M ${b.x+3} ${b.y+41} Q 180 250 200 270`} fill="none" stroke="#777" strokeWidth="1.5"/>
+ {b.type==='note'?<g fill="#252525" stroke="#252525" strokeWidth="2.5"><ellipse cx={b.x-2} cy={b.y+5} rx="7" ry="4.5" transform={`rotate(-25 ${b.x-2} ${b.y+5})`}/><path d={`M ${b.x+4} ${b.y+4} V ${b.y-19}`} fill="none"/></g>:<path d={`M ${b.x-3} ${b.y-14} q 14 8 1 17 q -7 6 4 12 q -4 -10 3 -14 q 6 -8 -8 -15`} fill="#252525" stroke="#252525" strokeWidth="1.5"/>}
+ </g>)}
+ <path d="M200 270 L188 292 M200 270 L200 294 M200 270 L213 292" stroke="#444" strokeWidth="2" fill="none"/>
+ </svg>
+ </div>
+ <div className="grid grid-cols-2 gap-3 mt-4">
+ <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-center"><span className="font-extrabold text-red-700">علامة النوار</span><p className="mt-1 text-sm">البالونات الحمراء: <strong>{notesColored} / {noteBalloons.filter(b=>b.type==='note').length}</strong></p></div>
+ <div className="rounded-xl bg-green-50 border border-green-200 p-3 text-center"><span className="font-extrabold text-green-700">سكتة النوار</span><p className="mt-1 text-sm">البالونات الخضراء: <strong>{restsColored} / {noteBalloons.filter(b=>b.type==='rest').length}</strong></p></div>
+ </div>
+ <div className="flex flex-wrap gap-2 mt-3"><button type="button" onClick={()=>setBalloonColors({})} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة التلوين</button>{coloringDone&&<span className="rounded-full bg-green-100 px-4 py-2 font-extrabold text-green-800">أحسنت! لوّنت كل البالونات بشكل صحيح 🎉</span>}</div>
+ </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
  <p className="my-2">نفّذ النشاط داخل الإطار. بعد الانتهاء، حدّد أنك أكملته ثم سلّم البيانات للمعلمة عبر واتساب.</p>
