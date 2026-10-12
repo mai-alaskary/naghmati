@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getLesson } from '@/content/curriculum'
 import { gradeTheme } from '@/lib/theme'
@@ -102,23 +102,7 @@ function LessonPage() {
         <section className="rounded-3xl bg-white p-4 shadow-chunky"><div className="flex items-center justify-between gap-2 mb-3"><h2 className="font-extrabold text-lg">⭐ تقدّمك في الدرس</h2><span className="font-bold text-violet-600">{progress.length} من 5 نجوم</span></div><div className="grid grid-cols-5 gap-2">{LESSON_STEPS.map((step,i)=><div key={step} className="text-center"><div className={`text-2xl ${progress.includes(step) ? "text-amber-400" : "text-slate-300"}`}>★</div><div className="text-xs font-bold">{["التهيئة","الفيديو","الأسئلة","النشاط","التطبيق"][i]}</div></div>)}</div></section>
         <section id="warmup" className="scroll-mt-24">
           <div onClick={() => finish("warmup")}><PreLessonActivity lesson={lesson} /></div>
-          {grade.id === 'grade-4' && lesson.title === 'نشيد (سلامتي)' && (
-            <div className="mt-6 rounded-3xl bg-white p-4 md:p-6 shadow-chunky">
-              <h3 className="mb-3 text-xl font-extrabold">📖 اقرأ قصة «سلامتي هي مهمتي»</h3>
-              <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ height: 'min(75vh, 680px)', minHeight: '420px' }}>
-                <iframe
-                  src="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
-                  title="كتاب سلامتي هي مهمتي على StoryJumper"
-                  className="h-full w-full border-0"
-                  loading="lazy"
-                  allowFullScreen
-                />
-              </div>
-              <p className="mt-3 text-center text-sm font-semibold text-ink/65">
-                لو الكتاب لم يظهر داخل الصفحة، <a href="https://www.storyjumper.com/book/read/170652271/65f75d977891f" target="_blank" rel="noreferrer" className="text-violet-700 underline underline-offset-4">افتح الكتاب مباشرة</a>.
-              </p>
-            </div>
-          )}
+          {grade.id === 'grade-4' && lesson.title === 'نشيد (سلامتي)' && <StoryJumperBook />}
         </section>
 
         <section id="watch" className="scroll-mt-24">
@@ -246,6 +230,50 @@ const rhythmVideos = [
     type: 'video/mp4',
   },
 ]
+
+
+function StoryJumperBook() {
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://www.storyjumper.com/script/storyjumper-embed.js'
+    script.async = true
+    script.defer = true
+    document.body.appendChild(script)
+    return () => {
+      script.remove()
+    }
+  }, [])
+
+  return (
+    <div className="mt-6 max-w-xl rounded-3xl bg-white p-4 shadow-chunky">
+      <h3 className="mb-3 text-xl font-extrabold">📖 اقرأ قصة «سلامتي هي مهمتي»</h3>
+      <div className="mx-auto w-full max-w-[480px]">
+        <a
+          href="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
+          target="_blank"
+          rel="noreferrer"
+          className="storyjumper-book block"
+          aria-label="افتح كتاب سلامتي هي مهمتي"
+        >
+          <img
+            src="https://www.storyjumper.com/book/coverImage/170652271/65f75d977891f/480"
+            alt="غلاف كتاب سلامتي هي مهمتي"
+            className="h-auto w-full border-0 transition-transform duration-300 hover:-translate-y-1"
+          />
+        </a>
+        <a
+          href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-3 block text-center text-sm font-bold text-violet-700 underline underline-offset-4"
+        >
+          افتح الكتاب مباشرة
+        </a>
+      </div>
+    </div>
+  )
+}
+
 
 function RhythmVideoActivity({ index, onIndexChange }: { index: number; onIndexChange: (index: number) => void }) {
   const video = rhythmVideos[index]
