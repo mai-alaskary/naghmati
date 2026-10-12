@@ -40,19 +40,8 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط: لوّن بالونات النوار والسكتة 🎈</h4>
  <p className="my-2">اضغط على كل بالونة لتلوينها: لوّن البالونات التي تحتوي على علامة النوار باللون الأحمر، والبالونات التي تحتوي على سكتة النوار باللون الأخضر. اضغط مرة أخرى لتغيير اللون أو مسح التلوين.</p>
- <div className="rounded-2xl border-2 border-slate-200 bg-[#f0eeee] p-2 sm:p-4">
- <svg viewBox="0 0 400 300" role="img" aria-label="ثماني بالونات تحمل علامات النوار وسكتة النوار، اضغط على كل بالونة لتلوينها" className="mx-auto w-full max-w-2xl">
- <rect x="3" y="3" width="394" height="294" rx="12" fill="none" stroke="#fff" strokeWidth="5"/>
- {noteBalloons.map(b=><g key={b.id} onClick={()=>setBalloonColors(old=>({...old,[b.id]:old[b.id]?'':b.type==='note'?'#ef4444':'#22c55e'}))} className="cursor-pointer" role="button" tabIndex={0} aria-label={b.type==='note'?'بالونة النوار':'بالونة سكتة النوار'}>
- <ellipse cx={b.x} cy={b.y} rx="29" ry="35" fill={balloonColors[b.id]||'#fff'} stroke={balloonColors[b.id]?'#475569':'#6b6868'} strokeWidth="2.2"/>
- <path d={`M ${b.x-2} ${b.y+34} l 5 8 l 4 -7`} fill={balloonColors[b.id]||'#fff'} stroke="#6b6868" strokeWidth="1.5"/>
- <path d={`M ${b.x+3} ${b.y+41} Q 180 250 200 270`} fill="none" stroke="#777" strokeWidth="1.5"/>
- {b.type==='note'?<g fill="#252525" stroke="#252525" strokeWidth="2.5"><ellipse cx={b.x-2} cy={b.y+5} rx="7" ry="4.5" transform={`rotate(-25 ${b.x-2} ${b.y+5})`}/><path d={`M ${b.x+4} ${b.y+4} V ${b.y-19}`} fill="none"/></g>:<g transform={`translate(${b.x-1} ${b.y-1})`} fill="#252525" stroke="#252525" strokeWidth="1.2" strokeLinejoin="round">
-   <path d="M -4 -17 C 2 -15 8 -10 7 -5 C 6 -1 2 1 1 4 C 0 7 3 10 5 13 C 7 16 5 19 2 21 C 4 16 -1 13 -3 10 C -6 6 -4 2 0 -1 C 4 -4 4 -7 1 -10 C -2 -13 -4 -14 -4 -17 Z"/>
-  </g>}
- </g>)}
- <path d="M200 270 L188 292 M200 270 L200 294 M200 270 L213 292" stroke="#444" strokeWidth="2" fill="none"/>
- </svg>
+ <div className="rounded-2xl border-2 border-slate-200 bg-white p-2 sm:p-4">
+ <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-balloons.jpg" alt="ورقة نشاط تلوين بالونات النوار وسكتة النوار" className="mx-auto w-full max-w-2xl h-auto rounded-lg" />
  </div>
  <div className="grid grid-cols-2 gap-3 mt-4">
  <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-center"><span className="font-extrabold text-red-700">علامة النوار</span><p className="mt-1 text-sm">البالونات الحمراء: <strong>{notesColored} / {noteBalloons.filter(b=>b.type==='note').length}</strong></p></div>
@@ -63,22 +52,9 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️</h4>
  <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
- <div className="rounded-xl border-2 border-amber-300 bg-white p-3"><p className="font-extrabold mb-2">١. خط مستقيم ومسار دائري</p>
- <svg viewBox="0 0 220 230" className="w-full" role="img" aria-label="خط مستقيم بسهم إلى الأسفل ومسار دائري متقطع للتتبع">
- <path d="M160 18 V128 M152 115 L160 132 L168 115" stroke="#111" strokeWidth="2.5" fill="none"/>
- <path d="M145 18 V126" stroke="#777" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" fill="none"/>
- <path d="M108 145 C70 146 35 170 43 194 C51 220 100 215 126 191 C150 169 130 151 108 158 C81 166 63 186 75 197 C86 208 113 195 130 177" stroke="#777" strokeWidth="3" strokeDasharray="5 8" fill="none" strokeLinecap="round"/>
- <path d="M122 178 L133 172 L131 185" fill="#111"/>
- </svg></div>
- <div className="rounded-xl border-2 border-amber-300 bg-white p-3"><p className="font-extrabold mb-2">٢. مسارات منحنية متتابعة</p>
- <svg viewBox="0 0 220 230" className="w-full" role="img" aria-label="مسارات متعرجة ومنحنية متقطعة مع أسهم لاتجاه التتبع">
- <path d="M35 20 V205 M27 193 L35 209 L43 193" stroke="#111" strokeWidth="2.5" fill="none"/>
- <path d="M64 25 L111 90 Q88 111 77 128 Q67 147 112 177 Q132 191 147 202" stroke="#777" strokeWidth="3" strokeDasharray="5 8" strokeLinecap="round" fill="none"/>
- <path d="M72 25 L120 89 M108 84 L123 94 L119 77" stroke="#111" strokeWidth="2.5" fill="none"/>
- <path d="M126 102 C88 125 99 146 134 164 M126 153 L139 167 L122 164" stroke="#111" strokeWidth="2.5" fill="none"/>
- </svg></div></div>
- <p className="mt-3 text-sm text-slate-600">تذكير: السكتة الموسيقية لها رمز خاص بها؛ هذا النشاط لتدريب حركة اليد وتتبع الأسهم، وليس لرسم رمز السكتة.</p>
+ <div className="rounded-2xl border-2 border-amber-200 bg-white p-2 sm:p-4">
+ <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-tracing.jpg" alt="ورقة نشاط تتبّع الخطوط حسب الأسهم" className="mx-auto w-full max-w-2xl h-auto rounded-lg" />
+ </div> <p className="mt-3 text-sm text-slate-600">تذكير: السكتة الموسيقية لها رمز خاص بها؛ هذا النشاط لتدريب حركة اليد وتتبع الأسهم، وليس لرسم رمز السكتة.</p>
  </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
