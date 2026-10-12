@@ -206,6 +206,51 @@ function FlagIllustration({ country }: { country: 'oman' | 'japan' | 'france' })
   )
 }
 
+
+function RhythmBlocksWarmup() {
+  const [stage, setStage] = useState(0)
+  const steps = [
+    { title: '١. لاحظ الوحدة الأساسية', description: 'الوحدة الخضراء تمثّل وحدة كاملة، وتتكوّن هنا من أربع وحدات صغيرة.', groups: [4] },
+    { title: '٢. اقسمها إلى حزمتين متساويتين', description: 'كل حزمة حمراء تضم وحدتين، والحزمتان معًا تساويان الوحدة الخضراء.', groups: [2, 2] },
+    { title: '٣. قسّم كل حزمة إلى وحدتين أصغر', description: 'كل جزء أزرق يمثّل وحدة صغيرة واحدة؛ أربع وحدات صغيرة تكوّن الوحدة الكاملة.', groups: [1, 1, 1, 1] },
+    { title: '٤. اجمع الأجزاء من جديد', description: 'عند جمع الأجزاء الأربعة نحصل على وحدة كاملة مثل الوحدة الخضراء.', groups: [4] },
+  ]
+  const current = steps[stage]
+  const colors = ['#e84b32', '#4c8ed9', '#b79bc9', '#8fc96c']
+  return (
+    <div className="rounded-3xl bg-white p-4 md:p-6">
+      <p className="text-lg font-extrabold mb-2">نشاط عملي: قسّم الوحدة الإيقاعية ثم اجمعها</p>
+      <p className="text-ink/75 mb-4">شاهد كيف تتحوّل الوحدة الكاملة إلى أجزاء متساوية، ثم كيف نعيد جمعها.</p>
+      <div className="rounded-2xl bg-[#f1eefb] p-3 md:p-5 mb-4">
+        <svg viewBox="0 0 340 150" role="img" aria-label="مكعبات ملوّنة توضّح تقسيم الوحدة الإيقاعية وتجميعها" className="w-full max-w-xl mx-auto">
+          <g transform="translate(16 18)">
+            <rect x="0" y="14" width="308" height="40" rx="4" fill="#8fc96c" stroke="#467b37" strokeWidth="1.5"/>
+            {[0,1,2,3].map(i => <g key={i}><rect x={i*77+7} y="4" width="63" height="13" rx="2" fill="#a8d98b" stroke="#467b37"/><line x1={i*77+77} y1="14" x2={i*77+77} y2="54" stroke="#467b37" strokeDasharray="3 3"/></g>)}
+            <text x="154" y="39" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#173b16">وحدة كاملة</text>
+          </g>
+          <path d="M170 78 V91 M164 85 L170 91 L176 85" stroke="#6750a4" strokeWidth="2" fill="none"/>
+          {current.groups.map((n, i) => {
+            const count = current.groups.length
+            const w = Math.min(308 / count - 5, 303)
+            const x = 16 + i * (308 / count)
+            const color = stage === 1 ? colors[0] : stage === 2 ? colors[1] : stage === 3 ? colors[3] : colors[2]
+            return <g key={i}><rect x={x} y="103" width={w} height="27" rx="3" fill={color} stroke="#663b45" strokeWidth="1.2"/>{Array.from({length:Math.min(n,4)},(_,j)=><rect key={j} x={x+4+j*(w-8)/n} y="96" width={(w-12)/n} height="8" rx="1" fill={color} stroke="#663b45" strokeWidth=".8"/>)}<text x={x+w/2} y="120" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#fff">{n===4?'كاملة':String(n)+' من ٤'}</text></g>
+          })}
+        </svg>
+      </div>
+      <div className="rounded-2xl bg-amber-50 p-4 mb-4">
+        <p className="font-extrabold text-lg">{current.title}</p>
+        <p className="mt-1">{current.description}</p>
+        <p className="mt-2 text-sm text-ink/65">الخطوة {stage + 1} من {steps.length}</p>
+      </div>
+      <div className="flex flex-wrap gap-3">
+        <button type="button" disabled={stage === 0} onClick={() => setStage(s => s - 1)} className="rounded-full border-2 border-ink/15 px-5 py-3 font-extrabold disabled:opacity-40">السابق</button>
+        {stage < steps.length - 1 ? <button type="button" onClick={() => setStage(s => s + 1)} className="rounded-full bg-amber-400 px-6 py-3 font-extrabold hover:bg-amber-500">الخطوة التالية ←</button> : <button type="button" onClick={() => setStage(0)} className="rounded-full bg-emerald-500 px-6 py-3 font-extrabold text-white hover:bg-emerald-600">أعد النشاط ↻</button>}
+      </div>
+    </div>
+  )
+}
+
 export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   const [choice, setChoice] = useState<number | null>(null)
   const activity = warmups[lesson.title] ?? {
@@ -214,11 +259,14 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
     answer: 0,
   }
   const isNationalAnthem = lesson.title === 'النشيد الوطني'
+  const isRhythmFigure = lesson.title === 'الشكل الإيقاعي (♫)'
   return (
     <section className="rounded-[2rem] bg-gradient-to-br from-amber-100 via-white to-sky-100 border-2 border-white p-5 md:p-7 shadow-chunky">
       <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">{lesson.title === 'الشكل الإيقاعي (♫)' ? <RhythmFigure className="w-12 h-12 text-ink" /> : '💡'}</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2><p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p></div></div>
-      {lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
-      {lesson.title === 'الحِدّة والغلظة – السرعة والبطء' ? null : lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
+      {lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
+      {isRhythmFigure ? (
+        <RhythmBlocksWarmup />
+      ) : lesson.title === 'الحِدّة والغلظة – السرعة والبطء' ? null : lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
         <ClockWarmup />
       ) : lesson.title === 'اللعبة الشعبية (حبّوه موه تدوري)' ? (
         <HabouhWarmup />
@@ -231,7 +279,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
-      {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
+      {choice !== null && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
       {lesson.warmupVideoUrl && (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
