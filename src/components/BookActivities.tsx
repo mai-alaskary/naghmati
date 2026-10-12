@@ -20,6 +20,17 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const [shadingMatches,setShadingMatches]=useState<Record<string,string>>({})
  const [flagClues,setFlagClues]=useState<Record<string,string>>({})
  const [flagDragged,setFlagDragged]=useState<string|null>(null)
+ const [dynamicsNumbers,setDynamicsNumbers]=useState<Record<number,string>>({})
+ const [activeAudio,setActiveAudio]=useState<number|null>(null)
+ function playMusicSample(index:number){
+  const AudioContextClass=(window as any).AudioContext||(window as any).webkitAudioContext
+  if(!AudioContextClass)return
+  const ctx=new AudioContextClass(),now=ctx.currentTime
+  const notes=index===0?[220,196,220]:index===1?[880,1046,880]:index===2?[440,440,440]:[660,660,660,660,660,660]
+  const beat=index===2?0.75:index===3?0.16:0.4
+  notes.forEach((freq,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain(),start=now+i*beat;osc.type='triangle';osc.frequency.value=freq;osc.connect(g);g.connect(ctx.destination);g.gain.setValueAtTime(0.0001,start);g.gain.exponentialRampToValueAtTime(0.12,start+0.02);g.gain.exponentialRampToValueAtTime(0.0001,start+beat*0.75);osc.start(start);osc.stop(start+beat*0.8)})
+  setActiveAudio(index);window.setTimeout(()=>setActiveAudio(v=>v===index?null:v),Math.ceil((notes.length*beat+0.3)*1000));window.setTimeout(()=>ctx.close(),Math.ceil((notes.length*beat+1)*1000))
+ }
  const tracingCanvas=useRef<HTMLCanvasElement|null>(null)
  const tracingDrawing=useRef(false)
  const [tracingColor,setTracingColor]=useState('#ef4444')
@@ -59,6 +70,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const shading=lessonTitle==='تدريبات صوتية بالتظليلات'
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
+ const dynamicsActivity=/الحدة والغلظة/.test(lessonTitle)
  const noteBalloons=[
   {id:0,type:'rest',left:25.9,top:20.6,width:13.0,height:18.2},
   {id:1,type:'note',left:47.5,top:11.1,width:12.3,height:17.8},
@@ -79,8 +91,22 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const matchDone=PROMPTS.every(p=>matches[p.id]===p.answer)
  const ready=full&&!!grade.trim()&&(!anthem||(puzzleDone&&(!flagActivity?matchDone:true)))&&(!shading||shadingDone)&&(!flagActivity||flagCluesDone)&&(!rhythmActivity||rhythmActivityDone)
  function swap(a:number,b:number){setTiles(old=>{const next=[...old];[next[a],next[b]]=[next[b],next[a]];return next});setSelected(null)}
- function send(){onSubmit?.();const msg=['تسليم أنشطة الكتاب - نغماتي','الدرس: '+lessonTitle,'الاسم الرباعي: '+name.trim(),'الصف: '+grade.trim(),...(rhythmActivity?['النشاط التفاعلي للشكل الإيقاعي: '+(rhythmActivityDone?'أفادت الطالبة بإكماله':'غير مكتمل'),'رابط النشاط: https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html']:[]),...(noteColoringActivity?['تلوين البالونات: النوار '+notesColored+'/'+noteBalloons.filter(b=>b.type==='note').length+'، العدد الذي كتبته: '+(noteCount||'لم يُكتب')+'؛ السكتة '+restsColored+'/'+noteBalloons.filter(b=>b.type==='rest').length+'، العدد الذي كتبته: '+(restCount||'لم يُكتب')]:[]),...(anthem?[(flagActivity?'النشاط الثاني':'النشاط الأول')+' - تركيب العلم: '+(puzzleDone?'مكتمل':'غير مكتمل'),...(!flagActivity?['النشاط الثاني - توصيل الصور بالجمل: '+PROMPTS.map(p=>p.text+' ← '+(PICTURES.find(c=>c.id===matches[p.id])?.label||'لم تُجب')).join('؛ ')]:[])]:[]),...(flagActivity?['نشاط معاني ألوان ورموز العلم: '+flagClueItems.map(x=>x.meaning+' ← '+(flagClues[x.id]===x.id?x.label:'غير مكتمل')).join('؛ ')]:[]),...(shading?['توصيل أسماء التظليلات بالرموز: '+shadingItems.map(x=>x.name+' ← '+(shadingMatches[x.id]===x.id?'صحيح':'غير مكتمل')).join('؛ ')]:[])].join('\n');window.open('https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
+ function send(){onSubmit?.();const msg=['تسليم أنشطة الكتاب - نغماتي','الدرس: '+lessonTitle,'الاسم الرباعي: '+name.trim(),'الصف: '+grade.trim(),...(rhythmActivity?['النشاط التفاعلي للشكل الإيقاعي: '+(rhythmActivityDone?'أفادت الطالبة بإكماله':'غير مكتمل'),'رابط النشاط: https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html']:[]),...(dynamicsActivity?['نشاط الاستماع - الأرقام: '+[{id:0,label:'الطبل'},{id:1,label:'الأرنب'},{id:2,label:'السلحفاة'},{id:3,label:'المثلث الموسيقي'}].map(x=>x.label+': '+(dynamicsNumbers[x.id]||'لم يُجب')).join('؛ ')]:[]),...(noteColoringActivity?['تلوين البالونات: النوار '+notesColored+'/'+noteBalloons.filter(b=>b.type==='note').length+'، العدد الذي كتبته: '+(noteCount||'لم يُكتب')+'؛ السكتة '+restsColored+'/'+noteBalloons.filter(b=>b.type==='rest').length+'، العدد الذي كتبته: '+(restCount||'لم يُكتب')]:[]),...(anthem?[(flagActivity?'النشاط الثاني':'النشاط الأول')+' - تركيب العلم: '+(puzzleDone?'مكتمل':'غير مكتمل'),...(!flagActivity?['النشاط الثاني - توصيل الصور بالجمل: '+PROMPTS.map(p=>p.text+' ← '+(PICTURES.find(c=>c.id===matches[p.id])?.label||'لم تُجب')).join('؛ ')]:[])]:[]),...(flagActivity?['نشاط معاني ألوان ورموز العلم: '+flagClueItems.map(x=>x.meaning+' ← '+(flagClues[x.id]===x.id?x.label:'غير مكتمل')).join('؛ ')]:[]),...(shading?['توصيل أسماء التظليلات بالرموز: '+shadingItems.map(x=>x.name+' ← '+(shadingMatches[x.id]===x.id?'صحيح':'غير مكتمل')).join('؛ ')]:[])].join('\n');window.open('https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
+ {dynamicsActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
+ <h4 className="font-extrabold text-lg">نشاط الاستماع: الحِدّة والغلظة والسرعة والبطء 🎧</h4>
+ <p className="my-2">استمع إلى النماذج الموسيقية الأربعة، ثم اكتب رقم الاستماع في المربع أسفل الصورة المناسبة. يمكنك إعادة الاستماع أكثر من مرة.</p>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+ {[{id:0,emoji:'🥁',label:'الطبل'},{id:1,emoji:'🐇',label:'الأرنب'},{id:2,emoji:'🐢',label:'السلحفاة'},{id:3,emoji:'🔺',label:'المثلث الموسيقي'}].map(item=><div key={item.id} className="rounded-xl border-2 border-slate-200 bg-white p-3 text-center">
+ <div className="mx-auto flex h-32 items-center justify-center rounded-lg bg-slate-50 text-7xl" role="img" aria-label={item.label}>{item.emoji}</div>
+ <p className="mt-2 font-extrabold">{item.label}</p>
+ <button type="button" onClick={()=>playMusicSample(item.id)} className="mt-2 rounded-full bg-violet-100 px-4 py-2 font-bold text-violet-900">{activeAudio===item.id?'▶ يُشغّل الآن':'▶ استمع للنموذج الموسيقي'}</button>
+ <label className="mt-3 flex items-center justify-center gap-2 font-bold">رقم الاستماع <input type="number" min="1" max="4" step="1" inputMode="numeric" value={dynamicsNumbers[item.id]||''} onChange={e=>setDynamicsNumbers(old=>({...old,[item.id]:e.target.value}))} className="w-20 rounded-lg border-2 border-violet-200 p-2 text-center text-xl" placeholder="—" aria-label={'رقم الاستماع لـ '+item.label}/></label>
+ </div>)}
+ </div>
+ <button type="button" onClick={()=>setDynamicsNumbers({})} className="mt-3 rounded-full border bg-white px-4 py-2 font-bold">مسح الأرقام وإعادة النشاط</button>
+ <p className="mt-2 text-sm text-slate-600">النماذج الصوتية مولّدة داخل النشاط لتوضيح الفرق بين الحدة والغلظة والسرعة والبطء.</p>
+ </div>}
  {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط: لوّن بالونات النوار والسكتة 🎈</h4>
  <p className="my-2">اختَر اللون من لوحة الألوان، ثم اضغط داخل البالونة في الصورة لتلوينها. يمكنك تغيير اللون في أي وقت.</p>
