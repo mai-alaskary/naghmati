@@ -3,6 +3,7 @@ import { getGrade } from '@/content/curriculum'
 import { gradeTheme, unitColors } from '@/lib/theme'
 import { img } from '@/lib/images'
 import { lessonKey, useStars, useLessonSteps } from '@/lib/progress'
+import RhythmFigure from '@/components/RhythmFigure'
 
 export const Route = createFileRoute('/grade/$gradeId')({
   loader: ({ params }) => {
@@ -90,7 +91,7 @@ function GradePage() {
                     >
                       <div className="flex items-start justify-between">
                         <span className="text-5xl transition group-hover:scale-110 group-hover:rotate-[-8deg]">
-                          {lesson.emoji}
+                          {grade.id === 'grade-4' && unit.id === 'u1' && lesson.id === 'lesson3' ? <RhythmFigure className="w-14 h-14 text-ink" /> : lesson.emoji}
                         </span>
                         <span className={`rounded-full ${t.chip} text-sm font-bold px-3 py-1`}>الدرس {li + 1}</span>
                       </div>
