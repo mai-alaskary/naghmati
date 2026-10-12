@@ -8,6 +8,7 @@ import FlagColoring from '@/components/FlagColoring'
 import Quiz from '@/components/Quiz'
 import ActivityCard, { isActivityReady } from '@/components/ActivityCard'
 import BookActivities from '@/components/BookActivities'
+import RhythmFigure from '@/components/RhythmFigure'
 
 export const Route = createFileRoute('/lesson/$gradeId/$lessonId')({
   loader: ({ params }) => {
@@ -59,11 +60,11 @@ function LessonPage() {
           </nav>
           <div className="flex items-center gap-4">
             <span className="grid place-items-center w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white/25 text-5xl md:text-6xl shrink-0">
-              {isSixteenthNoteLesson ? <SixteenthNotes className="w-14 h-14 text-white" /> : lesson.emoji}
+              {isSixteenthNoteLesson ? <RhythmFigure className="w-14 h-14 text-white" /> : lesson.emoji}
             </span>
             <h1 className="flex items-center gap-3 text-4xl md:text-5xl font-extrabold drop-shadow-sm">
               {isSixteenthNoteLesson ? 'الشكل الإيقاعي' : lesson.title}
-              {isSixteenthNoteLesson && <SixteenthNotes className="w-12 h-12 text-white" />}
+              {isSixteenthNoteLesson && <RhythmFigure className="w-12 h-12 text-white" />}
             </h1>
           </div>
           <div className="mt-6 flex flex-wrap gap-2">
@@ -205,20 +206,6 @@ function LessonPage() {
   )
 }
 
-function SixteenthNotes({ className = '' }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 76" aria-label="الشكل الإيقاعي بثلاث نغمات" role="img" className={className} fill="currentColor">
-      <ellipse cx="17" cy="61" rx="12" ry="8" transform="rotate(-25 17 61)" />
-      <ellipse cx="47" cy="61" rx="12" ry="8" transform="rotate(-25 47 61)" />
-      <ellipse cx="77" cy="61" rx="12" ry="8" transform="rotate(-25 77 61)" />
-      <path d="M27 59 V13 H33 V57 Z" />
-      <path d="M57 59 V13 H63 V57 Z" />
-      <path d="M87 59 V13 H93 V57 Z" />
-      <path d="M30 12 H93 V19 H30 Z" />
-      <path d="M30 23 H63 V30 H30 Z" />
-    </svg>
-  )
-}
 
 function SectionTitle({ n, title, emoji, sub }: { n: number; title: string; emoji: string; sub?: string }) {
   return (
