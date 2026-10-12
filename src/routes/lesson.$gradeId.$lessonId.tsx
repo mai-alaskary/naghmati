@@ -234,13 +234,35 @@ const rhythmVideos = [
 
 function StoryJumperBook() {
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://www.storyjumper.com/script/storyjumper-embed.js'
-    script.async = true
-    script.defer = true
-    document.body.appendChild(script)
+    const w = window as any
+    let attempts = 0
+    let timer: ReturnType<typeof setTimeout> | undefined
+
+    const initializeBook = () => {
+      if (typeof w.SJMakeBookOpenLightBox === 'function') {
+        w.SJMakeBookOpenLightBox()
+        return
+      }
+      if (attempts < 80) {
+        attempts += 1
+        timer = setTimeout(initializeBook, 100)
+      }
+    }
+
+    if (!w.SJScriptLoaded) {
+      w.SJScriptLoaded = true
+      const script = document.createElement('script')
+      script.src = 'https://www.storyjumper.com/script/storyjumper-embed.js'
+      script.async = true
+      script.defer = true
+      script.onload = initializeBook
+      document.head.appendChild(script)
+    } else {
+      initializeBook()
+    }
+
     return () => {
-      script.remove()
+      if (timer) clearTimeout(timer)
     }
   }, [])
 
@@ -250,8 +272,7 @@ function StoryJumperBook() {
       <div className="mx-auto w-full max-w-[480px]">
         <a
           href="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
-          target="_blank"
-          rel="noreferrer"
+          rel="nofollow"
           className="storyjumper-book block"
           aria-label="افتح كتاب سلامتي هي مهمتي"
         >
@@ -267,7 +288,7 @@ function StoryJumperBook() {
           rel="noreferrer"
           className="mt-3 block text-center text-sm font-bold text-violet-700 underline underline-offset-4"
         >
-          افتح الكتاب مباشرة
+          لو ما فتحش الكتاب داخل الصفحة، افتحه مباشرة
         </a>
       </div>
     </div>
