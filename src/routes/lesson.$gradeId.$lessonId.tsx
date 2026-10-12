@@ -207,13 +207,15 @@ function LessonPage() {
 
 function SixteenthNotes({ className = '' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 100 76" aria-label="علامة نغمتين ست عشريتين" role="img" className={className} fill="currentColor">
-      <ellipse cx="20" cy="61" rx="12" ry="8" transform="rotate(-25 20 61)" />
-      <ellipse cx="58" cy="61" rx="12" ry="8" transform="rotate(-25 58 61)" />
-      <path d="M30 59 V13 H36 V57 Z" />
-      <path d="M68 59 V13 H74 V57 Z" />
-      <path d="M33 12 H74 V19 H33 Z" />
-      <path d="M38 23 H69 V30 H38 Z" />
+    <svg viewBox="0 0 100 76" aria-label="الشكل الإيقاعي بثلاث نغمات" role="img" className={className} fill="currentColor">
+      <ellipse cx="17" cy="61" rx="12" ry="8" transform="rotate(-25 17 61)" />
+      <ellipse cx="47" cy="61" rx="12" ry="8" transform="rotate(-25 47 61)" />
+      <ellipse cx="77" cy="61" rx="12" ry="8" transform="rotate(-25 77 61)" />
+      <path d="M27 59 V13 H33 V57 Z" />
+      <path d="M57 59 V13 H63 V57 Z" />
+      <path d="M87 59 V13 H93 V57 Z" />
+      <path d="M30 12 H93 V19 H30 Z" />
+      <path d="M30 23 H63 V30 H30 Z" />
     </svg>
   )
 }
