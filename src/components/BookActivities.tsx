@@ -27,7 +27,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const shading=lessonTitle==='تدريبات صوتية بالتظليلات'
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
- const noteBalloons=[{id:0,type:'note',x:105,y:99},{id:1,type:'rest',x:178,y:67},{id:2,type:'note',x:250,y:83},{id:3,type:'rest',x:315,y:110},{id:4,type:'rest',x:145,y:165},{id:5,type:'note',x:220,y:175},{id:6,type:'rest',x:285,y:190},{id:7,type:'note',x:85,y:185}] as const
+ const noteBalloons=[{id:0,type:'note',x:105,y:85},{id:1,type:'rest',x:178,y:53},{id:2,type:'note',x:250,y:83},{id:3,type:'rest',x:315,y:110},{id:4,type:'rest',x:145,y:165},{id:5,type:'note',x:220,y:175},{id:6,type:'rest',x:285,y:190},{id:7,type:'note',x:85,y:185}] as const
  const notesColored=noteBalloons.filter(b=>b.type==='note'&&balloonColors[b.id]==='#ef4444').length
  const restsColored=noteBalloons.filter(b=>b.type==='rest'&&balloonColors[b.id]==='#22c55e').length
  const coloringDone=notesColored===noteBalloons.filter(b=>b.type==='note').length&&restsColored===noteBalloons.filter(b=>b.type==='rest').length
