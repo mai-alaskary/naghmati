@@ -245,7 +245,7 @@ function RhythmVideoActivity({ index, onIndexChange }: { index: number; onIndexC
         المتصفح لا يدعم تشغيل الفيديو. افتح الرابط المباشر لتجربته.
       </video>
       <p className="mt-3 text-sm font-semibold text-ink/65">
-        لو الفيديو ما اشتغلش داخل الصفحة، <a href={video.src} target="_blank" rel="noreferrer" className="text-violet-700 underline underline-offset-4">افتح الفيديو مباشرة</a>.
+        <a href={video.src} target="_blank" rel="noreferrer" className="text-violet-700 underline underline-offset-4">افتح الفيديو مباشرة</a>.
       </p>
       <div className="mt-4 flex items-center justify-between gap-3">
         <button type="button" onClick={() => onIndexChange(Math.max(0, index - 1))} disabled={index === 0} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold disabled:cursor-not-allowed disabled:opacity-40">→ السابق</button>
