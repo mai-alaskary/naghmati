@@ -27,7 +27,16 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const shading=lessonTitle==='تدريبات صوتية بالتظليلات'
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
- const noteBalloons=[{id:0,type:'note',x:105,y:85},{id:1,type:'rest',x:178,y:53},{id:2,type:'note',x:250,y:83},{id:3,type:'rest',x:315,y:110},{id:4,type:'rest',x:145,y:165},{id:5,type:'note',x:220,y:175},{id:6,type:'rest',x:285,y:190},{id:7,type:'note',x:85,y:185}] as const
+ const noteBalloons=[
+  {id:0,type:'rest',left:25.9,top:14.6,width:13.0,height:18.2},
+  {id:1,type:'note',left:47.5,top:5.1,width:12.3,height:17.8},
+  {id:2,type:'note',left:41.4,top:21.9,width:13.0,height:22.6},
+  {id:3,type:'rest',left:61.2,top:25.0,width:13.0,height:20.6},
+  {id:4,type:'note',left:27.5,top:38.4,width:13.0,height:20.7},
+  {id:5,type:'rest',left:36.1,top:32.3,width:12.1,height:22.7},
+  {id:6,type:'rest',left:50.8,top:28.8,width:12.8,height:22.7},
+  {id:7,type:'note',left:57.1,top:43.1,width:12.8,height:20.4}
+ ] as const
  const notesColored=noteBalloons.filter(b=>b.type==='note'&&balloonColors[b.id]==='#ef4444').length
  const restsColored=noteBalloons.filter(b=>b.type==='rest'&&balloonColors[b.id]==='#22c55e').length
  const coloringDone=notesColored===noteBalloons.filter(b=>b.type==='note').length&&restsColored===noteBalloons.filter(b=>b.type==='rest').length
@@ -50,7 +59,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  </div>
  <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-xl border-2 border-amber-200 bg-white">
  <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-balloons.jpg" alt="ورقة نشاط بالونات النوار والسكتة للتلوين" className="block w-full h-auto" style={{position:'relative',zIndex:0}} />
- {noteBalloons.map(balloon=><button key={balloon.id} type="button" aria-label={balloon.type==='note'?'بالونة النوار':'بالونة السكتة'} title={balloon.type==='note'?'بالونة النوار':'بالونة السكتة'} onClick={()=>setBalloonColors(old=>({...old,[balloon.id]:selectedBalloonColor==='#ffffff'?'':selectedBalloonColor}))} className="absolute border-0 rounded-full p-0" style={{left:(balloon.x/400*100-5.75)+'%',top:(balloon.y/300*100-9.5)+'%',width:'11.5%',height:'19%',backgroundColor:balloonColors[balloon.id]||'transparent',opacity:balloonColors[balloon.id]?0.58:0.01,cursor:'pointer',zIndex:1}} />)}
+ {noteBalloons.map(balloon=><button key={balloon.id} type="button" aria-label={balloon.type==='note'?'بالونة النوار':'بالونة السكتة'} title={balloon.type==='note'?'بالونة النوار':'بالونة السكتة'} onClick={()=>setBalloonColors(old=>({...old,[balloon.id]:selectedBalloonColor==='#ffffff'?'':selectedBalloonColor}))} className="absolute border-0 p-0" style={{left:balloon.left+'%',top:balloon.top+'%',width:balloon.width+'%',height:balloon.height+'%',borderRadius:'48% 48% 45% 45%',backgroundColor:balloonColors[balloon.id]||'transparent',opacity:balloonColors[balloon.id]?0.58:0.01,cursor:'pointer',zIndex:1}} />)}
  </div> <p className="mt-2 text-center text-sm text-slate-600">اضغط على البالونات في الصورة بعد اختيار اللون. زر «مسح اللون» يعيد البالونة إلى شكلها الأصلي.</p>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
  <label className="rounded-xl bg-red-50 border border-red-200 p-3 text-center"><span className="block font-extrabold text-red-700">اكتب عدد بالونات النوار</span><input type="number" min="0" max="4" step="1" inputMode="numeric" value={noteCount} onChange={e=>setNoteCount(e.target.value)} aria-label="عدد بالونات النوار" className="mx-auto mt-2 block w-24 rounded-lg border-2 border-red-300 bg-white p-2 text-center text-xl font-extrabold" placeholder="العدد" /></label>
