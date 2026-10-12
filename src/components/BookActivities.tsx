@@ -28,14 +28,14 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
  const noteBalloons=[
-  {id:0,type:'rest',left:25.9,top:14.6,width:13.0,height:18.2},
-  {id:1,type:'note',left:47.5,top:5.1,width:12.3,height:17.8},
-  {id:2,type:'note',left:41.4,top:21.9,width:13.0,height:22.6},
-  {id:3,type:'rest',left:61.2,top:25.0,width:13.0,height:20.6},
-  {id:4,type:'note',left:27.5,top:38.4,width:13.0,height:20.7},
-  {id:5,type:'rest',left:36.1,top:32.3,width:12.1,height:22.7},
-  {id:6,type:'rest',left:50.8,top:28.8,width:12.8,height:22.7},
-  {id:7,type:'note',left:57.1,top:43.1,width:12.8,height:20.4}
+  {id:0,type:'rest',left:24.9,top:34.2,width:17.2,height:24.0},
+  {id:1,type:'note',left:53.6,top:21.5,width:16.3,height:25.9},
+  {id:2,type:'note',left:45.6,top:31.7,width:17.0,height:29.7},
+  {id:3,type:'rest',left:71.7,top:36.3,width:17.2,height:26.8},
+  {id:4,type:'note',left:27.1,top:53.6,width:17.0,height:27.6},
+  {id:5,type:'rest',left:38.6,top:45.8,width:16.8,height:30.6},
+  {id:6,type:'rest',left:57.9,top:40.9,width:17.0,height:30.4},
+  {id:7,type:'note',left:66.0,top:58.4,width:17.3,height:28.7}
  ] as const
  const notesColored=noteBalloons.filter(b=>b.type==='note'&&balloonColors[b.id]==='#ef4444').length
  const restsColored=noteBalloons.filter(b=>b.type==='rest'&&balloonColors[b.id]==='#22c55e').length
