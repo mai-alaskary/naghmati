@@ -22,6 +22,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const [flagDragged,setFlagDragged]=useState<string|null>(null)
  const [dynamicsNumbers,setDynamicsNumbers]=useState<Record<number,string>>({})
  const [activeAudio,setActiveAudio]=useState<number|null>(null)
+ const [folkMatches,setFolkMatches]=useState<Record<string,any>>({})
  function playMusicSample(index:number){
   const AudioContextClass=(window as any).AudioContext||(window as any).webkitAudioContext
   if(!AudioContextClass)return
@@ -71,6 +72,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
  const dynamicsActivity=/الحِدّة والغلظة|الحدة والغلظة|السرعة والبطء/.test(lessonTitle)
+ const folkGameActivity=/اللعبة الشعبية.*حبّوه موه تدوري|حبّوه موه تدوري/.test(lessonTitle)
  const noteBalloons=[
   {id:0,type:'rest',left:25.9,top:20.6,width:13.0,height:18.2},
   {id:1,type:'note',left:47.5,top:11.1,width:12.3,height:17.8},
@@ -93,6 +95,20 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  function swap(a:number,b:number){setTiles(old=>{const next=[...old];[next[a],next[b]]=[next[b],next[a]];return next});setSelected(null)}
  function send(){onSubmit?.();const msg=['تسليم أنشطة الكتاب - نغماتي','الدرس: '+lessonTitle,'الاسم الرباعي: '+name.trim(),'الصف: '+grade.trim(),...(rhythmActivity?['النشاط التفاعلي للشكل الإيقاعي: '+(rhythmActivityDone?'أفادت الطالبة بإكماله':'غير مكتمل'),'رابط النشاط: https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html']:[]),...(dynamicsActivity?['نشاط الاستماع - الأرقام: '+[{id:0,label:'الطبل'},{id:1,label:'الأرنب'},{id:2,label:'السلحفاة'},{id:3,label:'المثلث الموسيقي'}].map(x=>x.label+': '+(dynamicsNumbers[x.id]||'لم يُجب')).join('؛ ')]:[]),...(noteColoringActivity?['تلوين البالونات: النوار '+notesColored+'/'+noteBalloons.filter(b=>b.type==='note').length+'، العدد الذي كتبته: '+(noteCount||'لم يُكتب')+'؛ السكتة '+restsColored+'/'+noteBalloons.filter(b=>b.type==='rest').length+'، العدد الذي كتبته: '+(restCount||'لم يُكتب')]:[]),...(anthem?[(flagActivity?'النشاط الثاني':'النشاط الأول')+' - تركيب العلم: '+(puzzleDone?'مكتمل':'غير مكتمل'),...(!flagActivity?['النشاط الثاني - توصيل الصور بالجمل: '+PROMPTS.map(p=>p.text+' ← '+(PICTURES.find(c=>c.id===matches[p.id])?.label||'لم تُجب')).join('؛ ')]:[])]:[]),...(flagActivity?['نشاط معاني ألوان ورموز العلم: '+flagClueItems.map(x=>x.meaning+' ← '+(flagClues[x.id]===x.id?x.label:'غير مكتمل')).join('؛ ')]:[]),...(shading?['توصيل أسماء التظليلات بالرموز: '+shadingItems.map(x=>x.name+' ← '+(shadingMatches[x.id]===x.id?'صحيح':'غير مكتمل')).join('؛ ')]:[])].join('\n');window.open('https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer')}
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
+ {folkGameActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
+ <h4 className="font-extrabold text-lg">نشاط توصيل عبارات اللعبة الشعبية بالصور 🎵</h4>
+ <p className="my-2">صِل كل عبارة من العمود (أ) بالصورة المناسبة لها في العمود (ب). اضغط على العبارة أولًا، ثم اضغط على الصورة المناسبة.</p>
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+ <div className="rounded-xl border-2 border-rose-300 bg-rose-50 p-3">
+ <h5 className="mb-3 text-center font-extrabold">العمود (أ) — العبارات</h5>
+ {[{id:0,text:'أدور إبرة'},{id:1,text:'عشرة'},{id:2,text:'حال البيض'},{id:3,text:'حال الكيس'}].map(item=><button key={item.id} type="button" onClick={()=>setFolkMatches(old=>({...old,selectedPhrase:item.id}))} className={'mb-3 w-full rounded-xl border-2 p-3 text-lg font-bold '+(folkMatches.selectedPhrase===item.id?'border-rose-600 bg-rose-100':'border-orange-300 bg-orange-100')}>{item.text}</button>)}
+ </div>
+ <div className="rounded-xl border-2 border-sky-300 bg-sky-50 p-3">
+ <h5 className="mb-3 text-center font-extrabold">العمود (ب) — الصور</h5>
+ {[{id:0,emoji:'👜',label:'الكيس'},{id:1,emoji:'🪡🧵',label:'إبرة وخيط'},{id:2,emoji:'🥚🥚🥚',label:'البيض'},{id:3,emoji:'🔟',label:'العدد عشرة'}].map(item=><button key={item.id} type="button" onClick={()=>{const phrase=folkMatches.selectedPhrase;if(phrase!==undefined)setFolkMatches(old=>({...old,[phrase]:item.id,selectedPhrase:undefined}))}} className={'mb-3 flex min-h-20 w-full items-center justify-center gap-3 rounded-xl border-2 p-3 '+(Object.keys(folkMatches).some(k=>k!=='selectedPhrase'&&folkMatches[k]===item.id)?'border-emerald-400 bg-emerald-50':'border-sky-200 bg-white')}><span className="text-4xl">{item.emoji}</span><span className="font-bold">{item.label}</span></button>)}
+ </div></div>
+ <div className="mt-3 flex flex-wrap items-center gap-3"><p className="font-bold">التوصيلات: {Object.keys(folkMatches).filter(k=>k!=='selectedPhrase').length} من 4</p><button type="button" onClick={()=>setFolkMatches({})} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة النشاط</button></div>
+ </div>}
  {dynamicsActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">نشاط الاستماع: الحِدّة والغلظة والسرعة والبطء 🎧</h4>
  <p className="my-2">أولًا: استمع إلى النماذج الأربعة المرقمة بالأسفل. ثانيًا: انظر إلى الصور، واكتب في المربع تحت كل صورة رقم النموذج الصوتي الذي يناسبها. لا يوجد زر استماع تحت الصور حتى لا تعرف الإجابة مسبقًا.</p>
