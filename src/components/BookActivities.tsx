@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 const PHONE = '96898778983'
 const INITIAL = [0,1,2,3,4,5,6,7,8]
 const PROMPTS = [
@@ -20,6 +20,38 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const [shadingMatches,setShadingMatches]=useState<Record<string,string>>({})
  const [flagClues,setFlagClues]=useState<Record<string,string>>({})
  const [flagDragged,setFlagDragged]=useState<string|null>(null)
+ const tracingCanvas=useRef<HTMLCanvasElement|null>(null)
+ const tracingDrawing=useRef(false)
+ const [tracingColor,setTracingColor]=useState('#ef4444')
+ const [tracingWidth,setTracingWidth]=useState(5)
+ function prepareTracingCanvas(e:React.SyntheticEvent<HTMLImageElement>){
+  const canvas=tracingCanvas.current
+  if(!canvas)return
+  const img=e.currentTarget
+  canvas.width=img.naturalWidth
+  canvas.height=img.naturalHeight
+ }
+ function tracingPoint(e:React.PointerEvent<HTMLCanvasElement>){
+  const canvas=e.currentTarget
+  const rect=canvas.getBoundingClientRect()
+  return {x:(e.clientX-rect.left)*canvas.width/rect.width,y:(e.clientY-rect.top)*canvas.height/rect.height}
+ }
+ function startTracing(e:React.PointerEvent<HTMLCanvasElement>){
+  const canvas=e.currentTarget,ctx=canvas.getContext('2d')
+  if(!ctx)return
+  canvas.setPointerCapture(e.pointerId)
+  const p=tracingPoint(e)
+  tracingDrawing.current=true
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=tracingColor;ctx.lineWidth=tracingWidth*(canvas.width/canvas.getBoundingClientRect().width);ctx.lineTo(p.x+0.1,p.y+0.1);ctx.stroke()
+ }
+ function moveTracing(e:React.PointerEvent<HTMLCanvasElement>){
+  if(!tracingDrawing.current)return
+  const canvas=e.currentTarget,ctx=canvas.getContext('2d')
+  if(!ctx)return
+  const p=tracingPoint(e);ctx.lineTo(p.x,p.y);ctx.stroke()
+ }
+ function stopTracing(){tracingDrawing.current=false}
+ function clearTracing(){const canvas=tracingCanvas.current;const ctx=canvas?.getContext('2d');if(canvas&&ctx)ctx.clearRect(0,0,canvas.width,canvas.height)}
  const flagActivity=lessonTitle==='نشيد (عَلَم بلادي)'
  const flagClueItems=[{id:'green',label:'الأخضر',meaning:'الخضرة والزراعة في البلاد'},{id:'red',label:'الأحمر',meaning:'الحرب والمعارك'},{id:'white',label:'الأبيض',meaning:'الأمن والسلام'},{id:'emblem',label:'شعار الخنجر والسيفين',meaning:'الأسلحة التقليدية العُمانية'}]
  const flagCluesDone=flagClueItems.every(x=>flagClues[x.id]===x.id)
@@ -70,8 +102,18 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  <h4 className="font-extrabold text-lg">النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️</h4>
  <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
  <div className="rounded-2xl border-2 border-amber-200 bg-white p-2 sm:p-4">
- <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-tracing.jpg" alt="ورقة نشاط تتبّع الخطوط حسب الأسهم" className="mx-auto w-full max-w-2xl h-auto rounded-lg" />
- </div> <p className="mt-3 text-sm text-slate-600">تذكير: السكتة الموسيقية لها رمز خاص بها؛ هذا النشاط لتدريب حركة اليد وتتبع الأسهم، وليس لرسم رمز السكتة.</p>
+ <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
+ <span className="font-extrabold">اختَر القلم:</span>
+ {[{value:'#ef4444',label:'أحمر'},{value:'#2563eb',label:'أزرق'},{value:'#16a34a',label:'أخضر'},{value:'#111827',label:'أسود'}].map(c=><button key={c.value} type="button" onClick={()=>setTracingColor(c.value)} aria-label={c.label} title={c.label} className={'h-9 w-9 rounded-full border-2 '+(tracingColor===c.value?'ring-4 ring-violet-300':'border-slate-300')} style={{backgroundColor:c.value}} />)}
+ <label className="flex items-center gap-2 text-sm font-bold">سُمك القلم <select value={tracingWidth} onChange={e=>setTracingWidth(Number(e.target.value))} className="rounded-lg border p-2"><option value={3}>رفيع</option><option value={5}>متوسط</option><option value={9}>سميك</option></select></label>
+ <button type="button" onClick={clearTracing} className="rounded-full border bg-white px-4 py-2 font-bold">مسح الكتابة</button>
+ </div>
+ <p className="mb-3 text-center text-sm">اكتب فوق الصورة بإصبعك أو بالقلم أو بالفأرة، واتبع الخطوط. يمكنك كتابة الأرقام داخل المربعات الفارغة.</p>
+ <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-lg touch-none">
+ <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-tracing.jpg" alt="ورقة نشاط تتبّع الخطوط وكتابة الأرقام داخل المربعات" onLoad={prepareTracingCanvas} className="block h-auto w-full" />
+ <canvas ref={tracingCanvas} className="absolute inset-0 h-full w-full touch-none" style={{touchAction:'none',cursor:'crosshair'}} onPointerDown={startTracing} onPointerMove={moveTracing} onPointerUp={stopTracing} onPointerCancel={stopTracing} onLostPointerCapture={stopTracing} />
+ </div>
+ </div> <p className="mt-3 text-sm text-slate-600">تقدر تختار لون القلم، تكتب فوق الصورة أو داخل المربعات الفارغة، وتمسح الكتابة وتعيد المحاولة في أي وقت.</p>
  </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
