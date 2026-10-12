@@ -214,19 +214,19 @@ function RhythmBlocksWarmup() {
   const [nextId, setNextId] = useState(2)
   const [dragId, setDragId] = useState<number | null>(null)
   const [workspace, setWorkspace] = useState<number[]>([1])
-  const names: Record<string, string> = { whole: 'وحدة كاملة', half: 'نصف الوحدة', quarter: 'ربع الوحدة' }
+  const names: Record<string, string> = { whole: 'النوار', half: 'الكروش', quarter: 'الدوبل كروش' }
   const colors: Record<string, string> = { whole: '#8fc96c', half: '#e84b32', quarter: '#4c8ed9', result: '#c5a6d7' }
   const makePiece = (kind: string, x: number, y: number, id: number) => ({ id, kind, x, y })
   const splitPiece = (id: number) => {
     const piece = pieces.find(p => p.id === id)
     if (!piece) return
     if (piece.kind === 'whole') {
-      const a = makePiece('half', piece.x - 48, piece.y + 72, nextId)
-      const b = makePiece('half', piece.x + 48, piece.y + 72, nextId + 1)
+      const a = makePiece('half', piece.x - 55, piece.y + 58, nextId)
+      const b = makePiece('half', piece.x + 55, piece.y + 58, nextId + 1)
       setPieces(prev => [...prev.filter(p => p.id !== id), a, b]); setWorkspace(prev => [...prev.filter(n => n !== id), a.id, b.id]); setNextId(v => v + 2); setSelected(null); setMessage('أحسنت! الوحدة الكاملة انقسمت إلى نصفين متساويين. يمكنك تقسيم كل نصف إلى جزأين أصغر.'); playCorrect()
     } else if (piece.kind === 'half') {
-      const a = makePiece('quarter', piece.x - 30, piece.y + 65, nextId)
-      const b = makePiece('quarter', piece.x + 30, piece.y + 65, nextId + 1)
+      const a = makePiece('quarter', piece.x - 38, piece.y + 58, nextId)
+      const b = makePiece('quarter', piece.x + 38, piece.y + 58, nextId + 1)
       setPieces(prev => [...prev.filter(p => p.id !== id), a, b]); setWorkspace(prev => [...prev.filter(n => n !== id), a.id, b.id]); setNextId(v => v + 2); setSelected(null); setMessage('رائع! كل نصف أصبح جزأين متساويين. أربعة أجزاء صغيرة تساوي وحدة كاملة.'); playCorrect()
     } else setMessage('هذه أصغر قطعة في النشاط؛ جرّب دمج أربع قطع زرقاء أو قطعتين حمراوين.')
   }
@@ -246,7 +246,7 @@ function RhythmBlocksWarmup() {
     const merged = makePiece(kind,x,y,id)
     setPieces(prev => [...prev.filter(p => !chosen.some(q => q.id === p.id)), merged])
     setWorkspace(prev => [...prev.filter(n => !chosen.some(q => q.id === n)), id])
-    setNextId(v => v + 1); setSelected(id); setMessage(kind === 'whole' ? 'ممتاز! قطعتان حمراوان كوّنتا وحدة كاملة خضراء.' : 'أحسنت! قطعتان زرقاوان كوّنتا نصف وحدة أحمر.'); playCorrect()
+    setNextId(v => v + 1); setSelected(id); setMessage(kind === 'whole' ? 'ممتاز! رأيتَ قطعتَي كروش جنبًا إلى جنب، ثم اندمجتا لتكوّنا نوارًا واحدًا.' : 'أحسنت! رأيتَ قطعتَي دوبل كروش جنبًا إلى جنب، ثم اندمجتا لتكوّنا كروشًا واحدًا.'); playCorrect()
   }
   const reset = () => { setPieces([{id: nextId,kind:'whole',x:0,y:0}]); setWorkspace([nextId]); setSelected(nextId); setNextId(v=>v+1); setMessage('بدأنا من جديد! اسحب القطعة الخضراء إلى مساحة العمل.'); }
   const dragStart = (id: number) => setDragId(id)
@@ -266,7 +266,7 @@ function RhythmBlocksWarmup() {
       <p className="text-lg font-extrabold mb-2">ورشة المكعبات الإيقاعية</p>
       <p className="text-ink/75 mb-4">اسحب القطع إلى اللوحة. اختر قطعة ثم فكّكها، أو ادمج القطع الصغيرة لتكوين قطعة أكبر.</p>
       <div className="grid grid-cols-3 gap-2 mb-4">
-        {(['whole','half','quarter'] as const).map(kind => <button key={kind} type="button" draggable onDragStart={() => dragStart(nextId)} onClick={() => { const id=nextId; setPieces(prev=>[...prev,makePiece(kind,0,0,id)]); setWorkspace(prev=>[...prev,id]); setSelected(id); setNextId(v=>v+1); setMessage('تمت إضافة قطعة إلى مساحة العمل. اخترها لتفكيكها أو ادمج القطع.'); }} className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-2 text-center font-extrabold hover:border-amber-300">
+        {(['whole','half','quarter'] as const).map(kind => <button key={kind} type="button" draggable onDragStart={() => dragStart(nextId)} onClick={() => { const id=nextId; setPieces(prev=>[...prev,makePiece(kind, Math.min(112, (prev.filter(p=>workspace.includes(p.id)).length % 3) * 100 - 100), Math.floor(prev.filter(p=>workspace.includes(p.id)).length / 3) * 58,id)]); setWorkspace(prev=>[...prev,id]); setSelected(id); setNextId(v=>v+1); setMessage('تمت إضافة قطعة إلى مساحة العمل. اخترها لتفكيكها أو ادمج القطع.'); }} className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-2 text-center font-extrabold hover:border-amber-300">
           <svg viewBox="0 0 100 58" className="mx-auto w-full max-w-[100px]" aria-hidden="true"><rect x={kind==='whole'?8:kind==='half'?20:31} y="20" width={kind==='whole'?84:kind==='half'?60:38} height="29" rx="2" fill={colors[kind]} stroke="#374151" strokeWidth="1.5"/>{Array.from({length:kind==='whole'?4:kind==='half'?2:1},(_,i)=><rect key={i} x={(kind==='whole'?10:kind==='half'?22:33)+i*(kind==='whole'?20:kind==='half'?28:34)} y="12" width={kind==='whole'?18:kind==='half'?24:34} height="9" rx="2" fill={colors[kind]} stroke="#374151" strokeWidth="1"/>)}</svg>
           <span className="block text-sm">{names[kind]}</span>
           <span className="block text-xs text-ink/60">اضغط للإضافة</span>
@@ -276,7 +276,13 @@ function RhythmBlocksWarmup() {
         <p className="text-sm font-extrabold text-violet-900">مساحة العمل — اسحب القطع ورتّبها هنا</p>
         <div className="relative mt-3 min-h-[185px]">
           {displayPieces.map(piece => <button key={piece.id} type="button" draggable onDragStart={()=>dragStart(piece.id)} onClick={()=>setSelected(piece.id)} style={{left:`calc(50% + ${piece.x}px)`,top:`${piece.y}px`,transform:'translateX(-50%)',backgroundColor:colors[piece.kind],zIndex:selected===piece.id?3:1}} className={`absolute w-24 rounded-lg border-2 p-2 shadow-md transition ring-offset-2 ${selected===piece.id?'ring-4 ring-amber-400':'border-slate-600'}`} aria-label={names[piece.kind]}>
-            <svg viewBox="0 0 100 46" className="w-full" aria-hidden="true"><path d="M5 13 L18 3 H94 L82 13Z" fill="#ffffff" fillOpacity=".3" stroke="#374151" strokeWidth="1.2"/><rect x="5" y="13" width="77" height="28" fill={colors[piece.kind]} stroke="#374151" strokeWidth="1.2"/><path d="M82 13 L94 3 V31 L82 41Z" fill="#000" fillOpacity=".08" stroke="#374151" strokeWidth="1.2"/>{Array.from({length:piece.kind==='whole'?4:piece.kind==='half'?2:1},(_,i)=><rect key={i} x={10+i*(piece.kind==='whole'?18:piece.kind==='half'?35:0)} y="7" width={piece.kind==='whole'?16:piece.kind==='half'?30:60} height="7" rx="1" fill={colors[piece.kind]} stroke="#374151" strokeWidth=".8"/>)}</svg>
+            <svg viewBox="0 0 100 60" className="w-full" aria-hidden="true">
+              <path d="M5 25 L18 15 H94 L82 25Z" fill="#ffffff" fillOpacity=".3" stroke="#374151" strokeWidth="1.2"/>
+              <rect x="5" y="25" width="77" height="28" fill={colors[piece.kind]} stroke="#374151" strokeWidth="1.2"/>
+              <path d="M82 25 L94 15 V43 L82 53Z" fill="#000" fillOpacity=".08" stroke="#374151" strokeWidth="1.2"/>
+              {Array.from({length:piece.kind==='whole'?4:piece.kind==='half'?2:1},(_,i)=><rect key={i} x={10+i*(piece.kind==='whole'?18:piece.kind==='half'?35:0)} y="19" width={piece.kind==='whole'?16:piece.kind==='half'?30:60} height="7" rx="1" fill={colors[piece.kind]} stroke="#374151" strokeWidth=".8"/>)}
+              {piece.kind === 'whole' ? <g stroke="#111827" strokeWidth="2.5" fill="none"><ellipse cx="50" cy="12" rx="7" ry="4" fill="#111827" transform="rotate(-20 50 12)"/><path d="M56 12 V0"/></g> : piece.kind === 'half' ? <g stroke="#111827" strokeWidth="2.5" fill="none"><ellipse cx="50" cy="12" rx="7" ry="4" fill="#111827" transform="rotate(-20 50 12)"/><path d="M56 12 V0"/></g> : <g stroke="#111827" strokeWidth="2.5" fill="none"><ellipse cx="50" cy="12" rx="7" ry="4" fill="#111827" transform="rotate(-20 50 12)"/><path d="M56 12 V0 M56 3 Q68 7 56 10"/></g>}
+            </svg>
             <span className="block text-xs font-extrabold text-slate-900">{names[piece.kind]}</span>
           </button>)}
         </div>
