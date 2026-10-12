@@ -95,17 +95,24 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
  {dynamicsActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">نشاط الاستماع: الحِدّة والغلظة والسرعة والبطء 🎧</h4>
- <p className="my-2">استمع إلى النماذج الموسيقية الأربعة، ثم اكتب رقم الاستماع في المربع أسفل الصورة المناسبة. يمكنك إعادة الاستماع أكثر من مرة.</p>
+ <p className="my-2">أولًا: استمع إلى النماذج الأربعة المرقمة بالأسفل. ثانيًا: انظر إلى الصور، واكتب في المربع تحت كل صورة رقم النموذج الصوتي الذي يناسبها. لا يوجد زر استماع تحت الصور حتى لا تعرف الإجابة مسبقًا.</p>
+ <div className="mb-5 rounded-xl border-2 border-violet-200 bg-white p-3">
+ <h5 className="mb-3 text-center font-extrabold">١. استمع إلى النماذج الصوتية بالترتيب</h5>
+ <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+ {[0,1,2,3].map(id=><button key={id} type="button" onClick={()=>playMusicSample(id)} className={'rounded-xl border-2 p-3 font-extrabold '+(activeAudio===id?'border-violet-500 bg-violet-100':'border-slate-200 bg-slate-50')}>{activeAudio===id?'▶ يُشغّل الآن':('▶ النموذج الصوتي '+(id+1))}</button>)}
+ </div>
+ <p className="mt-2 text-center text-sm text-slate-600">يمكنك تشغيل كل نموذج أكثر من مرة. تذكّر رقم النموذج ثم اختر الصورة التي يناسبها.</p>
+ </div>
+ <h5 className="mb-3 text-center font-extrabold">٢. اكتب رقم النموذج المناسب تحت كل صورة</h5>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
  {[{id:0,emoji:'🥁',label:'الطبل'},{id:1,emoji:'🐇',label:'الأرنب'},{id:2,emoji:'🐢',label:'السلحفاة'},{id:3,emoji:'🔺',label:'المثلث الموسيقي'}].map(item=><div key={item.id} className="rounded-xl border-2 border-slate-200 bg-white p-3 text-center">
  <div className="mx-auto flex h-32 items-center justify-center rounded-lg bg-slate-50 text-7xl" role="img" aria-label={item.label}>{item.emoji}</div>
  <p className="mt-2 font-extrabold">{item.label}</p>
- <button type="button" onClick={()=>playMusicSample(item.id)} className="mt-2 rounded-full bg-violet-100 px-4 py-2 font-bold text-violet-900">{activeAudio===item.id?'▶ يُشغّل الآن':'▶ استمع للنموذج الموسيقي'}</button>
- <label className="mt-3 flex items-center justify-center gap-2 font-bold">رقم الاستماع <input type="number" min="1" max="4" step="1" inputMode="numeric" value={dynamicsNumbers[item.id]||''} onChange={e=>setDynamicsNumbers(old=>({...old,[item.id]:e.target.value}))} className="w-20 rounded-lg border-2 border-violet-200 p-2 text-center text-xl" placeholder="—" aria-label={'رقم الاستماع لـ '+item.label}/></label>
+ <label className="mt-3 flex items-center justify-center gap-2 font-bold">رقم النموذج <input type="number" min="1" max="4" step="1" inputMode="numeric" value={dynamicsNumbers[item.id]||''} onChange={e=>setDynamicsNumbers(old=>({...old,[item.id]:e.target.value}))} className="w-20 rounded-lg border-2 border-violet-200 p-2 text-center text-xl" placeholder="—" aria-label={'رقم النموذج المناسب لصورة '+item.label}/></label>
  </div>)}
  </div>
  <button type="button" onClick={()=>setDynamicsNumbers({})} className="mt-3 rounded-full border bg-white px-4 py-2 font-bold">مسح الأرقام وإعادة النشاط</button>
- <p className="mt-2 text-sm text-slate-600">النماذج الصوتية مولّدة داخل النشاط لتوضيح الفرق بين الحدة والغلظة والسرعة والبطء.</p>
+ <p className="mt-2 text-sm text-slate-600">النماذج الصوتية مولّدة داخل النشاط لتوضيح الفرق بين الحِدّة والغلظة والسرعة والبطء.</p>
  </div>}
  {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط: لوّن بالونات النوار والسكتة 🎈</h4>
