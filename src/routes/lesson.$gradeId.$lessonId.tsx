@@ -222,7 +222,6 @@ const rhythmVideos = [
   {
     title: 'استمع إلى تمرين الفورتي والبيانو',
     src: 'https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_Forte_piano_p1.mov',
-    type: 'video/quicktime',
   },
   {
     title: 'استمع إلى تمرين الجاتو والاستكاتو',
@@ -243,8 +242,11 @@ function RhythmVideoActivity({ index, onIndexChange }: { index: number; onIndexC
       </div>
       <video key={video.src} controls playsInline preload="metadata" className="w-full rounded-xl bg-black" title={video.title}>
         <source src={video.src} type={video.type} />
-        المتصفح لا يدعم تشغيل الفيديو. يمكنك تجربة فتح الرابط مباشرة.
+        المتصفح لا يدعم تشغيل الفيديو. افتح الرابط المباشر لتجربته.
       </video>
+      <p className="mt-3 text-sm font-semibold text-ink/65">
+        لو الفيديو ما اشتغلش داخل الصفحة، <a href={video.src} target="_blank" rel="noreferrer" className="text-violet-700 underline underline-offset-4">افتح الفيديو مباشرة</a>.
+      </p>
       <div className="mt-4 flex items-center justify-between gap-3">
         <button type="button" onClick={() => onIndexChange(Math.max(0, index - 1))} disabled={index === 0} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold disabled:cursor-not-allowed disabled:opacity-40">→ السابق</button>
         <div className="flex gap-2" aria-label="اختيار الفيديو">
