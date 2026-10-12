@@ -47,7 +47,9 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  <ellipse cx={b.x} cy={b.y} rx="29" ry="35" fill={balloonColors[b.id]||'#fff'} stroke={balloonColors[b.id]?'#475569':'#6b6868'} strokeWidth="2.2"/>
  <path d={`M ${b.x-2} ${b.y+34} l 5 8 l 4 -7`} fill={balloonColors[b.id]||'#fff'} stroke="#6b6868" strokeWidth="1.5"/>
  <path d={`M ${b.x+3} ${b.y+41} Q 180 250 200 270`} fill="none" stroke="#777" strokeWidth="1.5"/>
- {b.type==='note'?<g fill="#252525" stroke="#252525" strokeWidth="2.5"><ellipse cx={b.x-2} cy={b.y+5} rx="7" ry="4.5" transform={`rotate(-25 ${b.x-2} ${b.y+5})`}/><path d={`M ${b.x+4} ${b.y+4} V ${b.y-19}`} fill="none"/></g>:<path d={`M ${b.x-3} ${b.y-14} q 14 8 1 17 q -7 6 4 12 q -4 -10 3 -14 q 6 -8 -8 -15`} fill="#252525" stroke="#252525" strokeWidth="1.5"/>}
+ {b.type==='note'?<g fill="#252525" stroke="#252525" strokeWidth="2.5"><ellipse cx={b.x-2} cy={b.y+5} rx="7" ry="4.5" transform={`rotate(-25 ${b.x-2} ${b.y+5})`}/><path d={`M ${b.x+4} ${b.y+4} V ${b.y-19}`} fill="none"/></g>:<g transform={`translate(${b.x-1} ${b.y-1})`} fill="#252525" stroke="#252525" strokeWidth="1.2" strokeLinejoin="round">
+   <path d="M -4 -17 C 2 -15 8 -10 7 -5 C 6 -1 2 1 1 4 C 0 7 3 10 5 13 C 7 16 5 19 2 21 C 4 16 -1 13 -3 10 C -6 6 -4 2 0 -1 C 4 -4 4 -7 1 -10 C -2 -13 -4 -14 -4 -17 Z"/>
+  </g>}
  </g>)}
  <path d="M200 270 L188 292 M200 270 L200 294 M200 270 L213 292" stroke="#444" strokeWidth="2" fill="none"/>
  </svg>
