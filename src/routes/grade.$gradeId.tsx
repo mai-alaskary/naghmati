@@ -34,6 +34,7 @@ function GradePage() {
   const [studentClass, setStudentClass] = useState('')
   const [detailsLoaded, setDetailsLoaded] = useState(false)
   const [shareAttempted, setShareAttempted] = useState(false)
+  const [achievementOpen, setAchievementOpen] = useState<Record<string, boolean>>({})
   const all = grade.units.flatMap((unit) => unit.lessons.map((lesson) => ({ unit, lesson })))
   const done = all.filter(({ unit, lesson }) => (lessonSteps[lessonKey(grade.id, `${unit.id}-${lesson.id}`)]?.length ?? 0) > 0 || (stars[lessonKey(grade.id, `${unit.id}-${lesson.id}`)] ?? 0) > 0).length
 
@@ -74,7 +75,7 @@ function GradePage() {
       '',
       'شكرًا لكِ على دعمك وتشجيعك.',
       'رابط منصة نغماتي: https://mai-alaskary.github.io/naghmati/',
-    ].join('\\n')
+    ].join('\n')
     const url = `https://wa.me/${TEACHER_WHATSAPP}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')
   }
@@ -166,10 +167,22 @@ function GradePage() {
                   <span>{collectedStars} من {possibleStars} نجمة</span>
                   <span>{unitCompleted ? 'أتممت دروس الوحدة! 🎉' : 'واصل التقدم واجمع المزيد من النجوم'}</span>
                 </div>
+                {unitCompleted && (
+                  <button
+                    type="button"
+                    onClick={() => setAchievementOpen((previous) => ({ ...previous, [unit.id]: !previous[unit.id] }))}
+                    aria-expanded={Boolean(achievementOpen[unit.id])}
+                    aria-controls={`achievement-panel-${unit.id}`}
+                    className="mt-4 flex w-full items-center justify-center gap-3 rounded-full bg-emerald-600 px-5 py-3 font-extrabold text-white shadow-chunky transition hover:bg-emerald-700"
+                  >
+                    <Share2 size={21} aria-hidden="true" />
+                    {achievementOpen[unit.id] ? 'إخفاء مشاركة الإنجاز' : 'شارك إنجازي مع معلمتي'}
+                  </button>
+                )}
               </div>
 
-              {unitCompleted && (
-                <div className="mb-6 overflow-hidden rounded-[2rem] border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-5 md:p-7 shadow-chunky">
+              {unitCompleted && achievementOpen[unit.id] && (
+                <div id={`achievement-panel-${unit.id}`} className="mb-6 overflow-hidden rounded-[2rem] border-2 border-amber-200 bg-gradient-to-br from-amber-50 via-white to-orange-50 p-5 md:p-7 shadow-chunky">
                   <div className="text-center">
                     <div className="mx-auto mb-3 grid h-20 w-20 place-items-center rounded-3xl bg-amber-100 text-amber-600 animate-bounce-in">
                       <Trophy size={48} aria-hidden="true" />
