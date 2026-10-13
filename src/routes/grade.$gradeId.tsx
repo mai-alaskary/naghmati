@@ -58,7 +58,7 @@ function GradePage() {
     }
   }, [detailsLoaded, studentName, studentClass])
 
-  const fullName = studentName.trim().split(/\\s+/).filter(Boolean).length >= 4
+  const fullName = studentName.trim().split(/\s+/).filter(Boolean).length >= 4
   const canShare = fullName && studentClass.trim().length > 0
 
   function shareAchievement(unitTitle: string, percentage: number) {
