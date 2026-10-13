@@ -209,3 +209,11 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .sol-floating-trigger, .sol-chat-backdrop, .sol-chat-drawer, .sol-message-row, .sol-typing span { animation: none !important; }
 }
+
+
+/* Uncle Sol local-answer suggestions */
+.sol-suggestions { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; margin: 0 34px 12px 0; animation: sol-message-in .25s ease both; }
+.sol-suggestions p { margin: 0 0 2px; color: #5d8982; font-size: 12px; font-weight: 800; }
+.sol-suggestions button { max-width: 100%; padding: 8px 12px; border: 1px solid #bfe4d9; border-radius: 14px; color: #176b70; background: #f1fcf8; font: inherit; font-size: 12px; font-weight: 800; text-align: right; cursor: pointer; transition: background .18s, border-color .18s; }
+.sol-suggestions button:hover { border-color: #70c8b7; background: #e3f8f0; }
+.sol-chat-messages { overflow-wrap: anywhere; }
