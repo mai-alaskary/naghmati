@@ -48,19 +48,38 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
   const rect=canvas.getBoundingClientRect()
   return {x:(e.clientX-rect.left)*canvas.width/rect.width,y:(e.clientY-rect.top)*canvas.height/rect.height}
  }
+ // يسمح بالرسم داخل الدوائر البيضاء الأربعة فقط، مع بقاء بقية الصورة محمية.
+ function tracingCircleAt(x:number,y:number,canvas:HTMLCanvasElement){
+  const circles=[
+   {x:0.455,y:0.657,r:0.032},
+   {x:0.542,y:0.657,r:0.032},
+   {x:0.455,y:0.941,r:0.032},
+   {x:0.542,y:0.941,r:0.032}
+  ]
+  return circles.some(c=>{const dx=(x/canvas.width-c.x)/c.r;const dy=(y/canvas.height-c.y)/(c.r*canvas.width/canvas.height);return dx*dx+dy*dy<=1})
+ }
+ function clipTracingToCircles(ctx:CanvasRenderingContext2D,canvas:HTMLCanvasElement){
+  const w=canvas.width,h=canvas.height
+  ctx.beginPath()
+  ;[{x:0.455,y:0.657,r:0.032},{x:0.542,y:0.657,r:0.032},{x:0.455,y:0.941,r:0.032},{x:0.542,y:0.941,r:0.032}].forEach(c=>ctx.ellipse(c.x*w,c.y*h,c.r*w,c.r*w,0,0,Math.PI*2))
+  ctx.clip()
+ }
  function startTracing(e:React.PointerEvent<HTMLCanvasElement>){
   const canvas=e.currentTarget,ctx=canvas.getContext('2d')
   if(!ctx)return
-  canvas.setPointerCapture(e.pointerId)
   const p=tracingPoint(e)
+  if(!tracingCircleAt(p.x,p.y,canvas)){tracingDrawing.current=false;return}
+  canvas.setPointerCapture(e.pointerId)
   tracingDrawing.current=true
-  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=tracingColor;ctx.lineWidth=tracingWidth*(canvas.width/canvas.getBoundingClientRect().width);ctx.lineTo(p.x+0.1,p.y+0.1);ctx.stroke()
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=tracingColor;ctx.lineWidth=tracingWidth*(canvas.width/canvas.getBoundingClientRect().width);ctx.lineTo(p.x+0.1,p.y+0.1)
+  ctx.save();clipTracingToCircles(ctx,canvas);ctx.stroke();ctx.restore()
  }
  function moveTracing(e:React.PointerEvent<HTMLCanvasElement>){
   if(!tracingDrawing.current)return
   const canvas=e.currentTarget,ctx=canvas.getContext('2d')
   if(!ctx)return
-  const p=tracingPoint(e);ctx.lineTo(p.x,p.y);ctx.stroke()
+  const p=tracingPoint(e);ctx.lineTo(p.x,p.y)
+  ctx.save();clipTracingToCircles(ctx,canvas);ctx.stroke();ctx.restore()
  }
  function stopTracing(){tracingDrawing.current=false}
  function clearTracing(){const canvas=tracingCanvas.current;const ctx=canvas?.getContext('2d');if(canvas&&ctx)ctx.clearRect(0,0,canvas.width,canvas.height)}
@@ -163,12 +182,12 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  <label className="flex items-center gap-2 text-sm font-bold">سُمك القلم <select value={tracingWidth} onChange={e=>setTracingWidth(Number(e.target.value))} className="rounded-lg border p-2"><option value={3}>رفيع</option><option value={5}>متوسط</option><option value={9}>سميك</option></select></label>
  <button type="button" onClick={clearTracing} className="rounded-full border bg-white px-4 py-2 font-bold">مسح الكتابة</button>
  </div>
- <p className="mb-3 text-center text-sm">اكتب فوق الصورة بإصبعك أو بالقلم أو بالفأرة، واتبع الخطوط. يمكنك كتابة الأرقام داخل المربعات الفارغة.</p>
+ <p className="mb-3 text-center text-sm">اكتب داخل الدوائر البيضاء الفارغة فقط بإصبعك أو بالقلم أو بالفأرة. بقية الصورة ثابتة ولا يمكن الرسم فوقها.</p>
  <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-lg touch-none">
  <img src={`${import.meta.env.BASE_URL}images/activities/${lessonTitle==='نشيد (سلامتي)'?'grade4-u2-l1-tracing.jpg':'grade1-u1-l2-tracing.jpg'}`} alt="ورقة نشاط التتبّع وكتابة الأرقام داخل المربعات" onLoad={prepareTracingCanvas} className="block h-auto w-full" />
  <canvas ref={tracingCanvas} className="absolute inset-0 h-full w-full touch-none" style={{touchAction:'none',cursor:'crosshair'}} onPointerDown={startTracing} onPointerMove={moveTracing} onPointerUp={stopTracing} onPointerCancel={stopTracing} onLostPointerCapture={stopTracing} />
  </div>
- </div> <p className="mt-3 text-sm text-slate-600">تقدر تختار لون القلم، تكتب فوق الصورة أو داخل المربعات الفارغة، وتمسح الكتابة وتعيد المحاولة في أي وقت.</p>
+ </div> <p className="mt-3 text-sm text-slate-600">تقدر تختار لون القلم وسمكه، وتكتب داخل الدوائر البيضاء الأربع فقط، وتمسح الكتابة وتعيد المحاولة في أي وقت.</p>
  </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
