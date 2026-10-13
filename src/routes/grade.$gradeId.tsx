@@ -11,6 +11,12 @@ const TEACHER_WHATSAPP = '96898778983'
 const STUDENT_NAME_KEY = 'naghmati-achievement-name-v1'
 const STUDENT_GRADE_KEY = 'naghmati-achievement-grade-v1'
 const LESSON_STARS = 5
+const ACHIEVEMENT_GIFTS = [
+  { name: 'حلوى', emoji: '🍬', color: '#fbcfe8' },
+  { name: 'لعبة', emoji: '🧸', color: '#bfdbfe' },
+  { name: 'قلم', emoji: '✏️', color: '#fde68a' },
+  { name: 'بطاقة تشجيع', emoji: '💌', color: '#bbf7d0' },
+]
 
 export const Route = createFileRoute('/grade/$gradeId')({
   loader: ({ params }) => {
@@ -35,6 +41,9 @@ function GradePage() {
   const [detailsLoaded, setDetailsLoaded] = useState(false)
   const [shareAttempted, setShareAttempted] = useState(false)
   const [achievementOpen, setAchievementOpen] = useState<Record<string, boolean>>({})
+  const [selectedGift, setSelectedGift] = useState<{ name: string; emoji: string; color: string } | null>(null)
+  const [wheelRotation, setWheelRotation] = useState(0)
+  const [wheelSpinning, setWheelSpinning] = useState(false)
   const all = grade.units.flatMap((unit) => unit.lessons.map((lesson) => ({ unit, lesson })))
   const done = all.filter(({ unit, lesson }) => (lessonSteps[lessonKey(grade.id, `${unit.id}-${lesson.id}`)]?.length ?? 0) > 0 || (stars[lessonKey(grade.id, `${unit.id}-${lesson.id}`)] ?? 0) > 0).length
 
@@ -63,12 +72,13 @@ function GradePage() {
 
   function shareAchievement(unitTitle: string, percentage: number) {
     setShareAttempted(true)
-    if (!canShare) return
+    if (!canShare || !selectedGift) return
     const message = [
       'مرحبًا معلمتي،',
       '',
       `لقد أتممت جميع دروس ${unitTitle} على منصة نغماتي.`,
       `نسبة النجوم التي جمعتها: ${percentage}%.`,
+      `هديتي الرمزية من عجلة نغماتي: ${selectedGift.emoji} ${selectedGift.name}.`,
       '',
       `الاسم الرباعي: ${studentName.trim()}`,
       `الصف الدراسي: ${studentClass.trim()}`,
@@ -78,6 +88,18 @@ function GradePage() {
     ].join('\n')
     const url = `https://wa.me/${TEACHER_WHATSAPP}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  function spinGiftWheel() {
+    if (wheelSpinning) return
+    const giftIndex = Math.floor(Math.random() * ACHIEVEMENT_GIFTS.length)
+    setSelectedGift(null)
+    setWheelSpinning(true)
+    setWheelRotation((rotation) => rotation + 1440 + (360 - giftIndex * 90 - 45))
+    window.setTimeout(() => {
+      setSelectedGift(ACHIEVEMENT_GIFTS[giftIndex])
+      setWheelSpinning(false)
+    }, 3200)
   }
 
   return (
@@ -235,10 +257,49 @@ function GradePage() {
                     </div>
                   </div>
 
+                  <div className="mt-6 rounded-3xl border-2 border-violet-200 bg-gradient-to-br from-violet-50 via-white to-pink-50 p-4 md:p-5 text-center">
+                    <h4 className="text-xl font-extrabold text-violet-800">🎁 اختر هديتك</h4>
+                    <p className="mt-1 text-sm font-semibold text-ink/65">لفّي العجلة واكتشفي هديتك الرمزية قبل مشاركة إنجازك!</p>
+                    <div className="relative mx-auto mt-4 h-64 w-64 max-w-full">
+                      <div className="absolute -top-1 left-1/2 z-20 -translate-x-1/2 text-3xl drop-shadow" aria-hidden="true">🔻</div>
+                      <div
+                        role="img"
+                        aria-label={wheelSpinning ? 'عجلة الهدايا تدور' : selectedGift ? `الهدية المختارة: ${selectedGift.name}` : 'عجلة الهدايا: حلوى ولعبة وقلم وبطاقة تشجيع'}
+                        className="absolute inset-2 overflow-hidden rounded-full border-4 border-white shadow-xl transition-transform"
+                        style={{
+                          background: 'conic-gradient(#f9a8d4 0deg 90deg, #93c5fd 90deg 180deg, #fcd34d 180deg 270deg, #86efac 270deg 360deg)',
+                          transform: `rotate(${wheelRotation}deg)`,
+                          transitionDuration: wheelSpinning || wheelRotation > 0 ? '3.2s' : '0s',
+                          transitionTimingFunction: 'cubic-bezier(.12,.72,.12,1)',
+                        }}
+                      >
+                        <span className="absolute left-1/2 top-[13%] -translate-x-1/2 text-4xl" aria-hidden="true">🍬</span>
+                        <span className="absolute right-[13%] top-1/2 -translate-y-1/2 text-4xl" aria-hidden="true">🧸</span>
+                        <span className="absolute bottom-[13%] left-1/2 -translate-x-1/2 text-4xl" aria-hidden="true">✏️</span>
+                        <span className="absolute left-[13%] top-1/2 -translate-y-1/2 text-4xl" aria-hidden="true">💌</span>
+                        <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-violet-600 text-xl text-white shadow">★</span>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={spinGiftWheel}
+                      disabled={wheelSpinning}
+                      className="mt-4 rounded-full bg-violet-600 px-7 py-3 font-extrabold text-white shadow-chunky transition hover:bg-violet-700 disabled:cursor-wait disabled:opacity-60"
+                    >
+                      {wheelSpinning ? '🎡 العجلة تدور...' : selectedGift ? '🔄 لفّي العجلة مرة أخرى' : '🎡 لفّي العجلة!'}
+                    </button>
+                    {selectedGift && !wheelSpinning && (
+                      <p role="status" className="mt-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-3 text-lg font-extrabold text-emerald-800 animate-bounce-in">
+                        هديتك هي: {selectedGift.emoji} {selectedGift.name}!
+                      </p>
+                    )}
+                    <p className="mt-3 text-xs text-ink/55">الهدية رمزية للتشجيع، وستُذكر في رسالة واتساب فقط.</p>
+                  </div>
+
                   <button
                     type="button"
                     onClick={() => shareAchievement(unit.title, percentage)}
-                    disabled={!canShare}
+                    disabled={!canShare || !selectedGift || wheelSpinning}
                     className="mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-emerald-600 px-5 py-4 text-lg font-extrabold text-white shadow-chunky transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
                   >
                     <Share2 size={22} aria-hidden="true" />
@@ -249,7 +310,10 @@ function GradePage() {
                       اكتب اسمك الرباعي والصف الدراسي لتفعيل المشاركة.
                     </p>
                   )}
-                  <p className="mt-3 text-center text-xs text-ink/55">ستُفتح رسالة جاهزة في واتساب؛ اضغط إرسال لإيصالها إلى المعلمة.</p>
+                  {canShare && !selectedGift && (
+                    <p className="mt-3 text-center text-sm font-bold text-violet-700">لفّي العجلة أولًا لاختيار هديتك قبل المشاركة.</p>
+                  )}
+                  <p className="mt-3 text-center text-xs text-ink/55">ستُفتح رسالة جاهزة في واتساب تتضمن إنجازك والهدية المختارة؛ اضغط إرسال لإيصالها إلى المعلمة.</p>
                 </div>
               )}
 
