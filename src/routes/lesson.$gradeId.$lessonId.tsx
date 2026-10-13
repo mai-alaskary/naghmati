@@ -268,35 +268,6 @@ const safetyStoryPages = [
       { speaker: 'سالم', role: 'salem', line: 'سَأَتَذَكَّرُ نَصِيحَتَكِ يَا أُمِّي، وَسَأَسْتَخْدِمُ الْأَدَوَاتِ بِحَذَرٍ.' },
     ],
   },
-  {
-    title: 'الطريق والدراجة',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'عند عبور الطريق، انتبه إلى إشارات المرور واعبر من المكان المخصص مع شخص بالغ. وعند ركوب الدراجة، ارتدِ الخوذة ولا تقلّد الحركات الخطرة في الرسوم المتحركة.' },
-      { speaker: 'سالم', role: 'salem', line: 'حاضر يا أمي، سأحافظ على سلامتي ولن أقلّد الحركات الخطرة.' },
-    ],
-  },
-  {
-    title: 'عادات صغيرة تحمينا',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'اربط رباط حذائك جيداً حتى لا تسقط، وألقِ القمامة في السلة لا في الطريق، لأنك بذلك تحافظ على سلامة الآخرين.' },
-      { speaker: 'سالم', role: 'salem', line: 'سأكون حذراً في المرة المقبلة، إن شاء الله تعالى.' },
-    ],
-  },
-  {
-    title: 'سالم يتعافى',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'بعد مرور عدة أيام، وبعد أن شُفيت، ماذا ستفعل يا سالم؟' },
-      { speaker: 'سالم', role: 'salem', line: 'سأساعد الآخرين وأعرّفهم معنى الأمن والسلامة.' },
-    ],
-  },
-  {
-    title: 'نهاية سعيدة',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'أحسنت يا صغيري! أنا حقاً فخورة بك.' },
-      { speaker: 'سالم', role: 'salem', line: 'شكراً يا أمي، إلى اللقاء! لا أريد أن أتأخر عن فعل الخير.' },
-      { speaker: 'الأم', role: 'mother', line: 'هههههه، حسناً، إلى اللقاء يا سالم!' },
-    ],
-  },
 ]
 
 const safetyStoryAudioUrls: (string | null)[] = [
@@ -310,15 +281,6 @@ const safetyStoryAudioUrls: (string | null)[] = [
   'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=84d919d8-f201-4ce4-aae6-87568c70a92b.wav',
   'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=888125ff-85e7-426c-912d-8b7494d2c9b0.wav',
   'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=bf1a13bb-ce57-413b-8c0b-73fc5b2c0b92.wav',
-  null,
-  null,
-  null,
-  null,
-  null,
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=0e5b67ef-a061-4a12-9acc-8890482c55fa.wav',
-  null,
-  null,
-  null,
 ]
 
 function StoryJumperBook() {
