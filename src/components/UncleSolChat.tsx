@@ -143,7 +143,6 @@ export default function UncleSolChat() {
         text: 'لضمان صحة الإجابة، أعرض هنا الأسئلة المعتمدة في المنهج فقط. إذا لم تجد سؤالك ضمن القائمة، يمكنك إرساله إلى المعلمة عبر واتساب باستخدام خيار «سؤالي غير موجود».',
       },
     ])
-    setDraft('')
     setNotice('')
   }
 
@@ -233,7 +232,7 @@ export default function UncleSolChat() {
                     <span className="sol-step-number">٤</span><strong>الأسئلة المتاحة للإجابة</strong>
                     <button type="button" className="sol-change-step" onClick={() => setSelectedLessonId('')}>تغيير الدرس</button>
                   </div>
-                  {availableQuestions.length > 0 ? (
+                  {availableQuestions.length > 0 && (
                     <div className="sol-question-list">
                       {availableQuestions.map((question, index) => (
                         <button key={`${question.question}-${index}`} type="button" onClick={() => answerQuestion(index)}>
@@ -241,9 +240,8 @@ export default function UncleSolChat() {
                         </button>
                       ))}
                     </div>
-                  ) : (
-                    <p className="sol-no-questions">لا توجد أسئلة وإجابات معتمدة لهذا الدرس حتى الآن. يمكنك إرسال سؤالك إلى المعلمة.</p>
                   )}
+                  <p className="sol-no-questions">يمكنك إرسال سؤالك إلى المعلمة</p>
                   <a className="sol-teacher-link" href={teacherWhatsAppUrl} target="_blank" rel="noopener noreferrer">
                     <MessageCircle size={18} /><span>سؤالي غير موجود — أرسله إلى المعلمة عبر واتساب</span>
                   </a>
