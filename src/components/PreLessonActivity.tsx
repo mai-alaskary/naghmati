@@ -331,7 +331,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           ].map((item, index) => (
             <div key={item.question} className="rounded-3xl border-2 border-amber-100 bg-white p-4 md:p-5">
               <h4 className="mb-3 text-lg font-extrabold">{index + 1}. {item.question}</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
                 {item.options.map((option, optionIndex) => (
                   <button key={option} type="button" onClick={() => { setStaffAnswers((current) => ({ ...current, [index]: optionIndex })); optionIndex === item.answer ? playCorrect() : playWrong() }} aria-pressed={staffAnswers[index] === optionIndex} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${staffAnswers[index] === optionIndex ? (optionIndex === item.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-slate-100 bg-amber-50 hover:bg-amber-100'}`}>{option}</button>
                 ))}
