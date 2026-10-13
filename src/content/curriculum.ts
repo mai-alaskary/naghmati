@@ -2,7 +2,7 @@ export type LabTool = 'piano' | 'xylophone' | 'drums' | 'rhythm'
 
 export type TeacherMedia = { url: string; title?: string }
 export type AnthemMedia = { explanationVideoUrl: string; listeningAudioUrl: string; listeningVideoUrl: string }
-export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string; visualOptions?: ('legato' | 'staccato' | 'piano' | 'forte' | 'crescendo' | 'diminuendo')[] }
+export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string; visualOptions?: ('legato' | 'staccato' | 'piano' | 'forte' | 'crescendo' | 'diminuendo' | 'clef-treble' | 'clef-bass' | 'clef-alto' | 'clef-percussion' | 'staff-3-lines' | 'staff-4-lines' | 'staff-5-lines' | 'staff-6-lines' | 'line-names-correct' | 'line-names-reversed' | 'line-names-spaces' | 'line-names-random' | 'space-names-correct' | 'space-names-reversed' | 'space-names-lines' | 'space-names-random')[] }
 export type Activity =
   | { type: 'lab'; tool: LabTool; title: string; description: string }
   | { type: 'musiclab' | 'wordwall' | 'genially' | 'embed'; url: string; title: string; description: string }
@@ -123,8 +123,28 @@ const grade1: Grade = {
           teacher: { url: '' },
           quiz: [
             {
-              question: 'أي عنوان يطابق الدرس الحالي؟', emoji: '🎯',
-              options: ['المُدَرَّج الموسيقي ومفتاح صول', 'درس آخر في المهارات الموسيقية', 'نشاط خارج المنهج', 'المختبر الموسيقي فقط'], answer: 0, hint: 'اقرأ عنوان الدرس أعلى الصفحة ثم اختر البطاقة المطابقة.',
+              question: 'أيّ مما يلي يمثّل الرسم الصحيح لمفتاح صول؟', emoji: '🎼',
+              options: ['مفتاح صول', 'مفتاح فا', 'مفتاح دو', 'علامة إيقاعية'],
+              answer: 0, hint: 'مفتاح صول له شكل مميّز يلتف حول خط صول في المدرج.',
+              visualOptions: ['clef-treble', 'clef-bass', 'clef-alto', 'clef-percussion'],
+            },
+            {
+              question: 'كم عدد خطوط المدرج الموسيقي؟', emoji: '🎼',
+              options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'],
+              answer: 2, hint: 'عدّ الخطوط الأفقية من أسفل المدرج إلى أعلاه.',
+              visualOptions: ['staff-3-lines', 'staff-4-lines', 'staff-5-lines', 'staff-6-lines'],
+            },
+            {
+              question: 'اختر أسماء خطوط المدرج الموسيقي الصحيحة من أسفل إلى أعلى.', emoji: '🎵',
+              options: ['مي – صول – سي – ري – فا', 'فا – ري – سي – صول – مي', 'فا – لا – دو – مي', 'دو – ري – مي – فا – صول'],
+              answer: 0, hint: 'تذكّر أسماء الخطوط من أسفل إلى أعلى: مي، صول، سي، ري، فا.',
+              visualOptions: ['line-names-correct', 'line-names-reversed', 'line-names-spaces', 'line-names-random'],
+            },
+            {
+              question: 'اختر أسماء مسافات المدرج الموسيقي الصحيحة من أسفل إلى أعلى.', emoji: '🎵',
+              options: ['فا – لا – دو – مي', 'مي – صول – سي – ري – فا', 'مي – دو – لا – فا', 'فا – سي – ري – صول'],
+              answer: 0, hint: 'أسماء المسافات من أسفل إلى أعلى هي: فا، لا، دو، مي.',
+              visualOptions: ['space-names-correct', 'space-names-reversed', 'space-names-lines', 'space-names-random'],
             },
           ],
           activities: [
