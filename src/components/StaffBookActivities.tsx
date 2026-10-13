@@ -72,7 +72,6 @@ export default function StaffBookActivities() {
           <path d={tracingPath} transform="translate(-35,-30) scale(.92)" fill="none" stroke="#8b5cf6" strokeWidth="3" strokeDasharray="2 6" strokeLinecap="round" data-trace="true" />
           <circle cx="121" cy="110" r="5" fill="#16a34a" /><text x="130" y="105" fontSize="9" fill="#15803d" fontWeight="bold">ابدأ</text>
           <circle cx="142" cy="109" r="5" fill="#f97316" /><text x="151" y="104" fontSize="9" fill="#c2410c" fontWeight="bold">اتبع النقاط ↗</text>
-          <text x="24" y="28" fontSize="10" fill="#64748b">نموذج للتتبّع</text>
         </svg>
       </div>
       <h5 className="my-3 font-extrabold">جرّب رسم مفتاح صول بنفسك</h5>
