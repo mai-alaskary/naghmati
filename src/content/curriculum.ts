@@ -149,7 +149,7 @@ const grade1: Grade = {
           ],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
-            { type: 'wordwall', url: '', title: 'لعبة Wordwall للدرس', description: 'مكان مخصص لإضافة لعبة Wordwall الخاصة بالدرس.' },
+            { type: 'wordwall', url: 'https://wordwall.net/ar/embed/6c1ca84169fe40c4a67f62191f2a34e2?themeId=1&templateId=2&fontStackId=0', title: 'نشاط Wordwall: المُدَرَّج الموسيقي ومفتاح صول', description: 'نشاط تفاعلي للتدريب على المُدَرَّج الموسيقي ومفتاح صول.' },
           ],
         },
         {
