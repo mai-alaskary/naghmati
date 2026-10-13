@@ -187,33 +187,41 @@ export default function UncleSolChat() {
                   <button type="button" onClick={resetChoices} className="sol-reset-button" aria-label="البدء من جديد" title="البدء من جديد"><RotateCcw size={16} /></button>
                 </div>
 
-                <div className="sol-picker-step">
-                  <span className="sol-step-number">١</span><strong>اختر الصف</strong>
-                </div>
-                <div className="sol-option-list">
-                  {grades.map((grade) => (
-                    <button key={grade.id} type="button" className={`sol-option-button ${selectedGradeId === grade.id ? 'is-selected' : ''}`} onClick={() => chooseGrade(grade.id)}>
-                      <span>{grade.emoji} {grade.title}</span><ChevronLeft size={17} />
-                    </button>
-                  ))}
-                </div>
+                {!selectedGrade && <>
+                  <div className="sol-picker-step">
+                    <span className="sol-step-number">١</span><strong>اختر الصف</strong>
+                  </div>
+                  <div className="sol-option-list">
+                    {grades.map((grade) => (
+                      <button key={grade.id} type="button" className="sol-option-button" onClick={() => chooseGrade(grade.id)}>
+                        <span>{grade.emoji} {grade.title}</span><ChevronLeft size={17} />
+                      </button>
+                    ))}
+                  </div>
+                </>}
 
-                {selectedGrade && <>
-                  <div className="sol-picker-step"><span className="sol-step-number">٢</span><strong>اختر الوحدة</strong></div>
+                {selectedGrade && !selectedUnit && <>
+                  <div className="sol-picker-step">
+                    <span className="sol-step-number">٢</span><strong>اختر الوحدة</strong>
+                    <button type="button" className="sol-change-step" onClick={() => resetChoices()}>تغيير الصف</button>
+                  </div>
                   <div className="sol-option-list">
                     {selectedGrade.units.map((unit) => (
-                      <button key={unit.id} type="button" className={`sol-option-button ${selectedUnitId === unit.id ? 'is-selected' : ''}`} onClick={() => chooseUnit(unit.id)}>
+                      <button key={unit.id} type="button" className="sol-option-button" onClick={() => chooseUnit(unit.id)}>
                         <span>{unit.emoji} {unit.title}</span><ChevronLeft size={17} />
                       </button>
                     ))}
                   </div>
                 </>}
 
-                {selectedUnit && <>
-                  <div className="sol-picker-step"><span className="sol-step-number">٣</span><strong>اختر الدرس</strong></div>
+                {selectedGrade && selectedUnit && !selectedLesson && <>
+                  <div className="sol-picker-step">
+                    <span className="sol-step-number">٣</span><strong>اختر الدرس</strong>
+                    <button type="button" className="sol-change-step" onClick={() => { setSelectedUnitId(''); setSelectedLessonId('') }}>تغيير الوحدة</button>
+                  </div>
                   <div className="sol-option-list">
                     {selectedUnit.lessons.map((lesson) => (
-                      <button key={lesson.id} type="button" className={`sol-option-button ${selectedLessonId === lesson.id ? 'is-selected' : ''}`} onClick={() => chooseLesson(lesson.id)}>
+                      <button key={lesson.id} type="button" className="sol-option-button" onClick={() => chooseLesson(lesson.id)}>
                         <span>{lesson.emoji} {lesson.title}</span><ChevronLeft size={17} />
                       </button>
                     ))}
@@ -221,7 +229,10 @@ export default function UncleSolChat() {
                 </>}
 
                 {selectedLesson && <>
-                  <div className="sol-picker-step"><span className="sol-step-number">٤</span><strong>الأسئلة المتاحة للإجابة</strong></div>
+                  <div className="sol-picker-step">
+                    <span className="sol-step-number">٤</span><strong>الأسئلة المتاحة للإجابة</strong>
+                    <button type="button" className="sol-change-step" onClick={() => setSelectedLessonId('')}>تغيير الدرس</button>
+                  </div>
                   {availableQuestions.length > 0 ? (
                     <div className="sol-question-list">
                       {availableQuestions.map((question, index) => (
