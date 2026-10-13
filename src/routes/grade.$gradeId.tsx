@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { Trophy, Star, Share2 } from 'lucide-react'
 import { getGrade } from '@/content/curriculum'
@@ -115,6 +115,8 @@ function GradePage() {
 
       <div className="max-w-6xl mx-auto px-4 py-10 space-y-10">
         {grade.units.map((unit, ui) => {
+          const semester = ui < 2 ? 'الفصل الدراسي الأول' : ui < 4 ? 'الفصل الدراسي الثاني' : null
+          const showSemesterHeading = semester && (ui === 0 || ui === 2)
           const c = unitColors[ui % unitColors.length]
           const unitLessonProgress = unit.lessons.map((lesson) => {
             const key = lessonKey(grade.id, `${unit.id}-${lesson.id}`)
@@ -128,7 +130,17 @@ function GradePage() {
           )
 
           return (
-            <section key={unit.id} className={`rounded-[2rem] border-2 ${c.card} p-5 md:p-8`}>
+            <Fragment key={unit.id}>
+              {showSemesterHeading && (
+                <div className={`${ui === 0 ? '' : 'pt-2'} mb-[-1.5rem] flex items-center gap-3`}>
+                  <span className="h-px flex-1 bg-gradient-to-l from-amber-300/80 to-transparent" />
+                  <h2 className="rounded-full border border-amber-200/80 bg-amber-50/80 px-5 py-2 text-base font-extrabold text-ink shadow-sm md:text-lg">
+                    <span aria-hidden="true" className="ml-2">✦</span>{semester}
+                  </h2>
+                  <span className="h-px flex-1 bg-gradient-to-r from-amber-300/80 to-transparent" />
+                </div>
+              )}
+              <section className={`rounded-[2rem] border-2 ${c.card} p-5 md:p-8`}>
               <div className="flex items-center gap-4 mb-6">
                 <span className={`grid place-items-center w-16 h-16 rounded-2xl text-4xl ${c.icon} shrink-0`}>
                   {unit.emoji}
@@ -268,7 +280,8 @@ function GradePage() {
                   )
                 })}
               </div>
-            </section>
+              </section>
+            </Fragment>
           )
         })}
       </div>
