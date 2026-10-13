@@ -147,7 +147,6 @@ function LessonPage() {
 
         <section id="book-activities" className="scroll-mt-24">
           <SectionTitle n={4} title="الأنشطة" emoji="📚" sub="أنشطة الكتاب وتسليم الإجابات للمعلمة" />
-          {grade.id === 'grade-4' && unit.id === 'u2' && lesson.id === 'lesson1' && <SafetyTracingActivity onComplete={() => finish("activities")} />}
           <BookActivities lessonTitle={lesson.title} onSubmit={() => finish("activities")} />
 
         </section>
@@ -436,75 +435,6 @@ function RhythmVideoActivity({ index, onIndexChange }: { index: number; onIndexC
 }
 
 
-
-function SafetyTracingActivity({ onComplete }: { onComplete: () => void }) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const drawingRef = useRef(false)
-  const [penColor, setPenColor] = useState('#ef4444')
-  const [penSize, setPenSize] = useState(6)
-
-  const startDrawing = (event: PointerEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    drawingRef.current = true
-    canvas.setPointerCapture(event.pointerId)
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    const rect = canvas.getBoundingClientRect()
-    ctx.beginPath()
-    ctx.moveTo((event.clientX - rect.left) * canvas.width / rect.width, (event.clientY - rect.top) * canvas.height / rect.height)
-    ctx.strokeStyle = penColor
-    ctx.lineWidth = penSize
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    onComplete()
-  }
-
-  const draw = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!drawingRef.current) return
-    const canvas = canvasRef.current
-    const ctx = canvas?.getContext('2d')
-    if (!canvas || !ctx) return
-    const rect = canvas.getBoundingClientRect()
-    ctx.lineTo((event.clientX - rect.left) * canvas.width / rect.width, (event.clientY - rect.top) * canvas.height / rect.height)
-    ctx.strokeStyle = penColor
-    ctx.lineWidth = penSize
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.stroke()
-  }
-
-  const stopDrawing = () => { drawingRef.current = false }
-
-  const clearDrawing = () => {
-    const canvas = canvasRef.current
-    if (canvas) canvas.getContext('2d')?.clearRect(0, 0, canvas.width, canvas.height)
-  }
-
-  return (
-    <div className="mb-6 rounded-[2rem] border-2 border-amber-200 bg-white p-4 md:p-6 shadow-chunky">
-      <h3 className="mb-2 text-xl md:text-2xl font-extrabold">✍️ نشاط تتبّع السلامة بالقلم</h3>
-      <p className="mb-4 text-ink/65">اتبع المسارات المتقطعة واكتب داخل المربعات فوق الصورة باستخدام إصبعك أو الفأرة. اختَر لون القلم وسمكه، ويمكنك مسح كتابتك والبدء من جديد.</p>
-      <div className="mb-4 flex flex-wrap items-center justify-center gap-3 rounded-2xl bg-amber-50 p-3">
-        <span className="font-extrabold">اختر القلم:</span>
-        {['#ef4444', '#111827', '#16a34a', '#2563eb'].map((color) => (
-          <button key={color} type="button" onClick={() => setPenColor(color)} aria-label={'لون القلم ' + color} aria-pressed={penColor === color} className={'h-9 w-9 rounded-full border-2 ' + (penColor === color ? 'border-violet-500 ring-4 ring-violet-200' : 'border-white shadow')} style={{ backgroundColor: color }} />
-        ))}
-        <label className="flex items-center gap-2 font-bold">سمك القلم
-          <select value={penSize} onChange={(event) => setPenSize(Number(event.target.value))} className="rounded-xl border-2 border-amber-200 bg-white px-3 py-2">
-            <option value={3}>رفيع</option>
-            <option value={6}>متوسط</option>
-            <option value={10}>سميك</option>
-          </select>
-        </label>
-        <button type="button" onClick={clearDrawing} className="rounded-full border-2 border-violet-200 bg-white px-5 py-2 font-extrabold hover:bg-violet-50">مسح الكتابة</button>
-      </div>
-      <div className="relative mx-auto w-full overflow-hidden rounded-xl border-2 border-amber-200 bg-white" style={{ aspectRatio: '1132 / 665', backgroundImage: "url('/images/activities/grade4-u2-l1-tracing.jpg')", backgroundSize: '100% 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
-        <canvas ref={canvasRef} width={1132} height={665} className="absolute inset-0 h-full w-full touch-none cursor-crosshair" onPointerDown={startDrawing} onPointerMove={draw} onPointerUp={stopDrawing} onPointerCancel={stopDrawing} onPointerLeave={stopDrawing} aria-label="لوحة الكتابة والتتبّع فوق صورة النشاط" />
-      </div>
-    </div>
-  )
-}
 
 function SectionTitle({ n, title, emoji, sub }: { n: number; title: string; emoji: string; sub?: string }) {
   return (
