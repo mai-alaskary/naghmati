@@ -108,30 +108,95 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
         </div>
       </div>
       </div>
-      <div className="rounded-[2rem] bg-white p-4 md:p-5 shadow-chunky">
-        <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
-        {embed || anthemVideo ? (
-          <>
-            <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
-              <div className="relative w-full aspect-video">
-                <iframe
-                  src={embed || anthemVideo}
-                  title={lesson.teacher.title || `شرح ${lesson.title}`}
-                  className="absolute inset-0 w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              </div>
+      {lesson.title === 'المُدَرَّج الموسيقي ومفتاح صول' ? (
+        <div className="space-y-5">
+          <section className="rounded-[2rem] border-2 border-sky-100 bg-white p-4 md:p-6 shadow-chunky">
+            <div className="mb-4">
+              <h3 className="text-xl md:text-2xl font-extrabold text-sky-800">🎼 أولًا: المُدَرَّج الموسيقي</h3>
+              <p className="mt-1 font-semibold text-ink/60">تصفّح صفحات الشرح بالترتيب، صفحة بعد صفحة.</p>
             </div>
-            <p className="text-ink/60 text-sm text-center pt-2">🎬 {providerName(embed || anthemVideo)}</p>
-          </>
-        ) : (
-          <div className="rounded-2xl bg-cream p-5 text-ink/65">
-            مكان مخصص لفيديو شرح «{lesson.title}». سيظهر الفيديو هنا عند إضافة رابط YouTube من لوحة المعلمة.
-          </div>
-        )}
-      </div>
-    </div>
+
+            <div className="space-y-6">
+              <article>
+                <h4 className="mb-3 text-lg font-extrabold">١. فيديو شرح المُدَرَّج الموسيقي</h4>
+                <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-black" onClick={() => onVideoStart?.()}>
+                  <iframe src="https://www.youtube.com/embed/hSceyr0Ckho?si=tco66deZ-fUWfWfn" title="فيديو شرح المدرج الموسيقي" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
+                </div>
+              </article>
+
+              <article>
+                <h4 className="mb-3 text-lg font-extrabold">٢. فيديو أسماء الخطوط</h4>
+                <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: '4 / 3' }} onClick={() => onVideoStart?.()}>
+                  <iframe src="https://drive.google.com/file/d/1uI5qMRYsezAzkRMrKpVb51P1gLWHCfyq/preview" title="فيديو أسماء الخطوط الموسيقية" className="absolute inset-0 h-full w-full border-0" allow="autoplay" allowFullScreen loading="lazy" />
+                </div>
+              </article>
+
+              <article>
+                <h4 className="mb-3 text-lg font-extrabold">٣. صورة أسماء الخطوط</h4>
+                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ aspectRatio: '4 / 3' }}>
+                  <iframe src="https://qr.me-qr.com/data/image-pack/KqZH0KOM" title="صورة أسماء الخطوط الموسيقية" className="absolute inset-0 h-full w-full border-0" loading="lazy" />
+                </div>
+                <a href="https://qr.me-qr.com/data/image-pack/KqZH0KOM" target="_blank" rel="noreferrer" className="mt-2 inline-block font-bold text-sky-700 underline">فتح الصورة في صفحة جديدة</a>
+              </article>
+
+              <article>
+                <h4 className="mb-3 text-lg font-extrabold">٤. فيديو أسماء المسافات</h4>
+                <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: '4 / 3' }} onClick={() => onVideoStart?.()}>
+                  <iframe src="https://drive.google.com/file/d/1EQ8I96-zNalBStqh3LG2svmSL8nEKtUY/preview" title="فيديو أسماء المسافات الموسيقية" className="absolute inset-0 h-full w-full border-0" allow="autoplay" allowFullScreen loading="lazy" />
+                </div>
+              </article>
+
+              <article>
+                <h4 className="mb-3 text-lg font-extrabold">٥. صورة أسماء المسافات</h4>
+                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ aspectRatio: '4 / 3' }}>
+                  <iframe src="https://qr.me-qr.com/data/image-pack/jKSizeLg" title="صورة أسماء المسافات الموسيقية" className="absolute inset-0 h-full w-full border-0" loading="lazy" />
+                </div>
+                <a href="https://qr.me-qr.com/data/image-pack/jKSizeLg" target="_blank" rel="noreferrer" className="mt-2 inline-block font-bold text-sky-700 underline">فتح الصورة في صفحة جديدة</a>
+              </article>
+
+              <article>
+                <h4 className="mb-3 text-lg font-extrabold">٦. صورة المُدَرَّج الموسيقي</h4>
+                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ aspectRatio: '4 / 3' }}>
+                  <iframe src="https://qr.me-qr.com/data/image-pack/44NS94Wr" title="صورة المدرج الموسيقي" className="absolute inset-0 h-full w-full border-0" loading="lazy" />
+                </div>
+                <a href="https://qr.me-qr.com/data/image-pack/44NS94Wr" target="_blank" rel="noreferrer" className="mt-2 inline-block font-bold text-sky-700 underline">فتح الصورة في صفحة جديدة</a>
+              </article>
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border-2 border-violet-100 bg-white p-4 md:p-6 shadow-chunky">
+            <h3 className="mb-4 text-xl md:text-2xl font-extrabold text-violet-800">🎵 ثانيًا: مفتاح صول</h3>
+            <h4 className="mb-3 text-lg font-extrabold">فيديو شرح مفتاح صول</h4>
+            <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-black" onClick={() => onVideoStart?.()}>
+              <iframe src="https://www.youtube.com/embed/cCX_E7-6hxE?si=6emzS2tDNHAIVb0f" title="فيديو شرح مفتاح صول" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
+            </div>
+          </section>
+        </div>
+      ) : (
+        <div className="rounded-[2rem] bg-white p-4 md:p-5 shadow-chunky">
+          <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
+          {embed || anthemVideo ? (
+            <>
+              <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
+                <div className="relative w-full aspect-video">
+                  <iframe
+                    src={embed || anthemVideo}
+                    title={lesson.teacher.title || `شرح ${lesson.title}`}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <p className="text-ink/60 text-sm text-center pt-2">🎬 {providerName(embed || anthemVideo)}</p>
+            </>
+          ) : (
+            <div className="rounded-2xl bg-cream p-5 text-ink/65">
+              مكان مخصص لفيديو شرح «{lesson.title}». سيظهر الفيديو هنا عند إضافة رابط YouTube من لوحة المعلمة.
+            </div>
+          )}
+        </div>
+      )}    </div>
   )
 }
