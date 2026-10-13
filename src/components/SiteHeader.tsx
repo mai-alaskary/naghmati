@@ -20,7 +20,7 @@ export default function SiteHeader() {
           </span>
           <span className="leading-none">
             <span className="block text-2xl font-extrabold text-ink">نغماتي</span>
-            <span className="block text-xs font-semibold text-ink/60">المهارات الموسيقية - إعداد أ/مي العسكري</span>
+            <span className="block text-xs font-semibold text-ink/60">نغماتي — منصة مفتوحة لطلاب المهارات الموسيقية في سلطنة عُمان، بدون تسجيل دخول - إعداد أ/مي العسكري</span>
           </span>
         </Link>
 
