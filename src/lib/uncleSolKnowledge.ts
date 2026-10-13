@@ -87,8 +87,31 @@ export function findUncleSolAnswer(question: string): { answer: string; source: 
   const listAnswer = answerLessonList(normalizedQuestion)
   if (listAnswer) return { answer: listAnswer, source: 'فهرس المنهج' }
 
+  if (/(ابدا|ابدأ|بدايه|البدايه|كيف ادرس|طريقة الدراسة)/.test(normalizedQuestion)) {
+    return {
+      answer: 'بحسب تعليمات الدروس في المنصة: ابدأ بمشاهدة شرح الدرس، ثم أجب عن الأسئلة، وبعدها انتقل إلى التطبيق أو المختبر الموسيقي.',
+      source: 'تعليمات الدرس',
+    }
+  }
+
   const questionTokens = new Set(tokens(normalizedQuestion))
   if (questionTokens.size === 0) return undefined
+
+  // For a single clear term (for example, "فورتي"), prefer a matching
+  // curriculum quiz answer rather than guessing from broad word overlap.
+  if (questionTokens.size === 1) {
+    const term = [...questionTokens][0]
+    const direct = entries.find((entry) =>
+      normalize(entry.answer).includes(term) &&
+      (normalize(entry.question).includes(term) || normalize(entry.lesson).includes(term)),
+    )
+    if (direct) {
+      return {
+        answer: `${direct.answer}\n\n📚 المصدر: ${direct.grade} — ${direct.unit} — ${direct.lesson}`,
+        source: direct.lesson,
+      }
+    }
+  }
 
   let best: { entry: KnowledgeEntry; score: number; overlap: number } | undefined
   for (const entry of entries) {
