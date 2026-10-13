@@ -127,5 +127,5 @@ export default function StaffBookActivities() {
       <p className="mt-3 font-extrabold text-violet-800" role="status">{feedback || `الإجابات الصحيحة: ${correctCount} من 5`}</p>
       {correctCount === 5 && <p className="mt-2 rounded-xl bg-emerald-100 p-3 font-extrabold text-emerald-800">رائع! وصلت كل النغمات إلى أماكنها الصحيحة 🌟</p>}
     </div>
-  </section>
+  </div>
 }
