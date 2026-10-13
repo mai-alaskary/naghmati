@@ -63,28 +63,33 @@ export default function StaffBookActivities() {
   return <div className="space-y-5">
     <p className="text-slate-700">تدرّب وارسم وتعرّف على أسماء خطوط ومسافات المدرج الموسيقي ومفتاح صول.</p>
     <div className="mb-6 rounded-2xl border-2 border-violet-200 bg-violet-50 p-4">
-      <h4 className="text-xl font-extrabold text-violet-900">✍️ النشاط الأول: تتبّع مسار مفتاح صول</h4>
-      <p className="my-2 text-sm leading-7">اتبع اتجاه الأسهم، وارسم بإصبعك أو بالفأرة فوق الخط المنقّط. رسوماتك تظهر فوق المسار مباشرة.</p>
+      <h4 className="text-xl font-extrabold text-violet-900">✍️ النشاط الأول: تتبّع وارسم مفتاح صول</h4>
+      <p className="my-2 text-sm leading-7">اتبع المسار المنقّط من نقطة البداية إلى النهاية، ثم ارسم مفتاح صول في المساحة الفارغة. يمكنك الرسم باللمس أو بالفأرة.</p>
       <div className="overflow-hidden rounded-xl border-2 border-violet-100 bg-white">
-        <svg ref={svgRef} viewBox="0 0 320 220" className="h-auto w-full touch-none" role="img" aria-label="مسار منقط للتتبع مع أسهم، ومساحة للرسم فوقه" onPointerDown={beginDraw} onPointerMove={continueDraw} onPointerUp={endDraw} onPointerCancel={endDraw}>
+        <svg viewBox="0 0 320 220" className="h-auto w-full" role="img" aria-label="نموذج منقط لتتبّع مفتاح صول">
           {staffLines.map(y => <line key={y} x1="18" x2="302" y1={y} y2={y} stroke="#334155" strokeWidth="1.6" />)}
           <defs>
             <marker id="trace-arrow" markerWidth="6" markerHeight="6" refX="4.5" refY="3" orient="auto">
               <path d="M0,0 L6,3 L0,6 Z" fill="#f97316" />
             </marker>
           </defs>
-          <path d={tracingPath} fill="none" stroke="#8b5cf6" strokeWidth="3.2" strokeDasharray="1 6" strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />
-          <path d="M 151 117 Q 154 110 162 110" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" pointerEvents="none" />
-          <path d="M 178 96 Q 190 76 194 55" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" pointerEvents="none" />
-          <path d="M 164 91 Q 160 105 158 119" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" pointerEvents="none" />
-          <circle cx="160" cy="132" r="4.5" fill="#16a34a" stroke="white" strokeWidth="1" pointerEvents="none" />
-          {[...strokes, activeStroke].map((stroke, i) => stroke.length > 0 && <polyline key={i} points={stroke.join(' ')} fill="none" stroke="#0f766e" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />)}
+          <path d={tracingPath} fill="none" stroke="#8b5cf6" strokeWidth="3.2" strokeDasharray="1 6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M 151 117 Q 154 110 162 110" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <path d="M 178 96 Q 190 76 194 55" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <path d="M 164 91 Q 160 105 158 119" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <circle cx="160" cy="132" r="4.5" fill="#16a34a" stroke="white" strokeWidth="1" />
+          <text x="168" y="145" fontSize="9" fill="#15803d" fontWeight="bold">ابدأ</text>
         </svg>
       </div>
-      <p className="mt-2 text-sm text-violet-900">ابدأ من النقطة الخضراء واتبع الأسهم الثلاثة بالترتيب.</p>
+      <h5 className="my-3 font-extrabold">جرّب رسم مفتاح صول بنفسك</h5>
+      <svg ref={svgRef} viewBox="0 0 320 220" className="w-full touch-none rounded-xl border-2 border-dashed border-violet-300 bg-white" role="img" aria-label="مساحة رسم مفتاح صول" onPointerDown={beginDraw} onPointerMove={continueDraw} onPointerUp={endDraw} onPointerCancel={endDraw}>
+        {staffLines.map(y => <line key={y} x1="10" x2="310" y1={y} y2={y} stroke="#94a3b8" strokeWidth="1.5" />)}
+        {[...strokes, activeStroke].map((stroke, i) => stroke.length > 0 && <polyline key={i} points={stroke.join(' ')} fill="none" stroke="#7c3aed" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />)}
+        {strokes.length === 0 && !drawing && <text x="160" y="42" textAnchor="middle" fontSize="11" fill="#94a3b8">ارسم هنا بإصبعك أو بالفأرة</text>}
+      </svg>
       <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" className="rounded-xl bg-violet-600 px-4 py-2 font-bold text-white" onClick={() => { setStrokes(old => old.slice(0, -1)); setActiveStroke([]) }}>مسح آخر رسمة</button>
-        <button type="button" className="rounded-xl border-2 border-violet-300 bg-white px-4 py-2 font-bold text-violet-800" onClick={() => { setStrokes([]); setActiveStroke([]); setDrawing(false) }}>إعادة من البداية</button>
+        <button type="button" className="rounded-xl bg-violet-600 px-4 py-2 font-bold text-white" onClick={() => { setStrokes(old => [...old.slice(0, 2), []]); setActiveStroke([]) }}>مسح آخر رسمة</button>
+        <button type="button" className="rounded-xl border-2 border-violet-300 bg-white px-4 py-2 font-bold text-violet-800" onClick={() => { setStrokes([[], [], []]); setActiveStroke([]) }}>إعادة من البداية</button>
       </div>
     </div>
 
