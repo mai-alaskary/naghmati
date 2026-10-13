@@ -397,7 +397,7 @@ function StoryJumperBook() {
       </div>
 
       <p className="mt-4 text-center text-xs leading-6 text-ink/55">
-        التسجيلات المتاحة مولّدة بصوت عربي لسالم وصوت عربي نسائي للأم. ويمكن فتح النسخة الأصلية من القصة على{' '}
+        يمكن فتح النسخة الأصلية من القصة على{' '}
         <a href="https://www.storyjumper.com/book/read/170652271/65f75d977891f" target="_blank" rel="noreferrer" className="font-bold text-violet-700 underline underline-offset-4">StoryJumper</a>.
       </p>
     </div>
