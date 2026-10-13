@@ -438,7 +438,7 @@ const grade4: Grade = {
           ],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
-            { type: 'wordwall', url: 'https://wordwall.net/embed/90844108a23d42838117cc6cb3149d93?themeId=46&templateId=5&fontStackId=0', title: 'نشاط Wordwall: نشيد سلامتي', description: 'نشاط تفاعلي للتطبيق على درس نشيد سلامتي.' },
+            { type: 'wordwall', url: 'https://wordwall.net/ar/embed/c7ec83cbf27f494db33feff11210553b?themeId=1&templateId=5&fontStackId=0', title: 'نشاط Wordwall: نشيد سلامتي', description: 'نشاط تفاعلي للتطبيق على درس نشيد سلامتي.' },
           ],
         },
         {
