@@ -16,6 +16,7 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
   const [step, setStep] = useState(0)
   const [talking, setTalking] = useState(false)
   const [speechOk, setSpeechOk] = useState(false)
+  const [staffVideoStep, setStaffVideoStep] = useState(0)
 
   useEffect(() => {
     setSpeechOk(canSpeak())
@@ -116,51 +117,35 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
               <p className="mt-1 font-semibold text-ink/60">تصفّح صفحات الشرح بالترتيب، صفحة بعد صفحة.</p>
             </div>
 
-            <div className="space-y-6">
-              <article>
-                <h4 className="mb-3 text-lg font-extrabold">١. فيديو شرح المُدَرَّج الموسيقي</h4>
+            <div>
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <h4 className="text-lg font-extrabold">
+                  {staffVideoStep === 0 ? '١. فيديو شرح المُدَرَّج الموسيقي' : staffVideoStep === 1 ? '٢. فيديو أسماء الخطوط' : '٣. فيديو أسماء المسافات'}
+                </h4>
+                <span className="rounded-full bg-sky-50 px-3 py-1 text-sm font-bold text-sky-800">الفيديو {staffVideoStep + 1} من 3</span>
+              </div>
+
+              {staffVideoStep === 0 ? (
                 <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-black" onClick={() => onVideoStart?.()}>
                   <iframe src="https://www.youtube.com/embed/hSceyr0Ckho?si=tco66deZ-fUWfWfn" title="فيديو شرح المدرج الموسيقي" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
                 </div>
-              </article>
-
-              <article>
-                <h4 className="mb-3 text-lg font-extrabold">٢. فيديو أسماء الخطوط</h4>
+              ) : staffVideoStep === 1 ? (
                 <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: '4 / 3' }} onClick={() => onVideoStart?.()}>
                   <iframe src="https://drive.google.com/file/d/1uI5qMRYsezAzkRMrKpVb51P1gLWHCfyq/preview" title="فيديو أسماء الخطوط الموسيقية" className="absolute inset-0 h-full w-full border-0" allow="autoplay" allowFullScreen loading="lazy" />
                 </div>
-              </article>
-
-              <article>
-                <h4 className="mb-3 text-lg font-extrabold">٣. صورة أسماء الخطوط</h4>
-                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ aspectRatio: '4 / 3' }}>
-                  <iframe src="https://qr.me-qr.com/data/image-pack/KqZH0KOM" title="صورة أسماء الخطوط الموسيقية" className="absolute inset-0 h-full w-full border-0" loading="lazy" />
-                </div>
-                <a href="https://qr.me-qr.com/data/image-pack/KqZH0KOM" target="_blank" rel="noreferrer" className="mt-2 inline-block font-bold text-sky-700 underline">فتح الصورة في صفحة جديدة</a>
-              </article>
-
-              <article>
-                <h4 className="mb-3 text-lg font-extrabold">٤. فيديو أسماء المسافات</h4>
+              ) : (
                 <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: '4 / 3' }} onClick={() => onVideoStart?.()}>
                   <iframe src="https://drive.google.com/file/d/1EQ8I96-zNalBStqh3LG2svmSL8nEKtUY/preview" title="فيديو أسماء المسافات الموسيقية" className="absolute inset-0 h-full w-full border-0" allow="autoplay" allowFullScreen loading="lazy" />
                 </div>
-              </article>
+              )}
 
-              <article>
-                <h4 className="mb-3 text-lg font-extrabold">٥. صورة أسماء المسافات</h4>
-                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ aspectRatio: '4 / 3' }}>
-                  <iframe src="https://qr.me-qr.com/data/image-pack/jKSizeLg" title="صورة أسماء المسافات الموسيقية" className="absolute inset-0 h-full w-full border-0" loading="lazy" />
+              <div className="mt-4 flex flex-row items-center justify-between gap-3">
+                <button type="button" disabled={staffVideoStep === 0} onClick={() => setStaffVideoStep((step) => Math.max(0, step - 1))} className="rounded-full bg-white px-5 py-2.5 font-extrabold shadow-chunky disabled:cursor-not-allowed disabled:opacity-40">→ السابق</button>
+                <div className="flex items-center gap-1.5" aria-label={`الفيديو ${staffVideoStep + 1} من 3`}>
+                  {[0, 1, 2].map((step) => <span key={step} className={`h-2.5 rounded-full transition-all ${step === staffVideoStep ? 'w-7 bg-sky-500' : 'w-2.5 bg-ink/20'}`} />)}
                 </div>
-                <a href="https://qr.me-qr.com/data/image-pack/jKSizeLg" target="_blank" rel="noreferrer" className="mt-2 inline-block font-bold text-sky-700 underline">فتح الصورة في صفحة جديدة</a>
-              </article>
-
-              <article>
-                <h4 className="mb-3 text-lg font-extrabold">٦. صورة المُدَرَّج الموسيقي</h4>
-                <div className="relative w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50" style={{ aspectRatio: '4 / 3' }}>
-                  <iframe src="https://qr.me-qr.com/data/image-pack/44NS94Wr" title="صورة المدرج الموسيقي" className="absolute inset-0 h-full w-full border-0" loading="lazy" />
-                </div>
-                <a href="https://qr.me-qr.com/data/image-pack/44NS94Wr" target="_blank" rel="noreferrer" className="mt-2 inline-block font-bold text-sky-700 underline">فتح الصورة في صفحة جديدة</a>
-              </article>
+                <button type="button" disabled={staffVideoStep === 2} onClick={() => setStaffVideoStep((step) => Math.min(2, step + 1))} className="rounded-full bg-sky-600 px-5 py-2.5 font-extrabold text-white shadow-chunky disabled:cursor-not-allowed disabled:opacity-40">التالي ←</button>
+              </div>
             </div>
           </section>
 
