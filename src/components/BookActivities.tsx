@@ -32,57 +32,24 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
   notes.forEach((freq,i)=>{const osc=ctx.createOscillator(),g=ctx.createGain(),start=now+i*beat;osc.type='triangle';osc.frequency.value=freq;osc.connect(g);g.connect(ctx.destination);g.gain.setValueAtTime(0.0001,start);g.gain.exponentialRampToValueAtTime(0.12,start+0.02);g.gain.exponentialRampToValueAtTime(0.0001,start+beat*0.75);osc.start(start);osc.stop(start+beat*0.8)})
   setActiveAudio(index);window.setTimeout(()=>setActiveAudio(v=>v===index?null:v),Math.ceil((notes.length*beat+0.3)*1000));window.setTimeout(()=>ctx.close(),Math.ceil((notes.length*beat+1)*1000))
  }
- const tracingCanvas=useRef<HTMLCanvasElement|null>(null)
- const tracingDrawing=useRef(false)
- const [tracingColor,setTracingColor]=useState('#ef4444')
- const [tracingWidth,setTracingWidth]=useState(5)
- function prepareTracingCanvas(e:React.SyntheticEvent<HTMLImageElement>){
-  const canvas=tracingCanvas.current
-  if(!canvas)return
-  const img=e.currentTarget
-  canvas.width=img.naturalWidth
-  canvas.height=img.naturalHeight
+ const [safetyNumbers,setSafetyNumbers]=useState<Record<string,number>>({})
+ const [safetyFeedback,setSafetyFeedback]=useState('')
+ const [selectedSafetyNumber,setSelectedSafetyNumber]=useState<number|null>(null)
+ const safetyTargets=[
+  {id:'home',label:'سلامتي في المنزل',number:3,left:45.5,top:65.7},
+  {id:'road',label:'سلامتي في الطريق',number:1,left:54.2,top:65.7},
+  {id:'bus',label:'سلامتي في الحافلة',number:4,left:45.5,top:94.1},
+  {id:'school',label:'سلامتي في المدرسة',number:2,left:54.2,top:94.1},
+ ]
+ function placeSafetyNumber(targetId:string,number:number){
+  const target=safetyTargets.find(t=>t.id===targetId)
+  if(!target)return
+  if(target.number!==number){setSafetyFeedback('حاولي مرة أخرى؛ اختاري الرقم الذي يطابق صورة السلامة.');return}
+  setSafetyNumbers(prev=>({...prev,[targetId]:number}))
+  setSelectedSafetyNumber(null)
+  setSafetyFeedback('أحسنتِ! إجابة صحيحة 🌟')
  }
- function tracingPoint(e:React.PointerEvent<HTMLCanvasElement>){
-  const canvas=e.currentTarget
-  const rect=canvas.getBoundingClientRect()
-  return {x:(e.clientX-rect.left)*canvas.width/rect.width,y:(e.clientY-rect.top)*canvas.height/rect.height}
- }
- // يسمح بالرسم داخل الدوائر البيضاء الأربعة فقط، مع بقاء بقية الصورة محمية.
- function tracingCircleAt(x:number,y:number,canvas:HTMLCanvasElement){
-  const circles=[
-   {x:0.455,y:0.657,r:0.032},
-   {x:0.542,y:0.657,r:0.032},
-   {x:0.455,y:0.941,r:0.032},
-   {x:0.542,y:0.941,r:0.032}
-  ]
-  return circles.some(c=>{const dx=(x/canvas.width-c.x)/c.r;const dy=(y/canvas.height-c.y)/(c.r*canvas.width/canvas.height);return dx*dx+dy*dy<=1})
- }
- function clipTracingToCircles(ctx:CanvasRenderingContext2D,canvas:HTMLCanvasElement){
-  const w=canvas.width,h=canvas.height
-  ctx.beginPath()
-  ;[{x:0.455,y:0.657,r:0.032},{x:0.542,y:0.657,r:0.032},{x:0.455,y:0.941,r:0.032},{x:0.542,y:0.941,r:0.032}].forEach(c=>ctx.ellipse(c.x*w,c.y*h,c.r*w,c.r*w,0,0,Math.PI*2))
-  ctx.clip()
- }
- function startTracing(e:React.PointerEvent<HTMLCanvasElement>){
-  const canvas=e.currentTarget,ctx=canvas.getContext('2d')
-  if(!ctx)return
-  const p=tracingPoint(e)
-  if(!tracingCircleAt(p.x,p.y,canvas)){tracingDrawing.current=false;return}
-  canvas.setPointerCapture(e.pointerId)
-  tracingDrawing.current=true
-  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=tracingColor;ctx.lineWidth=tracingWidth*(canvas.width/canvas.getBoundingClientRect().width);ctx.lineTo(p.x+0.1,p.y+0.1)
-  ctx.save();clipTracingToCircles(ctx,canvas);ctx.stroke();ctx.restore()
- }
- function moveTracing(e:React.PointerEvent<HTMLCanvasElement>){
-  if(!tracingDrawing.current)return
-  const canvas=e.currentTarget,ctx=canvas.getContext('2d')
-  if(!ctx)return
-  const p=tracingPoint(e);ctx.lineTo(p.x,p.y)
-  ctx.save();clipTracingToCircles(ctx,canvas);ctx.stroke();ctx.restore()
- }
- function stopTracing(){tracingDrawing.current=false}
- function clearTracing(){const canvas=tracingCanvas.current;const ctx=canvas?.getContext('2d');if(canvas&&ctx)ctx.clearRect(0,0,canvas.width,canvas.height)}
+ function resetSafetyNumbers(){setSafetyNumbers({});setSelectedSafetyNumber(null);setSafetyFeedback('')}
  const flagActivity=lessonTitle==='نشيد (عَلَم بلادي)'
  const flagClueItems=[{id:'green',label:'الأخضر',meaning:'الخضرة والزراعة في البلاد'},{id:'red',label:'الأحمر',meaning:'الحرب والمعارك'},{id:'white',label:'الأبيض',meaning:'الأمن والسلام'},{id:'emblem',label:'شعار الخنجر والسيفين',meaning:'الأسلحة التقليدية العُمانية'}]
  const flagCluesDone=flagClueItems.every(x=>flagClues[x.id]===x.id)
@@ -173,21 +140,25 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  </div>
  <div className="flex flex-wrap gap-2 mt-3"><button type="button" onClick={()=>{setBalloonColors({});setNoteCount('');setRestCount('');setSelectedBalloonColor('#ef4444')}} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة التلوين</button>{coloringDone&&<span className="rounded-full bg-green-100 px-4 py-2 font-extrabold text-green-800">أحسنت! لوّنت كل البالونات بشكل صحيح 🎉</span>}</div>
  </div>} {(noteColoringActivity || lessonTitle==='نشيد (سلامتي)')&&<div className="rounded-2xl bg-cream p-4 mb-5">
- <h4 className="font-extrabold text-lg">{lessonTitle==='نشيد (سلامتي)'?'نشاط تتبّع السلامة بالقلم ✍️':'النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️'}</h4>
- <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
- <div className="rounded-2xl border-2 border-amber-200 bg-white p-2 sm:p-4">
- <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
- <span className="font-extrabold">اختَر القلم:</span>
- {[{value:'#ef4444',label:'أحمر'},{value:'#2563eb',label:'أزرق'},{value:'#16a34a',label:'أخضر'},{value:'#111827',label:'أسود'}].map(c=><button key={c.value} type="button" onClick={()=>setTracingColor(c.value)} aria-label={c.label} title={c.label} className={'h-9 w-9 rounded-full border-2 '+(tracingColor===c.value?'ring-4 ring-violet-300':'border-slate-300')} style={{backgroundColor:c.value}} />)}
- <label className="flex items-center gap-2 text-sm font-bold">سُمك القلم <select value={tracingWidth} onChange={e=>setTracingWidth(Number(e.target.value))} className="rounded-lg border p-2"><option value={3}>رفيع</option><option value={5}>متوسط</option><option value={9}>سميك</option></select></label>
- <button type="button" onClick={clearTracing} className="rounded-full border bg-white px-4 py-2 font-bold">مسح الكتابة</button>
- </div>
- <p className="mb-3 text-center text-sm">اكتب داخل الدوائر البيضاء الفارغة فقط بإصبعك أو بالقلم أو بالفأرة. بقية الصورة ثابتة ولا يمكن الرسم فوقها.</p>
- <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-lg touch-none">
- <img src={`${import.meta.env.BASE_URL}images/activities/${lessonTitle==='نشيد (سلامتي)'?'grade4-u2-l1-tracing.jpg':'grade1-u1-l2-tracing.jpg'}`} alt="ورقة نشاط التتبّع وكتابة الأرقام داخل المربعات" onLoad={prepareTracingCanvas} className="block h-auto w-full" />
- <canvas ref={tracingCanvas} className="absolute inset-0 h-full w-full touch-none" style={{touchAction:'none',cursor:'crosshair'}} onPointerDown={startTracing} onPointerMove={moveTracing} onPointerUp={stopTracing} onPointerCancel={stopTracing} onLostPointerCapture={stopTracing} />
- </div>
- </div> <p className="mt-3 text-sm text-slate-600">تقدر تختار لون القلم وسمكه، وتكتب داخل الدوائر البيضاء الأربع فقط، وتمسح الكتابة وتعيد المحاولة في أي وقت.</p>
+ <h4 className="font-extrabold text-lg">{lessonTitle==='نشيد (سلامتي)'?'نشاط تفاعلي: صِل الرقم بالمكان المناسب ✍️':'النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️'}</h4>
+ {lessonTitle==='نشيد (سلامتي)' ? <>
+  <p className="my-2">اسحب الرقم من أسفل الصورة إلى الدائرة الفارغة التي تناسبه. على الهاتف، اضغط على الرقم ثم اضغط على الدائرة المناسبة.</p>
+  <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-lg">
+   <img src={`${import.meta.env.BASE_URL}images/activities/grade4-u2-l1-tracing.jpg`} alt="صور السلامة في الطريق والمدرسة والمنزل والحافلة" className="block h-auto w-full select-none" draggable={false}/>
+   {safetyTargets.map(target=><div key={target.id} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const n=Number(e.dataTransfer.getData('text/plain'));if(n)placeSafetyNumber(target.id,n)}} onClick={()=>{if(selectedSafetyNumber!==null)placeSafetyNumber(target.id,selectedSafetyNumber)}} className="absolute flex items-center justify-center rounded-full border-2 border-dashed border-violet-500/70 bg-white/80 text-2xl font-black text-violet-800 shadow-sm" style={{left:`${target.left}%`,top:`${target.top}%`,width:'8%',aspectRatio:'1',transform:'translate(-50%,-50%)'}} aria-label={target.label}>
+    {safetyNumbers[target.id]??''}
+   </div>)}
+  </div>
+  <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+   {[1,2,3,4].map(n=><button key={n} type="button" draggable onDragStart={e=>e.dataTransfer.setData('text/plain',String(n))} onClick={()=>setSelectedSafetyNumber(n)} className={'h-12 w-12 rounded-xl border-2 text-xl font-black shadow-sm '+(selectedSafetyNumber===n?'border-violet-600 bg-violet-100 ring-4 ring-violet-200':'border-sky-300 bg-white')} aria-pressed={selectedSafetyNumber===n}>{['١','٢','٣','٤'][n-1]}</button>)}
+   <button type="button" onClick={resetSafetyNumbers} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة المحاولة</button>
+  </div>
+  {safetyFeedback&&<p role="status" className="mt-3 text-center font-bold text-violet-800">{safetyFeedback}</p>}
+  {Object.keys(safetyNumbers).length===4&&<p className="mt-2 text-center font-extrabold text-green-700">رائع! أكملتِ النشاط بنجاح 🎉</p>}
+ </> : <>
+  <p className="mb-3 text-center text-sm">اكتب فوق الصورة بإصبعك أو بالقلم أو بالفأرة، واتبع الخطوط. يمكنك كتابة الأرقام داخل المربعات الفارغة.</p>
+  <img src={`${import.meta.env.BASE_URL}grade1-u1-l2-tracing.jpg`} alt="ورقة نشاط تتبّع الخطوط وكتابة الأرقام داخل المربعات" className="block h-auto w-full"/>
+ </>}
  </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
