@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { ArrowUp, Mic, Music2, Sparkles, X } from 'lucide-react'
+import { ArrowUp, Music2, Sparkles, X } from 'lucide-react'
+import { findUncleSolAnswer, suggestedSolQuestions, uncleSolFallback } from '@/lib/uncleSolKnowledge'
 
 type ChatMessage = {
   id: number
@@ -69,63 +70,17 @@ export default function UncleSolChat() {
     setDraft('')
     setNotice('')
     setSending(true)
-
-    const apiUrl = import.meta.env.VITE_SOL_API_URL as string | undefined
-    if (!apiUrl) {
-      setMessages((current) => [
-        ...current,
-        {
-          id: nextId.current++,
-          role: 'assistant',
-          text: 'وصلني سؤالك! 🎼 واجهة العم صول جاهزة، لكن لم يتم ربطها بعد بمحرك الإجابات المعتمد على المنهج. عندما يتم ربط الخدمة، سأجيبك من دروس نغماتي فقط.',
-        },
-      ])
-      setSending(false)
-      return
-    }
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, messages: messages.map(({ role, text }) => ({ role, content: text })) }),
-      })
-      if (!response.ok) throw new Error('تعذر الحصول على الإجابة')
-      const data = (await response.json()) as { answer?: string }
-      if (!data.answer?.trim()) throw new Error('لم تصل إجابة صالحة')
-      setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', text: data.answer!.trim() }])
-    } catch {
-      setNotice('لم أستطع الاتصال الآن. حاول مرة أخرى بعد قليل.')
-    } finally {
-      setSending(false)
-    }
-  }
-
-  function startVoiceInput() {
-    type SpeechRecognitionLike = {
-      lang: string
-      interimResults: boolean
-      onresult: ((event: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null
-      onerror: (() => void) | null
-      start: () => void
-    }
-    type SpeechWindow = Window & {
-      SpeechRecognition?: new () => SpeechRecognitionLike
-      webkitSpeechRecognition?: new () => SpeechRecognitionLike
-    }
-    const speechWindow = window as SpeechWindow
-    const Recognition = speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
-    if (!Recognition) {
-      setNotice('الإملاء الصوتي غير متاح في هذا المتصفح. يمكنك كتابة سؤالك هنا.')
-      return
-    }
-    const recognition = new Recognition()
-    recognition.lang = 'ar'
-    recognition.interimResults = false
-    recognition.onresult = (event) => setDraft((event.results[0]?.[0]?.transcript ?? '').trim())
-    recognition.onerror = () => setNotice('لم أتمكن من سماعك بوضوح. حاول مرة أخرى.')
-    recognition.start()
-    setNotice('تحدث الآن، وسيظهر سؤالك في خانة الكتابة.')
+    // All matching runs locally against the curriculum bundle; no request leaves the browser.
+    const result = findUncleSolAnswer(question)
+    setMessages((current) => [
+      ...current,
+      {
+        id: nextId.current++,
+        role: 'assistant',
+        text: result?.answer ?? uncleSolFallback,
+      },
+    ])
+    setSending(false)
   }
 
   return (
@@ -166,6 +121,16 @@ export default function UncleSolChat() {
 
             <div className="sol-chat-messages" aria-live="polite" aria-relevant="additions text">
               <div className="sol-chat-day-label"><span>بداية الدردشة</span></div>
+              {messages.length === 1 && (
+                <div className="sol-suggestions" aria-label="أسئلة مقترحة">
+                  <p>جرّب تسألني:</p>
+                  {suggestedSolQuestions.map((question) => (
+                    <button key={question} type="button" onClick={() => setDraft(question)}>
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              )}
               {messages.map((message) => (
                 <div key={message.id} className={`sol-message-row ${message.role === 'student' ? 'sol-message-row--student' : ''}`}>
                   {message.role === 'assistant' && <UncleSolAvatar small />}
@@ -189,9 +154,6 @@ export default function UncleSolChat() {
             <form className="sol-chat-composer" onSubmit={handleSubmit}>
               {notice && <p className="sol-chat-notice" role="status">{notice}</p>}
               <div className="sol-input-row">
-                <button type="button" className="sol-tool-button" onClick={startVoiceInput} aria-label="إملاء السؤال صوتياً" title="إملاء صوتي">
-                  <Mic size={20} />
-                </button>
                 <input
                   ref={inputRef}
                   value={draft}
@@ -205,7 +167,7 @@ export default function UncleSolChat() {
                   <ArrowUp size={22} />
                 </button>
               </div>
-              <p className="sol-chat-footnote">🎵 اسأل عن دروس الموسيقى في منهج نغماتي</p>
+              <p className="sol-chat-footnote">🔒 الإجابات من محتوى المنهج داخل المنصة فقط</p>
             </form>
           </aside>
         </div>
