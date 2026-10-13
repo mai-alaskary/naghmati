@@ -85,15 +85,6 @@ export default function StaffBookActivities() {
         <button type="button" className="rounded-xl bg-violet-600 px-4 py-2 font-bold text-white" onClick={() => { setStrokes(old => [...old.slice(0, 2), []]); setActiveStroke([]) }}>مسح آخر رسمة</button>
         <button type="button" className="rounded-xl border-2 border-violet-300 bg-white px-4 py-2 font-bold text-violet-800" onClick={() => { setStrokes([[], [], []]); setActiveStroke([]) }}>إعادة من البداية</button>
       </div>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        {[0, 1].map(i => <div key={i}>
-          <p className="mb-1 text-sm font-bold text-slate-600">مدرج تدريب {i + 1}</p>
-          <svg viewBox="0 0 300 95" className="w-full rounded-lg border border-slate-200 bg-white">
-            {[22, 34, 46, 58, 70].map(y => <line key={y} x1="8" x2="292" y1={y} y2={y} stroke="#64748b" strokeWidth="1.3" />)}
-            <text x="150" y="53" textAnchor="middle" fontSize="9" fill="#cbd5e1">ارسم مفتاح صول على هذا المدرج</text>
-          </svg>
-        </div>)}
-      </div>
     </div>
 
     <div className="rounded-2xl border-2 border-rose-200 bg-rose-50 p-4">
