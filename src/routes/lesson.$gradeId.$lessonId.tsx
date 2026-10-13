@@ -9,7 +9,6 @@ import FlagColoring from '@/components/FlagColoring'
 import Quiz from '@/components/Quiz'
 import ActivityCard, { isActivityReady } from '@/components/ActivityCard'
 import BookActivities from '@/components/BookActivities'
-import StaffBookActivities from '@/components/StaffBookActivities'
 import RhythmFigure from '@/components/RhythmFigure'
 
 export const Route = createFileRoute('/lesson/$gradeId/$lessonId')({
@@ -155,9 +154,7 @@ function LessonPage() {
         <section id="practice" className="scroll-mt-24">
           <SectionTitle n={5} title="التطبيق والأنشطة الموسيقية" emoji="🎮" />
 
-          {lesson.title === 'المُدَرَّج الموسيقي ومفتاح صول' || lesson.title === 'المدرج الموسيقي ومفتاح صول' ? (
-            <StaffBookActivities />
-          ) : activities.length > 0 ? (
+          {activities.length > 0 ? (
             <div className="space-y-4">
               {activities.map((a, i) => (
                 <ActivityCard key={i} activity={a} onStart={() => finish("practice")} />
