@@ -95,7 +95,7 @@ function GradePage() {
     const giftIndex = Math.floor(Math.random() * ACHIEVEMENT_GIFTS.length)
     setSelectedGift(null)
     setWheelSpinning(true)
-    setWheelRotation((rotation) => rotation + 1440 + (360 - giftIndex * 90 - 45))
+    setWheelRotation((rotation) => rotation + 1440 + (360 - giftIndex * 90))
     window.setTimeout(() => {
       setSelectedGift(ACHIEVEMENT_GIFTS[giftIndex])
       setWheelSpinning(false)
