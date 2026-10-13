@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 
 const staffLines = [72, 92, 112, 132, 152]
-const tracingPath = 'M 170 152 C 142 142 143 112 165 91 C 186 72 215 83 216 109 C 218 135 191 158 166 151 C 143 144 145 119 163 104 C 181 91 198 105 193 122 C 189 137 175 145 163 137 C 154 130 160 117 170 117 C 181 117 183 132 175 143 C 165 157 158 172 163 187 C 167 201 184 203 194 194 C 207 181 204 163 192 151'
+const tracingPath = 'M 166 132 C 153 128 151 115 163 108 C 178 99 193 111 188 126 C 184 139 168 145 156 136 C 145 127 151 115 161 117 C 170 119 173 129 167 135 C 161 140 154 135 157 129 C 160 121 169 116 176 107 C 191 88 200 63 194 40 C 190 25 177 23 170 32 C 163 41 170 50 178 46 C 186 42 183 32 177 32 C 166 32 163 48 165 65 C 168 88 155 112 160 132 C 164 153 164 172 154 188 C 150 194 142 190 144 184'
 const noteTargets = [
   { name: 'مي', type: 'line', y: 125 },
   { name: 'فا', type: 'space', y: 115 },
@@ -69,9 +69,18 @@ export default function StaffBookActivities() {
       <div className="overflow-hidden rounded-xl border-2 border-violet-100 bg-white">
         <svg viewBox="0 0 320 220" className="h-auto w-full touch-none" role="img" aria-label="مدرج موسيقي ونموذج منقط لمفتاح صول">
           {staffLines.map(y => <line key={y} x1="18" x2="302" y1={y} y2={y} stroke="#334155" strokeWidth="1.6" />)}
-          <path d={tracingPath} transform="translate(-35,-30) scale(.92)" fill="none" stroke="#8b5cf6" strokeWidth="3" strokeDasharray="2 6" strokeLinecap="round" data-trace="true" />
-          <circle cx="121" cy="110" r="5" fill="#16a34a" /><text x="130" y="105" fontSize="9" fill="#15803d" fontWeight="bold">ابدأ</text>
-          <circle cx="142" cy="109" r="5" fill="#f97316" /><text x="151" y="104" fontSize="9" fill="#c2410c" fontWeight="bold">اتبع النقاط ↗</text>
+          <defs>
+            <marker id="trace-arrow" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+              <path d="M0,0 L5,2.5 L0,5 Z" fill="#f97316" />
+            </marker>
+          </defs>
+          <path d={tracingPath} fill="none" stroke="#8b5cf6" strokeWidth="3.2" strokeDasharray="2 6" strokeLinecap="round" data-trace="true" />
+          <path d="M 151 121 Q 153 113 161 110" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <path d="M 176 104 Q 190 84 194 62" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <path d="M 166 76 Q 163 96 159 116" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <path d="M 161 151 Q 162 169 155 183" fill="none" stroke="#f97316" strokeWidth="1.8" strokeDasharray="2 2" markerEnd="url(#trace-arrow)" />
+          <circle cx="166" cy="132" r="4.5" fill="#16a34a" stroke="white" strokeWidth="1" />
+          <text x="174" y="145" fontSize="9" fill="#15803d" fontWeight="bold">ابدأ</text>
         </svg>
       </div>
       <h5 className="my-3 font-extrabold">جرّب رسم مفتاح صول بنفسك</h5>
