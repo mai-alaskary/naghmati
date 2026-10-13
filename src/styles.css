@@ -243,3 +243,7 @@ body {
   .sol-picker-heading strong { font-size: 13px; }
   .sol-option-button, .sol-question-list button { font-size: 11px; }
 }
+
+/* Compact navigation between the current Uncle Sol picker steps */
+.sol-change-step { margin-inline-start: auto; padding: 4px 8px; border: 1px solid #cfe7df; border-radius: 9px; color: #187f80; background: #fff; font: inherit; font-size: 10px; font-weight: 800; cursor: pointer; }
+.sol-change-step:hover { border-color: #82cdbb; background: #eaf8f2; }
