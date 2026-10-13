@@ -153,8 +153,8 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  <label className="rounded-xl bg-green-50 border border-green-200 p-3 text-center"><span className="block font-extrabold text-green-700">اكتب عدد بالونات السكتة</span><input type="number" min="0" max="4" step="1" inputMode="numeric" value={restCount} onChange={e=>setRestCount(e.target.value)} aria-label="عدد بالونات السكتة" className="mx-auto mt-2 block w-24 rounded-lg border-2 border-green-300 bg-white p-2 text-center text-xl font-extrabold" placeholder="العدد" /></label>
  </div>
  <div className="flex flex-wrap gap-2 mt-3"><button type="button" onClick={()=>{setBalloonColors({});setNoteCount('');setRestCount('');setSelectedBalloonColor('#ef4444')}} className="rounded-full border bg-white px-4 py-2 font-bold">إعادة التلوين</button>{coloringDone&&<span className="rounded-full bg-green-100 px-4 py-2 font-extrabold text-green-800">أحسنت! لوّنت كل البالونات بشكل صحيح 🎉</span>}</div>
- </div>} {noteColoringActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
- <h4 className="font-extrabold text-lg">النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️</h4>
+ </div>} {(noteColoringActivity || lessonTitle==='نشيد (سلامتي)')&&<div className="rounded-2xl bg-cream p-4 mb-5">
+ <h4 className="font-extrabold text-lg">{lessonTitle==='نشيد (سلامتي)'?'نشاط تتبّع السلامة بالقلم ✍️':'النشاط الثاني: تتبّع الخطوط حسب الأسهم ✍️'}</h4>
  <p className="my-2">اتبع الأسهم بإصبعك أو بالفأرة، ومرّر فوق الخطوط المتقطعة من البداية إلى النهاية.</p>
  <div className="rounded-2xl border-2 border-amber-200 bg-white p-2 sm:p-4">
  <div className="flex flex-wrap items-center justify-center gap-2 mb-3">
@@ -165,7 +165,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  </div>
  <p className="mb-3 text-center text-sm">اكتب فوق الصورة بإصبعك أو بالقلم أو بالفأرة، واتبع الخطوط. يمكنك كتابة الأرقام داخل المربعات الفارغة.</p>
  <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-lg touch-none">
- <img src="https://raw.githubusercontent.com/mai-alaskary/naghmati/main/grade1-u1-l2-tracing.jpg" alt="ورقة نشاط تتبّع الخطوط وكتابة الأرقام داخل المربعات" onLoad={prepareTracingCanvas} className="block h-auto w-full" />
+ <img src={`${import.meta.env.BASE_URL}images/activities/${lessonTitle==='نشيد (سلامتي)'?'grade4-u2-l1-tracing.jpg':'grade1-u1-l2-tracing.jpg'}`} alt="ورقة نشاط التتبّع وكتابة الأرقام داخل المربعات" onLoad={prepareTracingCanvas} className="block h-auto w-full" />
  <canvas ref={tracingCanvas} className="absolute inset-0 h-full w-full touch-none" style={{touchAction:'none',cursor:'crosshair'}} onPointerDown={startTracing} onPointerMove={moveTracing} onPointerUp={stopTracing} onPointerCancel={stopTracing} onLostPointerCapture={stopTracing} />
  </div>
  </div> <p className="mt-3 text-sm text-slate-600">تقدر تختار لون القلم، تكتب فوق الصورة أو داخل المربعات الفارغة، وتمسح الكتابة وتعيد المحاولة في أي وقت.</p>
