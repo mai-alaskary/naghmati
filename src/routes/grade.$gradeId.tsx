@@ -78,7 +78,7 @@ function GradePage() {
       '',
       `لقد أتممت جميع دروس ${unitTitle} على منصة نغماتي.`,
       `نسبة النجوم التي جمعتها: ${percentage}%.`,
-      `هديتي الرمزية من عجلة نغماتي: ${selectedGift.emoji} ${selectedGift.name}.`,
+      `هديتي الرمزية من عجلة نغماتي: ${selectedGift.name}.`,
       '',
       `الاسم الرباعي: ${studentName.trim()}`,
       `الصف الدراسي: ${studentClass.trim()}`,
@@ -95,7 +95,7 @@ function GradePage() {
     const giftIndex = Math.floor(Math.random() * ACHIEVEMENT_GIFTS.length)
     setSelectedGift(null)
     setWheelSpinning(true)
-    setWheelRotation((rotation) => rotation + 1440 + (360 - giftIndex * 90))
+    setWheelRotation((rotation) => rotation + 1440 + (360 - giftIndex * 90 - 45))
     window.setTimeout(() => {
       setSelectedGift(ACHIEVEMENT_GIFTS[giftIndex])
       setWheelSpinning(false)
@@ -273,10 +273,10 @@ function GradePage() {
                           transitionTimingFunction: 'cubic-bezier(.12,.72,.12,1)',
                         }}
                       >
-                        <span className="absolute left-1/2 top-[13%] -translate-x-1/2 text-4xl" aria-hidden="true">🍬</span>
-                        <span className="absolute right-[13%] top-1/2 -translate-y-1/2 text-4xl" aria-hidden="true">🧸</span>
-                        <span className="absolute bottom-[13%] left-1/2 -translate-x-1/2 text-4xl" aria-hidden="true">✏️</span>
-                        <span className="absolute left-[13%] top-1/2 -translate-y-1/2 text-4xl" aria-hidden="true">💌</span>
+                        <span className="absolute right-[22%] top-[22%] text-4xl" aria-hidden="true">🍬</span>
+                        <span className="absolute bottom-[22%] right-[22%] text-4xl" aria-hidden="true">🧸</span>
+                        <span className="absolute bottom-[22%] left-[22%] text-4xl" aria-hidden="true">✏️</span>
+                        <span className="absolute left-[22%] top-[22%] text-4xl" aria-hidden="true">💌</span>
                         <span className="absolute left-1/2 top-1/2 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-white bg-violet-600 text-xl text-white shadow">★</span>
                       </div>
                     </div>
