@@ -116,7 +116,7 @@ function GradePage() {
             <p className="text-xl font-semibold text-white/90 mt-3">{grade.tagline}</p>
             <div className="mt-6 max-w-md">
               <div className="flex justify-between font-bold mb-2">
-                <span>تقدّمي</span>
+                <span>تقدّمك</span>
                 <span>
                   {done} / {all.length} دروس
                 </span>
@@ -259,7 +259,7 @@ function GradePage() {
 
                   <div className="mt-6 rounded-3xl border-2 border-violet-200 bg-gradient-to-br from-violet-50 via-white to-pink-50 p-4 md:p-5 text-center">
                     <h4 className="text-xl font-extrabold text-violet-800">🎁 اختر هديتك</h4>
-                    <p className="mt-1 text-sm font-semibold text-ink/65">لفّي العجلة واكتشفي هديتك الرمزية قبل مشاركة إنجازك!</p>
+                    <p className="mt-1 text-sm font-semibold text-ink/65">لف العجلة واكتشف هديتك الرمزية قبل مشاركة إنجازك!</p>
                     <div className="relative mx-auto mt-4 h-64 w-64 max-w-full">
                       <div className="absolute -top-1 left-1/2 z-20 -translate-x-1/2 text-3xl drop-shadow" aria-hidden="true">🔻</div>
                       <div
@@ -286,7 +286,7 @@ function GradePage() {
                       disabled={wheelSpinning}
                       className="mt-4 rounded-full bg-violet-600 px-7 py-3 font-extrabold text-white shadow-chunky transition hover:bg-violet-700 disabled:cursor-wait disabled:opacity-60"
                     >
-                      {wheelSpinning ? '🎡 العجلة تدور...' : selectedGift ? '🔄 لفّي العجلة مرة أخرى' : '🎡 لفّي العجلة!'}
+                      {wheelSpinning ? '🎡 العجلة تدور...' : selectedGift ? '🔄 لف العجلة مرة أخرى' : '🎡 لف العجلة!'}
                     </button>
                     {selectedGift && !wheelSpinning && (
                       <p role="status" className="mt-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-3 text-lg font-extrabold text-emerald-800 animate-bounce-in">
@@ -311,7 +311,7 @@ function GradePage() {
                     </p>
                   )}
                   {canShare && !selectedGift && (
-                    <p className="mt-3 text-center text-sm font-bold text-violet-700">لفّي العجلة أولًا لاختيار هديتك قبل المشاركة.</p>
+                    <p className="mt-3 text-center text-sm font-bold text-violet-700">لف العجلة أولًا لاختيار هديتك قبل المشاركة.</p>
                   )}
                   <p className="mt-3 text-center text-xs text-ink/55">ستُفتح رسالة جاهزة في واتساب تتضمن إنجازك والهدية المختارة؛ اضغط إرسال لإيصالها إلى المعلمة.</p>
                 </div>
