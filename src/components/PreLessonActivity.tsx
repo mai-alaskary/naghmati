@@ -301,6 +301,9 @@ function RhythmBlocksWarmup() {
 export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   const [choice, setChoice] = useState<number | null>(null)
   const [staffAnswers, setStaffAnswers] = useState<Record<number, number>>({})
+  const [staffQuestionIndex, setStaffQuestionIndex] = useState(0)
+  const [staffWrong, setStaffWrong] = useState<number[]>([])
+  const [staffSolved, setStaffSolved] = useState(false)
   const activity = warmups[lesson.title] ?? {
     question: `ما المعلومة التي تساعدك على فهم درس «${lesson.title}»؟`,
     options: ['ألاحظ عنوان الدرس وأستمع جيدًا', 'أتجاهل الأمثلة', 'أجيب دون قراءة', 'أتوقف عن المشاركة'],
@@ -325,20 +328,64 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
               <text x="180" y="165" textAnchor="middle" fontSize="13" fontWeight="700" fill="#475569">المدرج الموسيقي</text>
             </svg>
           </div>
-          {[
-            { question: 'هل تستطيع عدّ الخطوط الموجودة في الصورة؟', options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'], answer: 2 },
-            { question: 'كم مسافة موجودة بين خطوط المدرج في الصورة؟', options: ['مسافتان', 'ثلاث مسافات', 'أربع مسافات', 'خمس مسافات'], answer: 2 },
-          ].map((item, index) => (
-            <div key={item.question} className="rounded-3xl border-2 border-amber-100 bg-white p-4 md:p-5">
-              <h4 className="mb-3 text-lg font-extrabold">{index + 1}. {item.question}</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
-                {item.options.map((option, optionIndex) => (
-                  <button key={option} type="button" onClick={() => { setStaffAnswers((current) => ({ ...current, [index]: optionIndex })); optionIndex === item.answer ? playCorrect() : playWrong() }} aria-pressed={staffAnswers[index] === optionIndex} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${staffAnswers[index] === optionIndex ? (optionIndex === item.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-slate-100 bg-amber-50 hover:bg-amber-100'}`}>{option}</button>
-                ))}
+          {(() => {
+            const questions = [
+              { question: 'هل تستطيع عدّ الخطوط الموجودة في الصورة؟', options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'], answer: 2 },
+              { question: 'كم مسافة موجودة بين خطوط المدرج في الصورة؟', options: ['مسافتان', 'ثلاث مسافات', 'أربع مسافات', 'خمس مسافات'], answer: 2 },
+            ]
+            const item = questions[staffQuestionIndex]
+            const colors = ['bg-pink-100 border-pink-300 hover:bg-pink-200', 'bg-sky-100 border-sky-300 hover:bg-sky-200', 'bg-amber-100 border-amber-300 hover:bg-amber-200', 'bg-emerald-100 border-emerald-300 hover:bg-emerald-200']
+            return (
+              <div className="rounded-[2rem] bg-white p-5 md:p-8 shadow-chunky">
+                <div className="flex items-center justify-between gap-3 mb-5">
+                  <span className="rounded-full bg-violet-100 text-violet-700 font-bold px-4 py-1">السؤال {staffQuestionIndex + 1} من {questions.length}</span>
+                  <div className="flex gap-1.5" aria-hidden="true">
+                    {questions.map((_, i) => <span key={i} className={`w-3 h-3 rounded-full ${i < staffQuestionIndex || (i === staffQuestionIndex && staffSolved) ? 'bg-emerald-400' : i === staffQuestionIndex ? 'bg-violet-400' : 'bg-ink/10'}`} />)}
+                  </div>
+                </div>
+                <h4 className="text-xl md:text-2xl font-extrabold leading-snug mb-6">{item.question}</h4>
+                <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2">
+                  {item.options.map((option, optionIndex) => {
+                    const isWrong = staffWrong.includes(optionIndex)
+                    const isRight = staffSolved && optionIndex === item.answer
+                    return (
+                      <button key={option} type="button" disabled={staffSolved || isWrong}
+                        onClick={() => {
+                          setStaffAnswers((current) => ({ ...current, [staffQuestionIndex]: optionIndex }))
+                          if (optionIndex === item.answer) { setStaffSolved(true); playCorrect() }
+                          else { setStaffWrong((current) => [...current, optionIndex]); playWrong() }
+                        }}
+                        aria-pressed={staffAnswers[staffQuestionIndex] === optionIndex}
+                        className={['relative rounded-3xl border-[3px] p-5 text-xl font-bold text-center transition min-h-20 shadow-chunky',
+                          isRight ? 'bg-emerald-400 border-emerald-500 text-white' : isWrong ? 'bg-red-100 border-red-300 text-red-400 line-through opacity-70' : staffSolved ? 'bg-ink/5 border-transparent opacity-50' : colors[optionIndex]
+                        ].join(' ')}>
+                        {option}
+                        {isRight && <span className="absolute -top-3 -left-3 text-3xl">✅</span>}
+                        {isWrong && <span className="absolute -top-3 -left-3 text-3xl">❌</span>}
+                      </button>
+                    )
+                  })}
+                </div>
+                <div aria-live="polite" className="min-h-20 mt-6">
+                  {staffSolved ? (
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-emerald-50 border-2 border-emerald-200 p-4">
+                      <p className="text-xl font-extrabold text-emerald-600">أحسنت! إجابة صحيحة ⭐</p>
+                      {staffQuestionIndex + 1 < questions.length ? (
+                        <button type="button" onClick={() => { setStaffQuestionIndex((i) => i + 1); setStaffWrong([]); setStaffSolved(false) }} className="rounded-full bg-emerald-500 text-white px-6 py-3 text-lg font-extrabold shadow-chunky">السؤال التالي ←</button>
+                      ) : (
+                        <button type="button" onClick={() => { setStaffQuestionIndex(0); setStaffWrong([]); setStaffSolved(false); setStaffAnswers({}) }} className="rounded-full bg-violet-500 text-white px-6 py-3 text-lg font-extrabold shadow-chunky">أعد المحاولة ↺</button>
+                      )}
+                    </div>
+                  ) : staffWrong.length > 0 ? (
+                    <div className="rounded-3xl bg-orange-50 border-2 border-orange-200 p-4">
+                      <p className="text-xl font-extrabold text-orange-600">حاول مرة أخرى 💪</p>
+                      <p className="text-lg text-ink/70 mt-1">💡 أعد العدّ من الصورة، ثم اختَر الإجابة الصحيحة.</p>
+                    </div>
+                  ) : null}
+                </div>
               </div>
-              {staffAnswers[index] !== undefined && <p className="mt-3 font-extrabold" aria-live="polite">{staffAnswers[index] === item.answer ? 'أحسنت! إجابة صحيحة ⭐' : 'محاولة جميلة! أعد العدّ من الصورة وحاول مرة أخرى.'}</p>}
-            </div>
-          ))}
+            )
+          })()}
         </div>
       ) : isRhythmFigure ? (
         <RhythmBlocksWarmup />
