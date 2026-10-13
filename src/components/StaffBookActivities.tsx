@@ -3,11 +3,11 @@ import { useRef, useState } from 'react'
 const staffLines = [72, 92, 112, 132, 152]
 const tracingPath = 'M 170 152 C 142 142 143 112 165 91 C 186 72 215 83 216 109 C 218 135 191 158 166 151 C 143 144 145 119 163 104 C 181 91 198 105 193 122 C 189 137 175 145 163 137 C 154 130 160 117 170 117 C 181 117 183 132 175 143 C 165 157 158 172 163 187 C 167 201 184 203 194 194 C 207 181 204 163 192 151'
 const noteTargets = [
-  { name: 'مي', type: 'line', y: 152 },
-  { name: 'فا', type: 'space', y: 142 },
-  { name: 'صول', type: 'line', y: 132 },
-  { name: 'لا', type: 'space', y: 122 },
-  { name: 'سي', type: 'line', y: 112 },
+  { name: 'مي', type: 'line', y: 125 },
+  { name: 'فا', type: 'space', y: 115 },
+  { name: 'صول', type: 'line', y: 105 },
+  { name: 'لا', type: 'space', y: 95 },
+  { name: 'سي', type: 'line', y: 85 },
 ]
 const cards = ['صول', 'لا', 'مي', 'سي', 'فا']
 
@@ -108,8 +108,8 @@ export default function StaffBookActivities() {
           {[45, 65, 85, 105, 125].map(y => <line key={y} x1="18" x2="342" y1={y} y2={y} stroke="#334155" strokeWidth="1.8" />)}
           <text x="26" y="102" fontSize="60" fill="#111827">𝄞</text>
           {noteTargets.map((n, i) => <g key={n.name} onClick={() => placeCard(i)} className="cursor-pointer">
-            <circle cx={104 + i * 53} cy={n.y - 20} r="12" fill={matches[i] ? '#bbf7d0' : '#fff'} stroke={matches[i] ? '#16a34a' : '#64748b'} strokeWidth="2.5" />
-            {matches[i] && <text x={104 + i * 53} y={n.y - 16} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#166534">✓</text>}
+            <circle cx={104 + i * 53} cy={n.y} r="12" fill={matches[i] ? '#bbf7d0' : '#fff'} stroke={matches[i] ? '#16a34a' : '#64748b'} strokeWidth="2.5" />
+            {matches[i] && <text x={104 + i * 53} y={n.y + 4} textAnchor="middle" fontSize="12" fontWeight="bold" fill="#166534">✓</text>}
           </g>)}
           <text x="180" y="165" textAnchor="middle" fontSize="11" fill="#64748b">اضغط على الدائرة بعد اختيار البطاقة</text>
         </svg>
