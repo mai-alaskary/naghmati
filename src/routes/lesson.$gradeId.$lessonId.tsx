@@ -339,7 +339,6 @@ function StoryJumperBook() {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-xl md:text-2xl font-extrabold">📖 قصة «سلامتي هي مهمتي»</h3>
-          <p className="mt-1 text-sm font-semibold text-ink/60">حوار صفحة بصفحة بتسجيلات صوتية مستقلة لشخصيتي سالم والأم</p>
         </div>
         <span className="rounded-full bg-violet-100 px-4 py-2 font-extrabold text-violet-700">الصفحة {pageIndex + 1} من {safetyStoryPages.length}</span>
       </div>
