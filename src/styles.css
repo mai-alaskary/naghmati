@@ -217,3 +217,29 @@ body {
 .sol-suggestions button { max-width: 100%; padding: 8px 12px; border: 1px solid #bfe4d9; border-radius: 14px; color: #176b70; background: #f1fcf8; font: inherit; font-size: 12px; font-weight: 800; text-align: right; cursor: pointer; transition: background .18s, border-color .18s; }
 .sol-suggestions button:hover { border-color: #70c8b7; background: #e3f8f0; }
 .sol-chat-messages { overflow-wrap: anywhere; }
+
+
+/* Guided curriculum picker and teacher escalation */
+.sol-picker { display: flex; flex-direction: column; gap: 10px; margin: 4px 34px 18px 0; padding: 14px; border: 1px solid #cfe7df; border-radius: 20px; background: linear-gradient(160deg,#fbfffd,#f0faf6); box-shadow: 0 4px 14px rgba(20,90,80,.05); }
+.sol-picker-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.sol-picker-heading > div { display: flex; flex-direction: column; gap: 3px; }
+.sol-picker-heading strong { color: #20575a; font-size: 14px; font-weight: 900; }
+.sol-picker-heading span { color: #6b928a; font-size: 11px; line-height: 1.6; }
+.sol-reset-button { display: grid; flex: 0 0 32px; width: 32px; height: 32px; place-items: center; border: 1px solid #cfe7df; border-radius: 11px; color: #187f80; background: white; cursor: pointer; }
+.sol-picker-step { display: flex; align-items: center; gap: 8px; margin-top: 4px; color: #24585c; font-size: 13px; }
+.sol-step-number { display: grid; flex: 0 0 25px; width: 25px; height: 25px; place-items: center; border-radius: 9px; color: #fff; background: linear-gradient(135deg,#0b8490,#19b7a7); font-weight: 900; }
+.sol-option-list, .sol-question-list { display: flex; flex-direction: column; gap: 7px; }
+.sol-option-button, .sol-question-list button { display: flex; align-items: center; justify-content: space-between; gap: 9px; width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #d2e9e1; border-radius: 13px; color: #315e60; background: #fff; font: inherit; font-size: 12px; font-weight: 800; text-align: right; cursor: pointer; transition: background .18s, border-color .18s, transform .18s; }
+.sol-option-button span, .sol-question-list button span { flex: 1; }
+.sol-option-button:hover, .sol-question-list button:hover { border-color: #82cdbb; background: #f0fbf6; }
+.sol-option-button.is-selected { border-color: #159b96; color: #075e68; background: #e5f8f1; box-shadow: inset 0 0 0 1px #159b9630; }
+.sol-question-list button { border-color: #c5e7df; background: #f8fffc; }
+.sol-no-questions { margin: 0; padding: 11px 12px; border: 1px dashed #b6d9d0; border-radius: 13px; color: #5b7776; background: #fff; font-size: 12px; line-height: 1.8; }
+.sol-teacher-link { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 12px; border: 1px solid #168b67; border-radius: 14px; color: #fff !important; background: linear-gradient(135deg,#12865f,#20a879); font-size: 12px; line-height: 1.7; font-weight: 900; text-align: center; text-decoration: none !important; box-shadow: 0 4px 10px rgba(18,134,95,.13); }
+.sol-teacher-link:hover { filter: brightness(1.04); transform: translateY(-1px); }
+.sol-picker button:focus-visible, .sol-teacher-link:focus-visible { outline: 3px solid #f2c85d; outline-offset: 2px; }
+@media (max-width: 480px) {
+  .sol-picker { margin-right: 0; padding: 12px; }
+  .sol-picker-heading strong { font-size: 13px; }
+  .sol-option-button, .sol-question-list button { font-size: 11px; }
+}
