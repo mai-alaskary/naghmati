@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type PointerEvent } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getLesson } from '@/content/curriculum'
 import { gradeTheme } from '@/lib/theme'
@@ -443,7 +443,7 @@ function SafetyTracingActivity({ onComplete }: { onComplete: () => void }) {
   const [penColor, setPenColor] = useState('#ef4444')
   const [penSize, setPenSize] = useState(6)
 
-  const startDrawing = (event: React.PointerEvent<HTMLCanvasElement>) => {
+  const startDrawing = (event: PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
     drawingRef.current = true
