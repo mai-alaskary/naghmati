@@ -300,19 +300,47 @@ function RhythmBlocksWarmup() {
 
 export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   const [choice, setChoice] = useState<number | null>(null)
+  const [staffAnswers, setStaffAnswers] = useState<Record<number, number>>({})
   const activity = warmups[lesson.title] ?? {
     question: `ما المعلومة التي تساعدك على فهم درس «${lesson.title}»؟`,
     options: ['ألاحظ عنوان الدرس وأستمع جيدًا', 'أتجاهل الأمثلة', 'أجيب دون قراءة', 'أتوقف عن المشاركة'],
     answer: 0,
   }
   const isNationalAnthem = lesson.title === 'النشيد الوطني'
+  const isStaffLesson = lesson.title === 'المُدَرَّج الموسيقي ومفتاح صول' || lesson.title === 'المدرج الموسيقي ومفتاح صول'
   const isShadingLesson = lesson.title === 'تدريبات صوتية بالتظليلات'
   const isRhythmFigure = lesson.title === 'الشكل الإيقاعي (♫)'
   return (
     <section className="rounded-[2rem] bg-gradient-to-br from-amber-100 via-white to-sky-100 border-2 border-white p-5 md:p-7 shadow-chunky">
       <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">{lesson.title === 'الشكل الإيقاعي (♫)' ? <RhythmFigure className="w-12 h-12 text-ink" /> : '💡'}</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2>{!isShadingLesson && <p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p>}</div></div>
-      {!isShadingLesson && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
-      {isRhythmFigure ? (
+      {!isShadingLesson && !isStaffLesson && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
+      {isStaffLesson ? (
+        <div className="space-y-5">
+          <div className="rounded-3xl border-2 border-sky-100 bg-white p-4 md:p-6">
+            <h3 className="mb-3 text-center text-xl font-extrabold text-sky-800">تأمّل المدرج الموسيقي ومفتاح صول</h3>
+            <svg viewBox="0 0 360 190" role="img" aria-label="مدرج موسيقي مكوّن من خمسة خطوط أفقية وعليه مفتاح صول" className="mx-auto w-full max-w-xl">
+              <rect x="8" y="8" width="344" height="174" rx="16" fill="#fffdf5" />
+              {[55, 75, 95, 115, 135].map((y) => <line key={y} x1="35" y1={y} x2="325" y2={y} stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />)}
+              <text x="42" y="132" fontSize="100" fontFamily="serif" fill="#7c3aed">𝄞</text>
+              <text x="180" y="165" textAnchor="middle" fontSize="13" fontWeight="700" fill="#475569">المدرج الموسيقي</text>
+            </svg>
+          </div>
+          {[
+            { question: 'هل تستطيع عدّ الخطوط الموجودة في الصورة؟', options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'], answer: 2 },
+            { question: 'كم مسافة موجودة بين خطوط المدرج في الصورة؟', options: ['مسافتان', 'ثلاث مسافات', 'أربع مسافات', 'خمس مسافات'], answer: 2 },
+          ].map((item, index) => (
+            <div key={item.question} className="rounded-3xl border-2 border-amber-100 bg-white p-4 md:p-5">
+              <h4 className="mb-3 text-lg font-extrabold">{index + 1}. {item.question}</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {item.options.map((option, optionIndex) => (
+                  <button key={option} type="button" onClick={() => { setStaffAnswers((current) => ({ ...current, [index]: optionIndex })); optionIndex === item.answer ? playCorrect() : playWrong() }} aria-pressed={staffAnswers[index] === optionIndex} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${staffAnswers[index] === optionIndex ? (optionIndex === item.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-slate-100 bg-amber-50 hover:bg-amber-100'}`}>{option}</button>
+                ))}
+              </div>
+              {staffAnswers[index] !== undefined && <p className="mt-3 font-extrabold" aria-live="polite">{staffAnswers[index] === item.answer ? 'أحسنت! إجابة صحيحة ⭐' : 'محاولة جميلة! أعد العدّ من الصورة وحاول مرة أخرى.'}</p>}
+            </div>
+          ))}
+        </div>
+      ) : isRhythmFigure ? (
         <RhythmBlocksWarmup />
       ) : lesson.title === 'الحِدّة والغلظة – السرعة والبطء' ? null : lesson.title === 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' ? (
         <ClockWarmup />
@@ -327,7 +355,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
-      {choice !== null && !isShadingLesson && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
+      {choice !== null && !isShadingLesson && !isStaffLesson && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
       {lesson.warmupVideoUrl && (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
