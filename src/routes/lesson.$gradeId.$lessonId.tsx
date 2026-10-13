@@ -147,13 +147,13 @@ function LessonPage() {
 
         <section id="book-activities" className="scroll-mt-24">
           <SectionTitle n={4} title="الأنشطة" emoji="📚" sub="أنشطة الكتاب وتسليم الإجابات للمعلمة" />
+          {grade.id === 'grade-4' && unit.id === 'u2' && lesson.id === 'lesson1' && <SafetyTracingActivity onComplete={() => finish("activities")} />}
           <BookActivities lessonTitle={lesson.title} onSubmit={() => finish("activities")} />
 
         </section>
 
         <section id="practice" className="scroll-mt-24">
           <SectionTitle n={5} title="التطبيق والأنشطة الموسيقية" emoji="🎮" />
-          {grade.id === 'grade-4' && unit.id === 'u2' && lesson.id === 'lesson1' && <SafetyTracingActivity onComplete={() => finish("practice")} />}
 
           {activities.length > 0 ? (
             <div className="space-y-4">
