@@ -1,17 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { ArrowUp, Music2, Sparkles, X } from 'lucide-react'
-import { findUncleSolAnswer, suggestedSolQuestions, uncleSolFallback } from '@/lib/uncleSolKnowledge'
+import { ArrowUp, Music2, Sparkles, X, ChevronLeft, RotateCcw, MessageCircle } from 'lucide-react'
+import { grades } from '@/content/curriculum'
 
 type ChatMessage = {
   id: number
   role: 'assistant' | 'student'
   text: string
-}
-
-const welcomeMessage: ChatMessage = {
-  id: 1,
-  role: 'assistant',
-  text: 'مرحباً! أنا جاهز للإجابة على أسئلتك من المنهج فقط. 🎵 اسألني عن أي درس في نغماتي!',
 }
 
 function UncleSolAvatar({ small = false }: { small?: boolean }) {
@@ -35,21 +29,49 @@ function UncleSolAvatar({ small = false }: { small?: boolean }) {
   )
 }
 
+
+const TEACHER_WHATSAPP = '96898778983'
+const initialMessage: ChatMessage = {
+  id: 1,
+  role: 'assistant',
+  text: 'مرحبًا بك! أنا العم صول. اختر صفك، ثم الوحدة والدرس، وسأعرض لك الأسئلة التي تتوفر لها إجابات مؤكدة في محتوى نغماتي.',
+}
+
 export default function UncleSolChat() {
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState('')
   const [sending, setSending] = useState(false)
-  const [messages, setMessages] = useState<ChatMessage[]>([welcomeMessage])
+  const [messages, setMessages] = useState<ChatMessage[]>([initialMessage])
   const [notice, setNotice] = useState('')
+  const [selectedGradeId, setSelectedGradeId] = useState('')
+  const [selectedUnitId, setSelectedUnitId] = useState('')
+  const [selectedLessonId, setSelectedLessonId] = useState('')
   const nextId = useRef(2)
   const endRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const selectedGrade = grades.find((grade) => grade.id === selectedGradeId)
+  const selectedUnit = selectedGrade?.units.find((unit) => unit.id === selectedUnitId)
+  const selectedLesson = selectedUnit?.lessons.find((lesson) => lesson.id === selectedLessonId)
+  const availableQuestions = (selectedLesson?.quiz ?? []).filter(
+    (question) => !/أي عنوان يطابق الدرس الحالي/.test(question.question),
+  )
+  const teacherMessage = [
+    'السلام عليكم ورحمة الله وبركاته،',
+    'لدي سؤال عن منهج نغماتي لم أجد إجابته في مساعد العم صول.',
+    selectedGrade ? `الصف: ${selectedGrade.title}` : '',
+    selectedUnit ? `الوحدة: ${selectedUnit.title}` : '',
+    selectedLesson ? `الدرس: ${selectedLesson.title}` : '',
+    draft.trim() ? `السؤال: ${draft.trim()}` : '',
+    'أرجو المساعدة، وشكرًا لكم.',
+  ].filter(Boolean).join('\n')
+  const teacherWhatsAppUrl = `https://wa.me/${TEACHER_WHATSAPP}?text=${encodeURIComponent(teacherMessage)}`
 
   useEffect(() => {
     if (!open) return
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
     inputRef.current?.focus()
-  }, [open, messages, sending])
+  }, [open, messages, sending, selectedGradeId, selectedUnitId, selectedLessonId])
 
   useEffect(() => {
     if (!open) return
@@ -60,44 +82,77 @@ export default function UncleSolChat() {
     return () => window.removeEventListener('keydown', handleKey)
   }, [open])
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const question = draft.trim()
-    if (!question || sending) return
-
-    const studentMessage: ChatMessage = { id: nextId.current++, role: 'student', text: question }
-    setMessages((current) => [...current, studentMessage])
+  function chooseGrade(gradeId: string) {
+    setSelectedGradeId(gradeId)
+    setSelectedUnitId('')
+    setSelectedLessonId('')
     setDraft('')
     setNotice('')
-    setSending(true)
-    // All matching runs locally against the curriculum bundle; no request leaves the browser.
-    const result = findUncleSolAnswer(question)
+  }
+
+  function chooseUnit(unitId: string) {
+    setSelectedUnitId(unitId)
+    setSelectedLessonId('')
+    setDraft('')
+    setNotice('')
+  }
+
+  function chooseLesson(lessonId: string) {
+    setSelectedLessonId(lessonId)
+    setDraft('')
+    setNotice('')
+  }
+
+  function resetChoices() {
+    setSelectedGradeId('')
+    setSelectedUnitId('')
+    setSelectedLessonId('')
+    setDraft('')
+    setNotice('')
+  }
+
+  function answerQuestion(questionIndex: number) {
+    if (!selectedLesson) return
+    const question = availableQuestions[questionIndex]
+    if (!question) return
+    const correctAnswer = question.options[question.answer]
+    const answer = question.hint
+      ? `الإجابة الصحيحة: ${correctAnswer}\n\nتلميح من محتوى الدرس: ${question.hint}`
+      : `الإجابة الصحيحة: ${correctAnswer}`
     setMessages((current) => [
       ...current,
+      { id: nextId.current++, role: 'student', text: question.question },
       {
         id: nextId.current++,
         role: 'assistant',
-        text: result?.answer ?? uncleSolFallback,
+        text: `${answer}\n\nالمصدر: ${selectedGrade?.title} — ${selectedUnit?.title} — ${selectedLesson.title}.`,
       },
     ])
-    setSending(false)
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const question = draft.trim()
+    if (!question || sending) return
+    setMessages((current) => [
+      ...current,
+      { id: nextId.current++, role: 'student', text: question },
+      {
+        id: nextId.current++,
+        role: 'assistant',
+        text: 'لضمان صحة الإجابة، أعرض هنا الأسئلة المعتمدة في المنهج فقط. إذا لم تجد سؤالك ضمن القائمة، يمكنك إرساله إلى المعلمة عبر واتساب باستخدام خيار «سؤالي غير موجود».',
+      },
+    ])
+    setDraft('')
+    setNotice('')
   }
 
   return (
     <>
       {!open && (
-        <button
-          type="button"
-          className="sol-floating-trigger"
-          onClick={() => setOpen(true)}
-          aria-label="اسأل العم صول إذا واجهك أي تساؤل"
-          aria-haspopup="dialog"
-        >
+        <button type="button" className="sol-floating-trigger" onClick={() => setOpen(true)} aria-label="اسأل العم صول إذا واجهك أي تساؤل" aria-haspopup="dialog">
           <span className="sol-trigger-icon"><span>𝄞</span><Sparkles className="sol-trigger-spark" size={18} /></span>
-          <span className="sol-trigger-copy">
-            <strong>اسأل العم صول</strong>
-            <span>إذا واجهك أي تساؤل!</span>
-          </span>
+          <span className="sol-trigger-copy"><strong>اسأل العم صول</strong><span>إذا واجهك أي تساؤل!</span></span>
         </button>
       )}
 
@@ -106,31 +161,16 @@ export default function UncleSolChat() {
           <button className="sol-chat-backdrop" aria-label="إغلاق دردشة العم صول" onClick={() => setOpen(false)} />
           <aside className="sol-chat-drawer" role="dialog" aria-modal="true" aria-labelledby="sol-chat-title" dir="rtl">
             <header className="sol-chat-header">
-              <button className="sol-close-button" type="button" onClick={() => setOpen(false)} aria-label="إغلاق الدردشة">
-                <X size={22} />
-              </button>
+              <button className="sol-close-button" type="button" onClick={() => setOpen(false)} aria-label="إغلاق الدردشة"><X size={22} /></button>
               <div className="sol-header-identity">
                 <UncleSolAvatar />
-                <div>
-                  <h2 id="sol-chat-title">دردشة مع العم صول</h2>
-                  <p>يسعدني مساعدتك في المنهج!</p>
-                </div>
+                <div><h2 id="sol-chat-title">دردشة مع العم صول</h2><p>مساعدك في منهج نغماتي</p></div>
               </div>
-              <div className="sol-header-note"><Music2 size={16} /> رفيقك في رحلة الموسيقى</div>
+              <div className="sol-header-note"><Music2 size={16} /> إجابات مستندة إلى محتوى المنهج</div>
             </header>
 
             <div className="sol-chat-messages" aria-live="polite" aria-relevant="additions text">
               <div className="sol-chat-day-label"><span>بداية الدردشة</span></div>
-              {messages.length === 1 && (
-                <div className="sol-suggestions" aria-label="أسئلة مقترحة">
-                  <p>جرّب تسألني:</p>
-                  {suggestedSolQuestions.map((question) => (
-                    <button key={question} type="button" onClick={() => setDraft(question)}>
-                      {question}
-                    </button>
-                  ))}
-                </div>
-              )}
               {messages.map((message) => (
                 <div key={message.id} className={`sol-message-row ${message.role === 'student' ? 'sol-message-row--student' : ''}`}>
                   {message.role === 'assistant' && <UncleSolAvatar small />}
@@ -140,34 +180,74 @@ export default function UncleSolChat() {
                   </div>
                 </div>
               ))}
-              {sending && (
-                <div className="sol-message-row">
-                  <UncleSolAvatar small />
-                  <div className="sol-message-bubble sol-message-bubble--assistant sol-typing" aria-label="العم صول يكتب">
-                    <span /><span /><span />
-                  </div>
+
+              <section className="sol-picker" aria-label="اختيار موضوع السؤال">
+                <div className="sol-picker-heading">
+                  <div><strong>اختر موضوع سؤالك</strong><span>انتقل خطوة بخطوة للوصول إلى الإجابات المتاحة.</span></div>
+                  <button type="button" onClick={resetChoices} className="sol-reset-button" aria-label="البدء من جديد" title="البدء من جديد"><RotateCcw size={16} /></button>
                 </div>
-              )}
+
+                <div className="sol-picker-step">
+                  <span className="sol-step-number">١</span><strong>اختر الصف</strong>
+                </div>
+                <div className="sol-option-list">
+                  {grades.map((grade) => (
+                    <button key={grade.id} type="button" className={`sol-option-button ${selectedGradeId === grade.id ? 'is-selected' : ''}`} onClick={() => chooseGrade(grade.id)}>
+                      <span>{grade.emoji} {grade.title}</span><ChevronLeft size={17} />
+                    </button>
+                  ))}
+                </div>
+
+                {selectedGrade && <>
+                  <div className="sol-picker-step"><span className="sol-step-number">٢</span><strong>اختر الوحدة</strong></div>
+                  <div className="sol-option-list">
+                    {selectedGrade.units.map((unit) => (
+                      <button key={unit.id} type="button" className={`sol-option-button ${selectedUnitId === unit.id ? 'is-selected' : ''}`} onClick={() => chooseUnit(unit.id)}>
+                        <span>{unit.emoji} {unit.title}</span><ChevronLeft size={17} />
+                      </button>
+                    ))}
+                  </div>
+                </>}
+
+                {selectedUnit && <>
+                  <div className="sol-picker-step"><span className="sol-step-number">٣</span><strong>اختر الدرس</strong></div>
+                  <div className="sol-option-list">
+                    {selectedUnit.lessons.map((lesson) => (
+                      <button key={lesson.id} type="button" className={`sol-option-button ${selectedLessonId === lesson.id ? 'is-selected' : ''}`} onClick={() => chooseLesson(lesson.id)}>
+                        <span>{lesson.emoji} {lesson.title}</span><ChevronLeft size={17} />
+                      </button>
+                    ))}
+                  </div>
+                </>}
+
+                {selectedLesson && <>
+                  <div className="sol-picker-step"><span className="sol-step-number">٤</span><strong>الأسئلة المتاحة للإجابة</strong></div>
+                  {availableQuestions.length > 0 ? (
+                    <div className="sol-question-list">
+                      {availableQuestions.map((question, index) => (
+                        <button key={`${question.question}-${index}`} type="button" onClick={() => answerQuestion(index)}>
+                          <span>{question.question}</span><ChevronLeft size={17} />
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="sol-no-questions">لا توجد أسئلة وإجابات معتمدة لهذا الدرس حتى الآن. يمكنك إرسال سؤالك إلى المعلمة.</p>
+                  )}
+                  <a className="sol-teacher-link" href={teacherWhatsAppUrl} target="_blank" rel="noopener noreferrer">
+                    <MessageCircle size={18} /><span>سؤالي غير موجود — أرسله إلى المعلمة عبر واتساب</span>
+                  </a>
+                </>}
+              </section>
               <div ref={endRef} />
             </div>
 
             <form className="sol-chat-composer" onSubmit={handleSubmit}>
               {notice && <p className="sol-chat-notice" role="status">{notice}</p>}
               <div className="sol-input-row">
-                <input
-                  ref={inputRef}
-                  value={draft}
-                  onChange={(event) => setDraft(event.target.value)}
-                  placeholder="اكتب سؤالك هنا..."
-                  aria-label="اكتب سؤالك للعم صول"
-                  maxLength={700}
-                  disabled={sending}
-                />
-                <button type="submit" className="sol-send-button" disabled={!draft.trim() || sending} aria-label="إرسال السؤال">
-                  <ArrowUp size={22} />
-                </button>
+                <input ref={inputRef} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="اكتب سؤالك (يمكنك إرساله للمعلمة)..." aria-label="اكتب سؤالك للعم صول" maxLength={500} disabled={sending} />
+                <button type="submit" className="sol-send-button" disabled={!draft.trim() || sending} aria-label="إرسال السؤال"><ArrowUp size={22} /></button>
               </div>
-              <p className="sol-chat-footnote">🔒 الإجابات من محتوى المنهج داخل المنصة فقط</p>
+              <p className="sol-chat-footnote">🔒 لا تُرسل الأسئلة إلى خدمة ذكاء اصطناعي خارجية.</p>
             </form>
           </aside>
         </div>
