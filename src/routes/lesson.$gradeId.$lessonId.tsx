@@ -232,37 +232,131 @@ const rhythmVideos = [
 ]
 
 
+const safetyStoryPages = [
+  {
+    title: 'قبل اللعب',
+    scene: '🏡',
+    text: 'قال سالم: يا أمي، سأذهب للعب مع أصدقائي. قالت أمه: سالم، انتظر! يجب أن تنتبه أثناء اللعب. ضحك سالم وقال: انتبه، ههههه! أنا سألعب فقط يا أمي. ثم قال: إلى اللقاء يا أمي!',
+  },
+  {
+    title: 'ماذا حدث لسالم؟',
+    scene: '🩹',
+    text: 'بعد مرور ساعة، نادت الأم: سالم، سالم! ثم سألته: ماذا حدث لك يا سالم؟ قال سالم: كنت ألعب مع صديقي، ثم وقعت بسبب الألعاب. قالت أمه: ألم أخبرك أن تنتبه وتحذر أثناء اللعب؟ هل رأيت ماذا قد يحدث إذا لم تستمع إلى نصيحتي؟ قال سالم: لم أتوقع أن أُصاب أثناء اللعب يا أمي.',
+  },
+  {
+    title: 'السلامة في كل مكان',
+    scene: '🚸',
+    text: 'قالت الأم: عليك أن تكون حذراً دائماً، في كل وقت وفي أي مكان. انتبه عند الصعود إلى الحافلة المدرسية والنزول منها، وعند استخدام الأدوات مثل المقص والسكين. وعند عبور الطريق، انتبه إلى إشارات المرور واعبر من المكان المخصص مع شخص بالغ.',
+  },
+  {
+    title: 'عادات تحمينا',
+    scene: '🚲',
+    text: 'وتابعت الأم: عند ركوب الدراجة، ارتدِ الخوذة ولا تقلّد الحركات الخطرة التي تراها في الرسوم المتحركة. وحتى في المنزل، اربط رباط حذائك جيداً حتى لا تتعثر وتسقط. وألقِ القمامة في السلة، لا في الطريق، لأن رميها يؤذي الآخرين. قال سالم: نعم يا أمي، سأكون حذراً في المرة المقبلة، إن شاء الله تعالى.',
+  },
+  {
+    title: 'سالم يساعد الآخرين',
+    scene: '💚',
+    text: 'بعد مرور عدة أيام، وبعد أن شُفي سالم، سألته أمه: ماذا تفعل يا سالم؟ قال: سأذهب لأساعد الآخرين، وأعرّفهم معنى الأمن والسلامة. قالت أمه: أحسنت يا صغيري! أنا حقاً فخورة بك. قال سالم: شكراً يا أمي، إلى اللقاء! لا أريد أن أتأخر عن فعل الخير. ضحكت أمه وقالت: حسناً، إلى اللقاء!',
+  },
+  {
+    title: 'تذكّر دائماً',
+    scene: '⭐',
+    text: 'تذكّر يا صديقي: انتبه أثناء اللعب، واستخدم الأدوات بحذر، واتبع إشارات المرور، وارتدِ الخوذة عند ركوب الدراجة، واربط حذاءك، وضع القمامة في السلة. سلامتك مسؤوليتك، ومساعدة الآخرين عمل جميل!',
+  },
+]
+
 function StoryJumperBook() {
+  const [pageIndex, setPageIndex] = useState(0)
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const page = safetyStoryPages[pageIndex]
+
+  const stopNarration = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
+    setIsSpeaking(false)
+  }
+
+  const speakPage = () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
+      return
+    }
+
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(page.text)
+    const arabicVoices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.toLowerCase().startsWith('ar'))
+    const voice = arabicVoices.find((item) => item.lang.toLowerCase().startsWith('ar-eg')) ?? arabicVoices[0]
+    if (voice) {
+      utterance.voice = voice
+      utterance.lang = voice.lang
+    } else {
+      utterance.lang = 'ar'
+    }
+    utterance.rate = 0.86
+    utterance.pitch = 1.12
+    utterance.onstart = () => setIsSpeaking(true)
+    utterance.onend = () => setIsSpeaking(false)
+    utterance.onerror = () => setIsSpeaking(false)
+    window.speechSynthesis.speak(utterance)
+  }
+
+  const changePage = (nextIndex: number) => {
+    stopNarration()
+    setPageIndex(nextIndex)
+  }
+
   return (
-    <div className="mt-6 rounded-3xl bg-white p-4 shadow-chunky">
-      <h3 className="mb-3 text-xl font-extrabold">📖 اقرأ قصة «سلامتي هي مهمتي»</h3>
-      <div className="w-full overflow-hidden rounded-2xl bg-slate-50" style={{ minHeight: '600px' }}>
-        <iframe
-          src="https://www.storyjumper.com/book/showframe/170652271/65f75d977891f"
-          title="كتاب سلامتي هي مهمتي"
-          className="block w-full border-0"
-          style={{ height: 'min(75vh, 760px)', minHeight: '600px' }}
-          allow="fullscreen"
-          allowFullScreen
-          loading="lazy"
-        />
+    <div className="mt-6 rounded-3xl bg-white p-4 md:p-6 shadow-chunky">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="text-xl md:text-2xl font-extrabold">📖 قصة «سلامتي هي مهمتي»</h3>
+          <p className="mt-1 text-sm font-semibold text-ink/60">قصة تفاعلية بسرد صوتي عربي</p>
+        </div>
+        <span className="rounded-full bg-violet-100 px-4 py-2 font-extrabold text-violet-700">
+          الصفحة {pageIndex + 1} من {safetyStoryPages.length}
+        </span>
       </div>
-      <p className="mt-3 text-center text-sm text-ink/60">
-        لو مساحة الكتاب ما ظهرتش، فممكن StoryJumper يكون مانع العرض داخل مواقع خارجية.
-        {' '}
-        <a
-          href="https://www.storyjumper.com/book/read/170652271/65f75d977891f"
-          target="_blank"
-          rel="noreferrer"
-          className="font-bold text-violet-700 underline underline-offset-4"
-        >
-          افتح الكتاب في StoryJumper
-        </a>
+
+      <div className="overflow-hidden rounded-3xl border-2 border-amber-100 bg-gradient-to-br from-amber-50 via-white to-sky-50 p-5 md:p-8 text-center" aria-live="polite">
+        <div className="mb-3 text-7xl md:text-8xl" role="img" aria-label={page.title}>{page.scene}</div>
+        <h4 className="mb-4 text-2xl font-extrabold text-violet-800">{page.title}</h4>
+        <p className="mx-auto max-w-3xl text-lg md:text-xl font-semibold leading-9 text-ink">{page.text}</p>
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <button type="button" onClick={speakPage} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white shadow-chunky hover:bg-violet-700">
+          {isSpeaking ? '🔊 السرد يعمل...' : '🔊 استمع إلى الصفحة'}
+        </button>
+        <button type="button" onClick={stopNarration} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold text-violet-700">
+          ⏹ إيقاف الصوت
+        </button>
+      </div>
+
+      <div className="mt-5 flex items-center justify-between gap-3">
+        <button type="button" onClick={() => changePage(Math.max(0, pageIndex - 1))} disabled={pageIndex === 0} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold disabled:cursor-not-allowed disabled:opacity-40">
+          → السابقة
+        </button>
+        <div className="flex flex-wrap justify-center gap-2" aria-label="اختيار صفحة القصة">
+          {safetyStoryPages.map((item, index) => (
+            <button key={item.title} type="button" onClick={() => changePage(index)} aria-label={item.title} aria-current={index === pageIndex ? 'step' : undefined} className={'grid h-9 w-9 place-items-center rounded-full font-extrabold ' + (index === pageIndex ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-violet-100')}>
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <button type="button" onClick={() => changePage(Math.min(safetyStoryPages.length - 1, pageIndex + 1))} disabled={pageIndex === safetyStoryPages.length - 1} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-40">
+          التالية ←
+        </button>
+      </div>
+
+      <p className="mt-4 text-center text-xs leading-6 text-ink/55">
+        يعتمد الصوت على الأصوات العربية المتاحة في جهازك والمتصفح. ويمكن فتح النسخة الأصلية من القصة على{' '}
+        <a href="https://www.storyjumper.com/book/read/170652271/65f75d977891f" target="_blank" rel="noreferrer" className="font-bold text-violet-700 underline underline-offset-4">
+          StoryJumper
+        </a>.
       </p>
     </div>
   )
 }
-
 
 function RhythmVideoActivity({ index, onIndexChange }: { index: number; onIndexChange: (index: number) => void }) {
   const video = rhythmVideos[index]
