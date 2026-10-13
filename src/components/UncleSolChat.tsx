@@ -70,8 +70,11 @@ export default function UncleSolChat() {
   useEffect(() => {
     if (!open) return
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-    inputRef.current?.focus()
   }, [open, messages, sending, selectedGradeId, selectedUnitId, selectedLessonId])
+
+  useEffect(() => {
+    if (open) inputRef.current?.focus()
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -241,7 +244,17 @@ export default function UncleSolChat() {
                       ))}
                     </div>
                   )}
-                  <p className="sol-no-questions">يمكنك إرسال سؤالك إلى المعلمة</p>
+                  <div className="sol-no-questions">
+                    <p>يمكنك إرسال سؤالك إلى المعلمة</p>
+                    <textarea
+                      value={draft}
+                      onChange={(event) => setDraft(event.target.value)}
+                      placeholder="اكتب سؤالك هنا..."
+                      aria-label="اكتب السؤال الذي تريد إرساله إلى المعلمة"
+                      maxLength={500}
+                      rows={3}
+                    />
+                  </div>
                   <a className="sol-teacher-link" href={teacherWhatsAppUrl} target="_blank" rel="noopener noreferrer">
                     <MessageCircle size={18} /><span>سؤالي غير موجود — أرسله إلى المعلمة عبر واتساب</span>
                   </a>
