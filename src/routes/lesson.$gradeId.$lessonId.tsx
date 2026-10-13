@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { getLesson } from '@/content/curriculum'
 import { gradeTheme } from '@/lib/theme'
@@ -299,37 +299,72 @@ const safetyStoryPages = [
   },
 ]
 
+const safetyStoryAudioUrls: (string | null)[] = [
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=1fe023b5-efab-4c94-8ed8-c2cbdfac0a42.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=b4d40a20-aff4-41ed-87aa-a2c618e8d05f.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=9215d9d7-7fa6-4f30-9b6a-1df667e4a1bd.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=baa654bf-ac8b-4db0-816b-8bc327e8ae28.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=a149c8d3-796d-40e8-9586-4c8806076b08.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=0b80122d-2355-48b1-b734-c6bff93ac698.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=5dff9e0b-6266-4a5a-84ab-0eddf66961c8.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=84d919d8-f201-4ce4-aae6-87568c70a92b.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=888125ff-85e7-426c-912d-8b7494d2c9b0.wav',
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=bf1a13bb-ce57-413b-8c0b-73fc5b2c0b92.wav',
+  null,
+  null,
+  null,
+  null,
+  null,
+  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=0e5b67ef-a061-4a12-9acc-8890482c55fa.wav',
+  null,
+  null,
+  null,
+]
+
 function StoryJumperBook() {
   const [pageIndex, setPageIndex] = useState(0)
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const playbackIdRef = useRef(0)
   const page = safetyStoryPages[pageIndex]
-  const narrationText = page.dialogue.map((line) => `${line.speaker}: ${line.line}`).join(' ')
+  const firstLineIndex = safetyStoryPages.slice(0, pageIndex).reduce((count, item) => count + item.dialogue.length, 0)
+  const pageAudioUrls = page.dialogue.map((_, index) => safetyStoryAudioUrls[firstLineIndex + index])
+  const pageAudioReady = pageAudioUrls.every((url): url is string => Boolean(url))
 
   const stopNarration = () => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
+    playbackIdRef.current += 1
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      audioRef.current = null
     }
     setIsSpeaking(false)
   }
 
-  const speakPage = () => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) return
-    window.speechSynthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(narrationText)
-    const arabicVoices = window.speechSynthesis.getVoices().filter((voice) => voice.lang.toLowerCase().startsWith('ar'))
-    const voice = arabicVoices.find((item) => item.lang.toLowerCase().startsWith('ar-eg')) ?? arabicVoices[0]
-    if (voice) {
-      utterance.voice = voice
-      utterance.lang = voice.lang
-    } else {
-      utterance.lang = 'ar'
+  const speakPage = async () => {
+    if (!pageAudioReady) return
+    stopNarration()
+    const playbackId = playbackIdRef.current
+    setIsSpeaking(true)
+    try {
+      for (const url of pageAudioUrls) {
+        if (playbackId !== playbackIdRef.current) return
+        const audio = new Audio(url)
+        audioRef.current = audio
+        await new Promise<void>((resolve, reject) => {
+          audio.onended = () => resolve()
+          audio.onerror = () => reject(new Error('تعذّر تشغيل التسجيل الصوتي'))
+          audio.play().catch(reject)
+        })
+      }
+    } catch {
+      // The status below explains that audio is unavailable for unfinished pages.
+    } finally {
+      if (playbackId === playbackIdRef.current) {
+        audioRef.current = null
+        setIsSpeaking(false)
+      }
     }
-    utterance.rate = 0.86
-    utterance.pitch = 1.12
-    utterance.onstart = () => setIsSpeaking(true)
-    utterance.onend = () => setIsSpeaking(false)
-    utterance.onerror = () => setIsSpeaking(false)
-    window.speechSynthesis.speak(utterance)
   }
 
   const changePage = (nextIndex: number) => {
@@ -342,7 +377,7 @@ function StoryJumperBook() {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-xl md:text-2xl font-extrabold">📖 قصة «سلامتي هي مهمتي»</h3>
-          <p className="mt-1 text-sm font-semibold text-ink/60">شخصيتان وحوار صفحة بصفحة مع سرد صوتي</p>
+          <p className="mt-1 text-sm font-semibold text-ink/60">حوار صفحة بصفحة بتسجيلات صوتية مستقلة لشخصيتي سالم والأم</p>
         </div>
         <span className="rounded-full bg-violet-100 px-4 py-2 font-extrabold text-violet-700">الصفحة {pageIndex + 1} من {safetyStoryPages.length}</span>
       </div>
@@ -376,11 +411,16 @@ function StoryJumperBook() {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-        <button type="button" onClick={speakPage} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white shadow-chunky hover:bg-violet-700">
+        <button type="button" onClick={speakPage} disabled={!pageAudioReady} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white shadow-chunky hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40">
           {isSpeaking ? '🔊 السرد يعمل...' : '🔊 استمع إلى الحوار'}
         </button>
         <button type="button" onClick={stopNarration} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold text-violet-700">⏹ إيقاف الصوت</button>
       </div>
+      {!pageAudioReady && (
+        <p role="status" className="mt-3 text-center text-sm font-bold text-amber-700">
+          تسجيلات هذه الصفحة لم تكتمل بعد. زر الاستماع سيتفعّل عند إضافة تسجيلات جميع الجمل.
+        </p>
+      )}
 
       <div className="mt-5 flex items-center justify-between gap-3">
         <button type="button" onClick={() => changePage(Math.max(0, pageIndex - 1))} disabled={pageIndex === 0} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold disabled:cursor-not-allowed disabled:opacity-40">→ الصفحة السابقة</button>
@@ -395,7 +435,7 @@ function StoryJumperBook() {
       </div>
 
       <p className="mt-4 text-center text-xs leading-6 text-ink/55">
-        يعتمد الصوت على الأصوات العربية المتاحة في جهازك والمتصفح. ويمكن فتح النسخة الأصلية من القصة على{' '}
+        التسجيلات المتاحة مولّدة بصوت عربي لسالم وصوت عربي نسائي للأم. ويمكن فتح النسخة الأصلية من القصة على{' '}
         <a href="https://www.storyjumper.com/book/read/170652271/65f75d977891f" target="_blank" rel="noreferrer" className="font-bold text-violet-700 underline underline-offset-4">StoryJumper</a>.
       </p>
     </div>
