@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { playClick } from '@/lib/audio'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
+import UncleSolChat from '@/components/UncleSolChat'
 
 import '../styles.css'
 
@@ -57,6 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <UncleSolChat />
         <Scripts />
       </body>
     </html>
