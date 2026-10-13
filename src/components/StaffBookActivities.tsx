@@ -61,9 +61,8 @@ export default function StaffBookActivities() {
     }
   }
 
-  return <section className="rounded-[2rem] border-2 border-amber-200 bg-white p-4 shadow-chunky md:p-6">
-    <h3 className="mb-2 text-2xl font-extrabold">📚 أنشطة الكتاب</h3>
-    <p className="mb-5 text-slate-700">تدرّب وارسم وتعرّف على أسماء خطوط ومسافات المدرج الموسيقي ومفتاح صول.</p>
+  return <div className="space-y-5">
+    <p className="text-slate-700">تدرّب وارسم وتعرّف على أسماء خطوط ومسافات المدرج الموسيقي ومفتاح صول.</p>
     <div className="mb-6 rounded-2xl border-2 border-violet-200 bg-violet-50 p-4">
       <h4 className="text-xl font-extrabold text-violet-900">✍️ النشاط الأول: تتبّع وارسم مفتاح صول</h4>
       <p className="my-2 text-sm leading-7">اتبع المسار المنقّط من نقطة البداية إلى النهاية، ثم ارسم مفتاح صول في المدرجات الفارغة. يمكنك الرسم باللمس أو بالفأرة.</p>
