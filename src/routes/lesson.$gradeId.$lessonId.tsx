@@ -157,21 +157,6 @@ function LessonPage() {
         <section id="practice" className="scroll-mt-24">
           <SectionTitle n={5} title="التطبيق والأنشطة الموسيقية" emoji="🎮" />
 
-          {(lesson.title === 'تطبيقات على المدرج الموسيقي' || lesson.title === 'تطبيقات على المُدَرَّج الموسيقي') && (
-            <div className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky">
-              <h3 className="text-xl md:text-2xl font-extrabold mb-4">🎮 نشاط تفاعلي: تطبيقات على المدرج الموسيقي</h3>
-              <div className="relative w-full overflow-hidden rounded-xl" style={{ aspectRatio: '500 / 380' }}>
-                <iframe
-                  src="https://wordwall.net/ar/embed/0d152a77ab4d4f1da95dd8f8dfacdabe?themeId=1&templateId=3&fontStackId=0"
-                  title="ورد وول: تطبيقات على المدرج الموسيقي"
-                  className="absolute inset-0 h-full w-full border-0"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              </div>
-            </div>
-          )}
-
           {activities.length > 0 ? (
             <div className="space-y-4">
               {activities.map((a, i) => (
