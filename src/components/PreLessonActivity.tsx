@@ -316,7 +316,7 @@ function WarmupNotationOption({ kind, label }: { kind: WarmupVisualKind; label: 
   return <div className="flex flex-col items-center gap-2"><svg viewBox="0 0 240 104" role="img" aria-label={label} className="w-full max-w-[260px] h-auto"><rect x="4" y="5" width="232" height="94" rx="10" fill="#fffdf5"/>{lineYs.map(y=><line key={y} x1="12" y1={y} x2="228" y2={y} stroke="#334155" strokeWidth="1.8"/>)}{noteNames.map((name,i)=>{const x=36+i*42;const y=isSpaces?lineYs[lineYs.length-1-i]+5.5:lineYs[lineYs.length-1-i];return <g key={i}><ellipse cx={x} cy={y} rx="9" ry="5.5" transform={'rotate(-22 '+x+' '+y+')'} fill="#7c3aed"/><text x={x} y={y-8} textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155">{name}</text></g>})}</svg><span className="text-base font-extrabold">{label}</span></div>
 }
 
-export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
+export default function PreLessonActivity({ lesson, onComplete }: { lesson: Lesson; onComplete?: () => void }) {
   const [choice, setChoice] = useState<number | null>(null)
   const [staffAnswers, setStaffAnswers] = useState<Record<number, number>>({})
   const [staffQuestionIndex, setStaffQuestionIndex] = useState(0)
@@ -444,7 +444,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
         </div>
       ) : isShadingLesson ? null : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
+          {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); if (i === activity.answer) { playCorrect(); onComplete?.() } else playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
       {choice !== null && !isShadingLesson && !isStaffLesson && !isStaffApplicationsLesson && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
@@ -452,7 +452,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
             {lesson.warmupVideoUrl.toLowerCase().split('?')[0].endsWith('.mp4') ? (
-              <video controls playsInline preload="metadata" className="absolute inset-0 w-full h-full" title={`تمهيد درس ${lesson.title}`}>
+              <video controls playsInline preload="metadata" onPlay={() => onComplete?.()} className="absolute inset-0 w-full h-full" title={`تمهيد درس ${lesson.title}`}>
                 <source src={lesson.warmupVideoUrl} type="video/mp4" />
                 المتصفح لا يدعم تشغيل الفيديو.
               </video>
