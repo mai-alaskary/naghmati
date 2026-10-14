@@ -23,7 +23,7 @@ export function isActivityReady(a: Activity) {
   return a.type === 'lab' || toEmbedUrl(a.url) !== ''
 }
 
-export default function ActivityCard({ activity, onStart }: { activity: Activity; onStart?: () => void }) {
+export default function ActivityCard({ activity, onComplete }: { activity: Activity; onComplete?: () => void }) {
   const [open, setOpen] = useState(false)
 
   if (activity.type === 'lab') {
@@ -64,7 +64,7 @@ export default function ActivityCard({ activity, onStart }: { activity: Activity
         </div>
         <div className="flex gap-2 shrink-0">
           <button
-            onClick={() => { setOpen((o) => !o); onStart?.() }}
+            onClick={() => setOpen((o) => !o)}
             className="rounded-full bg-violet-500 hover:bg-violet-600 text-white px-6 py-3 font-extrabold shadow-chunky"
           >
             {open ? 'إغلاق ✖' : 'ابدأ النشاط ▶'}
@@ -107,6 +107,7 @@ export default function ActivityCard({ activity, onStart }: { activity: Activity
               </p>
             </>
           )}
+          <button type="button" onClick={() => onComplete?.()} className="mt-4 w-full rounded-full bg-emerald-500 px-5 py-3 font-extrabold text-white shadow-chunky hover:bg-emerald-600">أكملت النشاط ✓</button>
         </div>
       )}
     </div>
