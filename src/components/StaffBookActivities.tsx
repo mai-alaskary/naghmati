@@ -5,10 +5,10 @@ type BalloonNote = { id: string; name: NoteName; color: string; colorName: strin
 type QuizNote = { id: number; name: NoteName; y: number; options: [NoteName, NoteName] }
 
 const balloons: BalloonNote[] = [
-  { id: 'mi', name: 'مي', color: '#ef4444', colorName: 'الأحمر', y: 139, x: 70 },
-  { id: 'sol', name: 'صول', color: '#3b82f6', colorName: 'الأزرق', y: 124, x: 180 },
-  { id: 'fa', name: 'فا', color: '#eab308', colorName: 'الأصفر', y: 131.5, x: 290 },
-  { id: 'la', name: 'لا', color: '#22c55e', colorName: 'الأخضر', y: 116.5, x: 400 },
+  { id: 'mi', name: 'مي', color: '#ef4444', colorName: 'الأحمر', y: 128, x: 70 },
+  { id: 'sol', name: 'صول', color: '#3b82f6', colorName: 'الأزرق', y: 116, x: 180 },
+  { id: 'fa', name: 'فا', color: '#eab308', colorName: 'الأصفر', y: 122, x: 290 },
+  { id: 'la', name: 'لا', color: '#22c55e', colorName: 'الأخضر', y: 110, x: 400 },
 ]
 
 const quizNotes: QuizNote[] = [
