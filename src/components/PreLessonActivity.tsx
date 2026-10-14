@@ -343,7 +343,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           <div aria-live="polite" className="min-h-20 mt-6">{applicationsSolved ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-emerald-50 border-2 border-emerald-200 p-4"><p className="text-xl font-extrabold text-emerald-600">أحسنت! إجابة صحيحة ⭐</p><button type="button" onClick={() => { if (applicationsQuestionIndex + 1 < questions.length) { setApplicationsQuestionIndex(i => i + 1); setApplicationsWrong([]); setApplicationsSolved(false) } else { setApplicationsQuestionIndex(0); setApplicationsWrong([]); setApplicationsSolved(false); setApplicationsAnswers({}) } }} className="rounded-full bg-emerald-500 text-white px-6 py-3 text-lg font-extrabold shadow-chunky">{applicationsQuestionIndex + 1 < questions.length ? 'السؤال التالي ←' : 'أعد المحاولة ↺'}</button></div> : applicationsWrong.length > 0 ? <div className="rounded-3xl bg-orange-50 border-2 border-orange-200 p-4"><p className="text-xl font-extrabold text-orange-600">حاول مرة أخرى 💪</p><p className="text-lg text-ink/70 mt-1">💡 راجع ترتيب مفتاح صول وخطوط المدرج ومسافاته ثم حاول مرة أخرى.</p></div> : null}</div>
         </div>
       })() : null}
-      {isStaffLesson ? (
+      {isStaffApplicationsLesson ? null : isStaffLesson ? (
         <div className="space-y-5">
           <div className="rounded-3xl border-2 border-sky-100 bg-white p-4 md:p-6">
             <h3 className="mb-3 text-center text-xl font-extrabold text-sky-800">تأمّل المدرج الموسيقي ومفتاح صول</h3>
@@ -428,7 +428,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           {activity.options.map((option, i) => <button key={option} onClick={() => { setChoice(i); i === activity.answer ? playCorrect() : playWrong() }} className={`rounded-2xl border-2 p-4 text-lg font-bold transition ${choice === i ? (i === activity.answer ? 'border-emerald-500 bg-emerald-100' : 'border-rose-400 bg-rose-100') : 'border-white bg-white hover:bg-amber-50'}`}>{option}</button>)}
         </div>
       )}
-      {choice !== null && !isShadingLesson && !isStaffLesson && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
+      {choice !== null && !isShadingLesson && !isStaffLesson && !isStaffApplicationsLesson && lesson.title !== 'اللعبة الشعبية (حبّوه موه تدوري)' && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && !isRhythmFigure && <p className="font-extrabold text-lg mt-4" aria-live="polite">{choice === activity.answer ? (activity.clue ?? 'أحسنت! إجابة رائعة 🌟') : 'محاولة جميلة! جرّب اختيارًا آخر.'}</p>}
       {lesson.warmupVideoUrl && (
         <div className="rounded-2xl bg-ink p-2 md:p-3 shadow-chunky mt-4">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black">
