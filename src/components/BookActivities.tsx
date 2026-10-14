@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import StaffBookActivities from './StaffBookActivities'
 import StaffApplicationsActivities from './StaffApplicationsActivities'
+import OrganBookActivities from './OrganBookActivities'
 const PHONE = '96898778983'
 const INITIAL = [0,1,2,3,4,5,6,7,8]
 const PROMPTS = [
@@ -85,6 +86,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  return <section className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky border-2 border-amber-200"><h3 className="text-2xl font-extrabold mb-4">📚 أنشطة الكتاب</h3>
  {lessonTitle === 'المُدَرَّج الموسيقي ومفتاح صول' || lessonTitle === 'المدرج الموسيقي ومفتاح صول' ? <div className="mt-4"><StaffBookActivities /></div> : null}
  {lessonTitle === 'تطبيقات على المُدَرَّج الموسيقي' || lessonTitle === 'تطبيقات على المدرج الموسيقي' ? <div className="mt-4"><StaffApplicationsActivities /></div> : null}
+ {lessonTitle === 'آلة الأورج' ? <div className="mt-4"><OrganBookActivities /></div> : null}
  {folkGameActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">نشاط توصيل عبارات اللعبة الشعبية بالصور 🎵</h4>
  <p className="my-2">صِل كل عبارة بالصورة المناسبة: اضغط على العبارة أولًا، ثم اضغط على الصورة. ستظهر لك نتيجة إجابتك فورًا!</p>
