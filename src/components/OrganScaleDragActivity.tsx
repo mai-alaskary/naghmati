@@ -91,22 +91,31 @@ export default function OrganScaleDragActivity() {
 
     <div className="rounded-2xl border border-sky-200 bg-white p-3 sm:p-4">
       <h4 className="mb-3 text-center text-lg font-extrabold text-slate-800">١. لوحة مفاتيح الأورج — ضع كل نغمة فوق مفتاحها</h4>
-      <div className="mx-auto grid max-w-3xl grid-cols-5 gap-1.5 sm:gap-2" aria-label="مفاتيح سلم دو الكبير">
-        {NOTES.map((note, index) => {
-          const isPlaced = placed[note.id] === note.id
-          const isWrong = wrongTarget === note.id
-          return <div key={note.id} onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); place(note.id, event.dataTransfer.getData('text/plain')) }}
-            onClick={() => place(note.id, null)}
-            className={'relative flex min-h-36 cursor-pointer touch-manipulation flex-col items-center overflow-hidden rounded-b-xl border-2 p-2 text-center transition sm:min-h-44 ' + (isPlaced ? 'border-emerald-400 bg-emerald-50' : isWrong ? 'border-rose-400 bg-rose-50 animate-pulse' : 'border-slate-300 bg-white hover:border-violet-400 hover:bg-violet-50')}>
-            <span className="text-xs font-bold text-slate-500">المفتاح {index + 1}</span>
-            <span className="mt-2 text-2xl font-black text-slate-800 sm:text-3xl">{note.name}</span>
-            <span className="text-sm font-bold text-slate-500">{note.latin}</span>
-            <div className="mt-3 flex flex-1 items-center justify-center">
-              {isPlaced ? <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-2xl font-black text-white" aria-label="إجابة صحيحة">✓</span> : <span className="text-3xl text-slate-300">＋</span>}
+      <div className="relative mx-auto max-w-3xl pt-1" aria-label="مفاتيح سلم دو الكبير">
+        <div className="flex min-h-44 gap-0.5 rounded-xl border border-slate-400 bg-slate-800 p-1.5 pb-2 shadow-[0_8px_14px_rgba(15,23,42,0.22)] sm:min-h-56 sm:gap-1 sm:p-2" dir="ltr">
+          {NOTES.map((note, index) => {
+            const isPlaced = placed[note.id] === note.id
+            const isWrong = wrongTarget === note.id
+            return <div key={note.id} onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); place(note.id, event.dataTransfer.getData('text/plain')) }}
+              onClick={() => selected ? place(note.id, null) : playNote(note)}
+              role="button" tabIndex={0} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); selected ? place(note.id, null) : playNote(note) } }}
+              aria-label={selected ? `ضع النغمة المختارة على مفتاح ${note.name}` : `اعزف نغمة ${note.name}`}
+              className={'relative flex min-w-0 flex-1 cursor-pointer touch-manipulation flex-col items-center rounded-b-md border-x border-b-2 border-slate-300 px-0.5 pb-3 pt-4 text-center transition-all duration-100 sm:pt-5 ' + (isPlaced ? 'translate-y-1 border-emerald-500 bg-gradient-to-b from-emerald-50 to-emerald-100 shadow-[inset_0_2px_5px_rgba(16,185,129,0.2),0_0_0_2px_rgba(16,185,129,0.35)]' : isWrong ? 'animate-pulse translate-y-1 border-rose-500 bg-rose-50 shadow-[0_0_0_2px_rgba(244,63,94,0.4)]' : 'bg-gradient-to-b from-white via-white to-slate-100 shadow-[0_3px_0_#cbd5e1,0_5px_7px_rgba(15,23,42,0.18)] hover:from-violet-50 hover:to-slate-100 active:translate-y-1 active:shadow-inner')}>
+              <span className="text-[10px] font-bold text-slate-500 sm:text-xs">المفتاح {index + 1}</span>
+              <span className="mt-2 text-xl font-black text-slate-800 sm:text-3xl">{note.name}</span>
+              <span className="text-xs font-bold text-slate-500 sm:text-sm">{note.latin}</span>
+              <div className="mt-3 flex flex-1 items-center justify-center">
+                {isPlaced ? <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-xl font-black text-white sm:h-10 sm:w-10" aria-label="إجابة صحيحة">✓</span> : <span className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-300/70 bg-slate-100/70 text-xl text-slate-400 sm:h-10 sm:w-10">＋</span>}
+              </div>
+              <span className={'mt-2 text-[10px] font-extrabold sm:text-xs ' + (isPlaced ? 'text-emerald-700' : 'text-slate-500')}>{isPlaced ? 'صحيح!' : 'أفلت هنا'}</span>
             </div>
-            <span className={'mt-2 text-xs font-extrabold ' + (isPlaced ? 'text-emerald-700' : 'text-slate-500')}>{isPlaced ? 'صحيح!' : 'أفلت النغمة هنا'}</span>
-          </div>
-        })}
+          })}
+        </div>
+        <div aria-hidden="true" className="pointer-events-none absolute left-0 right-0 top-1 z-10 h-[48%]" dir="ltr">
+          {[{ left: '10%' }, { left: '30%' }, { left: '70%' }].map((key, index) => <div key={index} style={{ left: key.left }} className="absolute top-0 h-[82%] w-[10%] -translate-x-1/2 rounded-b-md border-x border-b-2 border-slate-950 bg-gradient-to-r from-slate-700 via-slate-900 to-black shadow-[0_4px_5px_rgba(0,0,0,0.4)] sm:w-[9%]">
+            <div className="h-2/3 rounded-b-sm border-b border-slate-600/70 bg-gradient-to-b from-slate-700 to-slate-950" />
+          </div>)}
+        </div>
       </div>
       <div className="mt-3 flex flex-wrap justify-center gap-2">
         {NOTES.map(note => <button key={note.id} type="button" onClick={() => playNote(note)} className="rounded-full border border-sky-200 bg-sky-50 px-3 py-2 text-sm font-bold text-sky-900 hover:bg-sky-100" aria-label={`استمع إلى نغمة ${note.name}`}>🔊 اسمع {note.name}</button>)}
