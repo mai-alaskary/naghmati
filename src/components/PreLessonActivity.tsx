@@ -304,6 +304,10 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   const [staffQuestionIndex, setStaffQuestionIndex] = useState(0)
   const [staffWrong, setStaffWrong] = useState<number[]>([])
   const [staffSolved, setStaffSolved] = useState(false)
+  const [applicationsQuestionIndex, setApplicationsQuestionIndex] = useState(0)
+  const [applicationsAnswers, setApplicationsAnswers] = useState<Record<number, number>>({})
+  const [applicationsWrong, setApplicationsWrong] = useState<number[]>([])
+  const [applicationsSolved, setApplicationsSolved] = useState(false)
   const activity = warmups[lesson.title] ?? {
     question: `ما المعلومة التي تساعدك على فهم درس «${lesson.title}»؟`,
     options: ['ألاحظ عنوان الدرس وأستمع جيدًا', 'أتجاهل الأمثلة', 'أجيب دون قراءة', 'أتوقف عن المشاركة'],
@@ -311,12 +315,34 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   }
   const isNationalAnthem = lesson.title === 'النشيد الوطني'
   const isStaffLesson = lesson.title === 'المُدَرَّج الموسيقي ومفتاح صول' || lesson.title === 'المدرج الموسيقي ومفتاح صول'
+  const isStaffApplicationsLesson = lesson.title === 'تطبيقات على المُدَرَّج الموسيقي' || lesson.title === 'تطبيقات على المدرج الموسيقي'
   const isShadingLesson = lesson.title === 'تدريبات صوتية بالتظليلات'
   const isRhythmFigure = lesson.title === 'الشكل الإيقاعي (♫)'
   return (
     <section className="rounded-[2rem] bg-gradient-to-br from-amber-100 via-white to-sky-100 border-2 border-white p-5 md:p-7 shadow-chunky">
       <div className="flex items-center gap-3 mb-4"><span className="grid place-items-center w-12 h-12 rounded-2xl bg-ink text-white text-xl font-extrabold shrink-0">1</span><span className="grid place-items-center w-14 h-14 rounded-2xl bg-amber-300 text-3xl shrink-0">{lesson.title === 'الشكل الإيقاعي (♫)' ? <RhythmFigure className="w-12 h-12 text-ink" /> : '💡'}</span><div><h2 className="text-2xl md:text-3xl font-extrabold">تهيّأ قبل أن تتعلّم</h2>{!isShadingLesson && <p className="text-ink/65">نشاط قصير مرتبط بموضوع الدرس.</p>}</div></div>
       {!isShadingLesson && !isStaffLesson && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
+      {isStaffApplicationsLesson ? (() => {
+        const questions = [
+          { question: 'أيّ مما يلي يمثّل الرسم الصحيح لمفتاح صول؟', options: ['مفتاح صول', 'مفتاح فا', 'مفتاح دو', 'علامة إيقاعية'], answer: 0 },
+          { question: 'كم عدد خطوط المدرج الموسيقي؟', options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'], answer: 2 },
+          { question: 'اختر أسماء خطوط المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', options: ['مي – صول – سي – ري – فا', 'فا – ري – سي – صول – مي', 'فا – لا – دو – مي', 'دو – ري – مي – فا – صول'], answer: 0 },
+          { question: 'اختر أسماء مسافات المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', options: ['فا – لا – دو – مي', 'مي – صول – سي – ري – فا', 'مي – دو – لا – فا', 'فا – سي – ري – صول'], answer: 0 },
+        ]
+        const item = questions[applicationsQuestionIndex]
+        const colors = ['bg-pink-100 border-pink-300 hover:bg-pink-200', 'bg-sky-100 border-sky-300 hover:bg-sky-200', 'bg-amber-100 border-amber-300 hover:bg-amber-200', 'bg-emerald-100 border-emerald-300 hover:bg-emerald-200']
+        return <div className="rounded-[2rem] bg-white p-5 md:p-8 shadow-chunky">
+          <p className="text-ink/70 mb-4">راجع ما تعرفه عن مفتاح صول وخطوط المدرج ومسافاته، ثم اختر الإجابة الصحيحة.</p>
+          <div className="flex items-center justify-between gap-3 mb-5"><span className="rounded-full bg-violet-100 text-violet-700 font-bold px-4 py-1">السؤال {applicationsQuestionIndex + 1} من {questions.length}</span><div className="flex gap-1.5">{questions.map((_, i) => <span key={i} className={`w-3 h-3 rounded-full ${i < applicationsQuestionIndex || (i === applicationsQuestionIndex && applicationsSolved) ? 'bg-emerald-400' : i === applicationsQuestionIndex ? 'bg-violet-400' : 'bg-ink/10'}`} />)}</div></div>
+          <h3 className="text-xl md:text-2xl font-extrabold leading-snug mb-6">{item.question}</h3>
+          <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2">{item.options.map((option, optionIndex) => {
+            const isWrong = applicationsWrong.includes(optionIndex)
+            const isRight = applicationsSolved && optionIndex === item.answer
+            return <button key={option} type="button" disabled={applicationsSolved || isWrong} onClick={() => { setApplicationsAnswers(current => ({ ...current, [applicationsQuestionIndex]: optionIndex })); if (optionIndex === item.answer) { setApplicationsSolved(true); playCorrect() } else { setApplicationsWrong(current => [...current, optionIndex]); playWrong() } }} aria-pressed={applicationsAnswers[applicationsQuestionIndex] === optionIndex} className={['relative rounded-3xl border-[3px] p-5 text-lg md:text-xl font-bold text-center transition min-h-20 shadow-chunky', isRight ? 'bg-emerald-400 border-emerald-500 text-white' : isWrong ? 'bg-red-100 border-red-300 text-red-400 line-through opacity-70' : applicationsSolved ? 'bg-ink/5 border-transparent opacity-50' : colors[optionIndex]].join(' ')}>{option}{isRight && <span className="absolute -top-3 -left-3 text-3xl">✅</span>}{isWrong && <span className="absolute -top-3 -left-3 text-3xl">❌</span>}</button>
+          })}</div>
+          <div aria-live="polite" className="min-h-20 mt-6">{applicationsSolved ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-emerald-50 border-2 border-emerald-200 p-4"><p className="text-xl font-extrabold text-emerald-600">أحسنت! إجابة صحيحة ⭐</p><button type="button" onClick={() => { if (applicationsQuestionIndex + 1 < questions.length) { setApplicationsQuestionIndex(i => i + 1); setApplicationsWrong([]); setApplicationsSolved(false) } else { setApplicationsQuestionIndex(0); setApplicationsWrong([]); setApplicationsSolved(false); setApplicationsAnswers({}) } }} className="rounded-full bg-emerald-500 text-white px-6 py-3 text-lg font-extrabold shadow-chunky">{applicationsQuestionIndex + 1 < questions.length ? 'السؤال التالي ←' : 'أعد المحاولة ↺'}</button></div> : applicationsWrong.length > 0 ? <div className="rounded-3xl bg-orange-50 border-2 border-orange-200 p-4"><p className="text-xl font-extrabold text-orange-600">حاول مرة أخرى 💪</p><p className="text-lg text-ink/70 mt-1">💡 راجع ترتيب مفتاح صول وخطوط المدرج ومسافاته ثم حاول مرة أخرى.</p></div> : null}</div>
+        </div>
+      })() : null}
       {isStaffLesson ? (
         <div className="space-y-5">
           <div className="rounded-3xl border-2 border-sky-100 bg-white p-4 md:p-6">
