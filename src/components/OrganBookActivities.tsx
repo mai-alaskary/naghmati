@@ -83,7 +83,7 @@ export default function OrganBookActivities() {
           return <button key={part.id} type="button" draggable={!isPlaced}
             onDragStart={event => { event.dataTransfer.setData('text/plain', part.id); event.dataTransfer.effectAllowed = 'move'; setSelected(part.id) }}
             onClick={() => { if (!isPlaced) { setSelected(part.id); setMessage('تم اختيار البطاقة. اضغط الآن على مربع الجزء المناسب.') } else playEncouragingTone() }}
-            disabled={isPlaced}
+            aria-label={isPlaced ? `تشغيل نغمة تشجيعية: ${part.label}` : `اختيار بطاقة: ${part.label}`}
             className={'min-h-14 rounded-xl border-2 p-3 text-right font-bold transition touch-manipulation '+(isPlaced ? 'border-emerald-300 bg-emerald-50 text-emerald-800 opacity-75' : selected === part.id ? 'border-violet-500 bg-violet-100 ring-2 ring-violet-200' : 'border-white bg-white shadow-sm hover:border-sky-300')}>
             <span className="ml-2 inline-block rounded-lg bg-amber-100 px-2 py-1">✂️</span>{part.label}{isPlaced && <span className="mr-2 text-emerald-700">✓</span>}
           </button>
