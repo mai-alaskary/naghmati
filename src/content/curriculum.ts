@@ -167,7 +167,7 @@ const grade1: Grade = {
           quiz: [],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
-            { type: 'wordwall', url: '', title: 'لعبة Wordwall للدرس', description: 'مكان مخصص لإضافة لعبة Wordwall الخاصة بالدرس.' },
+            { type: 'wordwall', url: 'https://wordwall.net/ar/embed/0d152a77ab4d4f1da95dd8f8dfacdabe?themeId=1&templateId=3&fontStackId=0', title: 'نشاط Wordwall: تطبيقات على المُدَرَّج الموسيقي', description: 'نشاط تفاعلي للتدريب على تطبيقات المدرج الموسيقي.' },
           ],
         },
       ],
