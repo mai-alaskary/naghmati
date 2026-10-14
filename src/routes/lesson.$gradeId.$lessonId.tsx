@@ -10,6 +10,7 @@ import Quiz from '@/components/Quiz'
 import ActivityCard, { isActivityReady } from '@/components/ActivityCard'
 import BookActivities from '@/components/BookActivities'
 import RhythmFigure from '@/components/RhythmFigure'
+import StaffPositionQuiz from '@/components/StaffPositionQuiz'
 
 export const Route = createFileRoute('/lesson/$gradeId/$lessonId')({
   loader: ({ params }) => {
@@ -120,6 +121,8 @@ function LessonPage() {
                 المتصفح لا يدعم تشغيل الفيديو.
               </video>
             </div>
+          ) : lesson.title === 'تطبيقات على المدرج الموسيقي' || lesson.title === 'تطبيقات على المُدَرَّج الموسيقي' ? (
+            <StaffPositionQuiz />
           ) : lesson.title === 'اللعبة الشعبية (حبّوه موه تدوري)' ? (
             <div className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky">
               <h3 className="text-xl font-extrabold mb-3">🎮 نشاط تفاعلي: حبّوه موه تدوري</h3>
