@@ -298,6 +298,24 @@ function RhythmBlocksWarmup() {
   )
 }
 
+type WarmupVisualKind = 'clef-treble' | 'clef-bass' | 'clef-alto' | 'clef-percussion' | 'staff-3-lines' | 'staff-4-lines' | 'staff-5-lines' | 'staff-6-lines' | 'line-names-correct' | 'line-names-reversed' | 'line-names-spaces' | 'line-names-random' | 'space-names-correct' | 'space-names-reversed' | 'space-names-lines' | 'space-names-random'
+
+function WarmupNotationOption({ kind, label }: { kind: WarmupVisualKind; label: string }) {
+  const clefs: Record<string, string> = { 'clef-treble': '𝄞', 'clef-bass': '𝄢', 'clef-alto': '𝄡', 'clef-percussion': '𝄥' }
+  const names: Record<string, string[]> = {
+    'line-names-correct': ['مي','صول','سي','ري','فا'], 'line-names-reversed': ['فا','ري','سي','صول','مي'],
+    'line-names-spaces': ['فا','لا','دو','مي','فا'], 'line-names-random': ['مي','سي','صول','فا','ري'],
+    'space-names-correct': ['فا','لا','دو','مي'], 'space-names-reversed': ['مي','دو','لا','فا'],
+    'space-names-lines': ['مي','صول','سي','ري'], 'space-names-random': ['لا','فا','مي','دو'],
+  }
+  if (kind.startsWith('clef-')) return <div className="flex flex-col items-center gap-2"><svg viewBox="0 0 220 100" role="img" aria-label={label} className="w-full max-w-[260px] h-auto"><rect x="8" y="8" width="204" height="84" rx="10" fill="#fffdf5"/>{[28,39,50,61,72].map(y => <line key={y} x1="20" y1={y} x2="200" y2={y} stroke="#334155" strokeWidth="1.8"/>)}<text x="72" y="78" fontSize="76" fontFamily="serif" fill="#7c3aed">{clefs[kind]}</text></svg><span className="text-base font-extrabold">{label}</span></div>
+  if (kind.startsWith('staff-')) { const count = Number(kind.split('-')[1]); return <div className="flex flex-col items-center gap-2"><svg viewBox="0 0 240 104" role="img" aria-label={label} className="w-full max-w-[260px] h-auto"><rect x="4" y="5" width="232" height="94" rx="10" fill="#fffdf5"/>{Array.from({length:count},(_,i)=>28+i*(44/(count-1))).map(y=><line key={y} x1="12" y1={y} x2="228" y2={y} stroke="#334155" strokeWidth="2.2"/>)}</svg><span className="text-base font-extrabold">{label}</span></div> }
+  const isSpaces = kind.startsWith('space-')
+  const lineYs = isSpaces ? [34,45,56,67] : [28,39,50,61,72]
+  const noteNames = names[kind]
+  return <div className="flex flex-col items-center gap-2"><svg viewBox="0 0 240 104" role="img" aria-label={label} className="w-full max-w-[260px] h-auto"><rect x="4" y="5" width="232" height="94" rx="10" fill="#fffdf5"/>{lineYs.map(y=><line key={y} x1="12" y1={y} x2="228" y2={y} stroke="#334155" strokeWidth="1.8"/>)}{noteNames.map((name,i)=>{const x=36+i*42;const y=isSpaces?lineYs[lineYs.length-1-i]+5.5:lineYs[lineYs.length-1-i];return <g key={i}><ellipse cx={x} cy={y} rx="9" ry="5.5" transform={'rotate(-22 '+x+' '+y+')'} fill="#7c3aed"/><text x={x} y={y-8} textAnchor="middle" fontSize="11" fontWeight="700" fill="#334155">{name}</text></g>})}</svg><span className="text-base font-extrabold">{label}</span></div>
+}
+
 export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
   const [choice, setChoice] = useState<number | null>(null)
   const [staffAnswers, setStaffAnswers] = useState<Record<number, number>>({})
@@ -324,10 +342,10 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
       {!isShadingLesson && !isStaffLesson && !isStaffApplicationsLesson && lesson.title !== 'الحِدّة والغلظة – السرعة والبطء' && lesson.title !== 'العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها' && !isRhythmFigure && <p className="text-xl font-extrabold mb-4">{activity.question}</p>}
       {isStaffApplicationsLesson ? (() => {
         const questions = [
-          { question: 'أيّ مما يلي يمثّل الرسم الصحيح لمفتاح صول؟', options: ['مفتاح صول', 'مفتاح فا', 'مفتاح دو', 'علامة إيقاعية'], answer: 0 },
-          { question: 'كم عدد خطوط المدرج الموسيقي؟', options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'], answer: 2 },
-          { question: 'اختر أسماء خطوط المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', options: ['مي – صول – سي – ري – فا', 'فا – ري – سي – صول – مي', 'فا – لا – دو – مي', 'دو – ري – مي – فا – صول'], answer: 0 },
-          { question: 'اختر أسماء مسافات المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', options: ['فا – لا – دو – مي', 'مي – صول – سي – ري – فا', 'مي – دو – لا – فا', 'فا – سي – ري – صول'], answer: 0 },
+          { question: 'أيّ مما يلي يمثّل الرسم الصحيح لمفتاح صول؟', options: ['مفتاح صول', 'مفتاح فا', 'مفتاح دو', 'علامة إيقاعية'], answer: 0, visualOptions: ['clef-treble', 'clef-bass', 'clef-alto', 'clef-percussion'] },
+          { question: 'كم عدد خطوط المدرج الموسيقي؟', options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'], answer: 2, visualOptions: ['staff-3-lines', 'staff-4-lines', 'staff-5-lines', 'staff-6-lines'] },
+          { question: 'اختر أسماء خطوط المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', options: ['مي – صول – سي – ري – فا', 'فا – ري – سي – صول – مي', 'فا – لا – دو – مي', 'دو – ري – مي – فا – صول'], answer: 0, visualOptions: ['line-names-correct', 'line-names-reversed', 'line-names-spaces', 'line-names-random'] },
+          { question: 'اختر أسماء مسافات المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', options: ['فا – لا – دو – مي', 'مي – صول – سي – ري – فا', 'مي – دو – لا – فا', 'فا – سي – ري – صول'], answer: 0, visualOptions: ['space-names-correct', 'space-names-reversed', 'space-names-lines', 'space-names-random'] },
         ]
         const item = questions[applicationsQuestionIndex]
         const colors = ['bg-pink-100 border-pink-300 hover:bg-pink-200', 'bg-sky-100 border-sky-300 hover:bg-sky-200', 'bg-amber-100 border-amber-300 hover:bg-amber-200', 'bg-emerald-100 border-emerald-300 hover:bg-emerald-200']
@@ -338,7 +356,7 @@ export default function PreLessonActivity({ lesson }: { lesson: Lesson }) {
           <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2">{item.options.map((option, optionIndex) => {
             const isWrong = applicationsWrong.includes(optionIndex)
             const isRight = applicationsSolved && optionIndex === item.answer
-            return <button key={option} type="button" disabled={applicationsSolved || isWrong} onClick={() => { setApplicationsAnswers(current => ({ ...current, [applicationsQuestionIndex]: optionIndex })); if (optionIndex === item.answer) { setApplicationsSolved(true); playCorrect() } else { setApplicationsWrong(current => [...current, optionIndex]); playWrong() } }} aria-pressed={applicationsAnswers[applicationsQuestionIndex] === optionIndex} className={['relative rounded-3xl border-[3px] p-5 text-lg md:text-xl font-bold text-center transition min-h-20 shadow-chunky', isRight ? 'bg-emerald-400 border-emerald-500 text-white' : isWrong ? 'bg-red-100 border-red-300 text-red-400 line-through opacity-70' : applicationsSolved ? 'bg-ink/5 border-transparent opacity-50' : colors[optionIndex]].join(' ')}>{option}{isRight && <span className="absolute -top-3 -left-3 text-3xl">✅</span>}{isWrong && <span className="absolute -top-3 -left-3 text-3xl">❌</span>}</button>
+            return <button key={option} type="button" disabled={applicationsSolved || isWrong} onClick={() => { setApplicationsAnswers(current => ({ ...current, [applicationsQuestionIndex]: optionIndex })); if (optionIndex === item.answer) { setApplicationsSolved(true); playCorrect() } else { setApplicationsWrong(current => [...current, optionIndex]); playWrong() } }} aria-pressed={applicationsAnswers[applicationsQuestionIndex] === optionIndex} className={['relative rounded-3xl border-[3px] p-4 md:p-5 text-lg md:text-xl font-bold text-center transition min-h-20 shadow-chunky', isRight ? 'bg-emerald-400 border-emerald-500 text-white' : isWrong ? 'bg-red-100 border-red-300 text-red-400 line-through opacity-70' : applicationsSolved ? 'bg-ink/5 border-transparent opacity-50' : colors[optionIndex]].join(' ')}>{item.visualOptions?.[optionIndex] ? <WarmupNotationOption kind={item.visualOptions[optionIndex]} label={option} /> : option}{isRight && <span className="absolute -top-3 -left-3 text-3xl">✅</span>}{isWrong && <span className="absolute -top-3 -left-3 text-3xl">❌</span>}</button>
           })}</div>
           <div aria-live="polite" className="min-h-20 mt-6">{applicationsSolved ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-emerald-50 border-2 border-emerald-200 p-4"><p className="text-xl font-extrabold text-emerald-600">أحسنت! إجابة صحيحة ⭐</p><button type="button" onClick={() => { if (applicationsQuestionIndex + 1 < questions.length) { setApplicationsQuestionIndex(i => i + 1); setApplicationsWrong([]); setApplicationsSolved(false) } else { setApplicationsQuestionIndex(0); setApplicationsWrong([]); setApplicationsSolved(false); setApplicationsAnswers({}) } }} className="rounded-full bg-emerald-500 text-white px-6 py-3 text-lg font-extrabold shadow-chunky">{applicationsQuestionIndex + 1 < questions.length ? 'السؤال التالي ←' : 'أعد المحاولة ↺'}</button></div> : applicationsWrong.length > 0 ? <div className="rounded-3xl bg-orange-50 border-2 border-orange-200 p-4"><p className="text-xl font-extrabold text-orange-600">حاول مرة أخرى 💪</p><p className="text-lg text-ink/70 mt-1">💡 راجع ترتيب مفتاح صول وخطوط المدرج ومسافاته ثم حاول مرة أخرى.</p></div> : null}</div>
         </div>
