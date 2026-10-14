@@ -5,10 +5,10 @@ type BalloonNote = { id: string; name: NoteName; color: string; colorName: strin
 type QuizNote = { id: number; name: NoteName; y: number; options: [NoteName, NoteName] }
 
 const balloons: BalloonNote[] = [
-  { id: 'mi', name: 'مي', color: '#ef4444', colorName: 'الأحمر', y: 139, x: 70 },
-  { id: 'sol', name: 'صول', color: '#3b82f6', colorName: 'الأزرق', y: 124, x: 180 },
-  { id: 'fa', name: 'فا', color: '#eab308', colorName: 'الأصفر', y: 131.5, x: 290 },
-  { id: 'la', name: 'لا', color: '#22c55e', colorName: 'الأخضر', y: 116.5, x: 400 },
+  { id: 'mi', name: 'مي', color: '#ef4444', colorName: 'الأحمر', y: 128, x: 70 },
+  { id: 'sol', name: 'صول', color: '#3b82f6', colorName: 'الأزرق', y: 116, x: 180 },
+  { id: 'fa', name: 'فا', color: '#eab308', colorName: 'الأصفر', y: 122, x: 290 },
+  { id: 'la', name: 'لا', color: '#22c55e', colorName: 'الأخضر', y: 110, x: 400 },
 ]
 
 const quizNotes: QuizNote[] = [
@@ -121,7 +121,6 @@ export default function StaffBookActivities() {
               {[80, 92, 104, 116, 128].map(y => <line key={y} x1="49" x2="131" y1={y-8} y2={y-8} stroke="#64748b" strokeWidth="1" />)}
               <text x="49" y="111" fontSize="31" fill="#1e293b">𝄞</text>
               <ellipse cx="103" cy={b.y-8} rx="6.5" ry="4.5" transform={`rotate(-20 103 ${b.y-8})`} fill="#111827" />
-              {b.y === 139 && <line x1="94" x2="113" y1="131" y2="131" stroke="#64748b" strokeWidth="1" />}
             </g>
             {colored[b.id] && <text x="90" y="25" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#16a34a">★</text>}
           </svg>
