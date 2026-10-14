@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-type NoteId = 'do' | 're' | 'mi' | 'fa' | 'sol'
+type NoteId = 'do' | 're' | 'mi' | 'fa' | 'sol' | 'do2'
 type Note = { id: NoteId; name: string; latin: string; frequency: number; staffY: number }
 const NOTES: Note[] = [
   { id: 'do', name: 'دو', latin: 'C', frequency: 261.63, staffY: 57.5 },
@@ -8,8 +8,9 @@ const NOTES: Note[] = [
   { id: 'mi', name: 'مي', latin: 'E', frequency: 329.63, staffY: 42.5 },
   { id: 'fa', name: 'فا', latin: 'F', frequency: 349.23, staffY: 35 },
   { id: 'sol', name: 'صول', latin: 'G', frequency: 392, staffY: 27.5 },
+  { id: 'do2', name: 'دو′', latin: 'C5', frequency: 523.25, staffY: 12.5 },
 ]
-const SHUFFLED: NoteId[] = ['mi', 'do', 'sol', 're', 'fa']
+const SHUFFLED: NoteId[] = ['mi', 'do2', 'do', 'sol', 're', 'fa']
 
 function playNote(note: Note) {
   const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext
@@ -58,7 +59,7 @@ export default function OrganScaleDragActivity() {
     if (placed[target] === target || used.includes(noteId)) return
     if (noteId !== target) {
       setWrongTarget(target)
-      setMessage('قريبة! تذكّر ترتيب سلم دو الكبير: دو، ري، مي، فا، صول. جرّب مرة أخرى 🌟')
+      setMessage('قريبة! تذكّر ترتيب سلم دو الكبير: دو، ري، مي، فا، صول، دو. جرّب مرة أخرى 🌟')
       window.setTimeout(() => setWrongTarget(current => current === target ? null : current), 800)
       return
     }
@@ -69,7 +70,7 @@ export default function OrganScaleDragActivity() {
     playNote(NOTES.find(note => note.id === target)!)
     if (NOTES.every(note => note.id === target || placed[note.id] === note.id)) {
       window.setTimeout(() => NOTES.forEach((note, index) => window.setTimeout(() => playNote(note), index * 260)), 480)
-      setMessage('رائع! رتّبت نغمات سلم دو الكبير بالترتيب الصحيح! 🎉')
+      setMessage('رائع! رتّبت نغمات سلم دو الكبير من دو إلى دو العليا! 🎉')
     }
   }
 
@@ -84,9 +85,9 @@ export default function OrganScaleDragActivity() {
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div>
         <h3 className="text-xl md:text-2xl font-extrabold text-violet-950">🎹 نشاط تفاعلي: رتّب نغمات سلم دو الكبير</h3>
-        <p className="mt-2 text-slate-700">اسحب كل قصاصة إلى المفتاح المطابق لها بالترتيب من دو إلى صول. على الهاتف، اضغط على القصاصة ثم على المفتاح.</p>
+        <p className="mt-2 text-slate-700">اسحب كل قصاصة إلى المفتاح المطابق لها بالترتيب من دو إلى دو العليا. على الهاتف، اضغط على القصاصة ثم على المفتاح.</p>
       </div>
-      <span className="rounded-full bg-white px-4 py-2 font-extrabold text-violet-800 shadow-sm">{NOTES.filter(note => placed[note.id] === note.id).length} / 5 نغمات</span>
+      <span className="rounded-full bg-white px-4 py-2 font-extrabold text-violet-800 shadow-sm">{NOTES.filter(note => placed[note.id] === note.id).length} / 6 نغمات</span>
     </div>
 
     <div className="rounded-2xl border border-sky-200 bg-white p-3 sm:p-4">
@@ -112,7 +113,7 @@ export default function OrganScaleDragActivity() {
           })}
         </div>
         <div aria-hidden="true" className="pointer-events-none absolute left-0 right-0 top-1 z-10 h-[48%]" dir="ltr">
-          {[{ left: '10%' }, { left: '30%' }, { left: '70%' }].map((key, index) => <div key={index} style={{ left: key.left }} className="absolute top-0 h-[82%] w-[10%] -translate-x-1/2 rounded-b-md border-x border-b-2 border-slate-950 bg-gradient-to-r from-slate-700 via-slate-900 to-black shadow-[0_4px_5px_rgba(0,0,0,0.4)] sm:w-[9%]">
+          {[{ left: '8.33%' }, { left: '25%' }, { left: '58.33%' }, { left: '75%' }].map((key, index) => <div key={index} style={{ left: key.left }} className="absolute top-0 h-[82%] w-[8.5%] -translate-x-1/2 rounded-b-md border-x border-b-2 border-slate-950 bg-gradient-to-r from-slate-700 via-slate-900 to-black shadow-[0_4px_5px_rgba(0,0,0,0.4)] sm:w-[8%]">
             <div className="h-2/3 rounded-b-sm border-b border-slate-600/70 bg-gradient-to-b from-slate-700 to-slate-950" />
           </div>)}
         </div>
@@ -147,6 +148,6 @@ export default function OrganScaleDragActivity() {
       <p className="font-extrabold text-slate-700" role="status" aria-live="polite">{message || 'ابدأ بسحب القصاصات إلى المفاتيح المناسبة. استمع إلى النغمات من أزرار الصوت.'}</p>
       <button type="button" onClick={reset} className="rounded-full bg-violet-600 px-5 py-2.5 font-extrabold text-white hover:bg-violet-700">إعادة النشاط ↻</button>
     </div>
-    {complete && <div className="rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-center text-lg font-extrabold text-emerald-800">🎉 ممتاز! اكتمل سلم دو الكبير: دو — ري — مي — فا — صول.</div>}
+    {complete && <div className="rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4 text-center text-lg font-extrabold text-emerald-800">🎉 ممتاز! اكتمل سلم دو الكبير: دو — ري — مي — فا — صول — دو العليا.</div>}
   </section>
 }
