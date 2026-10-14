@@ -141,7 +141,7 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
 
               {staffVideoStep === 0 ? (
                 <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-black" onClick={() => onVideoStart?.()}>
-                  <iframe src="https://www.youtube.com/embed/hSceyr0Ckho?si=tco66deZ-fUWfWfn" title="فيديو شرح المدرج الموسيقي" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
+                  <iframe src={`https://www.youtube.com/embed/hSceyr0Ckho?si=tco66deZ-fUWfWfn&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`} onLoad={(event) => event.currentTarget.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*")} title="فيديو شرح المدرج الموسيقي" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
                 </div>
               ) : staffVideoStep === 1 ? (
                 <div className="relative w-full overflow-hidden rounded-2xl bg-black" style={{ aspectRatio: '4 / 3' }} onClick={() => onVideoStart?.()}>
@@ -167,7 +167,7 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
             <h3 className="mb-4 text-xl md:text-2xl font-extrabold text-violet-800">🎵 ثانيًا: مفتاح صول</h3>
             <h4 className="mb-3 text-lg font-extrabold">فيديو شرح مفتاح صول</h4>
             <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-black" onClick={() => onVideoStart?.()}>
-              <iframe src="https://www.youtube.com/embed/cCX_E7-6hxE?si=6emzS2tDNHAIVb0f" title="فيديو شرح مفتاح صول" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
+              <iframe src={`https://www.youtube.com/embed/cCX_E7-6hxE?si=6emzS2tDNHAIVb0f&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`} onLoad={(event) => event.currentTarget.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*")} title="فيديو شرح مفتاح صول" className="absolute inset-0 h-full w-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
             </div>
           </section>
         </div>
