@@ -102,7 +102,7 @@ function LessonPage() {
       <div className="max-w-5xl mx-auto px-4 py-10 space-y-14">
         <section className="rounded-3xl bg-white p-4 shadow-chunky"><div className="flex items-center justify-between gap-2 mb-3"><h2 className="font-extrabold text-lg">⭐ تقدّمك في الدرس</h2><span className="font-bold text-violet-600">{progress.length} من 5 نجوم</span></div><div className="grid grid-cols-5 gap-2">{LESSON_STEPS.map((step,i)=><div key={step} className="text-center"><div className={`text-2xl ${progress.includes(step) ? "text-amber-400" : "text-slate-300"}`}>★</div><div className="text-xs font-bold">{["التهيئة","الفيديو","الأسئلة","النشاط","التطبيق"][i]}</div></div>)}</div></section>
         <section id="warmup" className="scroll-mt-24">
-          <div onClick={() => finish("warmup")}><PreLessonActivity lesson={lesson} /></div>
+          <PreLessonActivity lesson={lesson} onComplete={() => finish("warmup")} />
           {grade.id === 'grade-4' && lesson.title === 'نشيد (سلامتي)' && <StoryJumperBook />}
         </section>
 
@@ -116,7 +116,7 @@ function LessonPage() {
           {lesson.title === 'الشكل الإيقاعي (♫)' ? (
             <div className="rounded-[2rem] bg-white p-4 md:p-6 shadow-chunky">
               <h3 className="text-xl md:text-2xl font-extrabold mb-4">قم بتأدية التمرين الايقاعي كاملا بالحركات الموضحة أسفل كل مازورة</h3>
-              <video controls playsInline preload="metadata" className="w-full rounded-xl bg-black" title="التمرين الإيقاعي الكامل">
+              <video controls playsInline preload="metadata" onPlay={() => finish("quiz")} className="w-full rounded-xl bg-black" title="التمرين الإيقاعي الكامل">
                 <source src="https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_Step_14_p1.mp4" type="video/mp4" />
                 المتصفح لا يدعم تشغيل الفيديو.
               </video>
@@ -160,14 +160,14 @@ function LessonPage() {
           {activities.length > 0 ? (
             <div className="space-y-4">
               {activities.map((a, i) => (
-                <ActivityCard key={i} activity={a} onStart={() => finish("practice")} />
+                <ActivityCard key={i} activity={a} onComplete={() => finish("practice")} />
               ))}
             </div>
           ) : (
             <div className="rounded-[2rem] bg-white p-8 text-center shadow-chunky">
               <div className="text-6xl mb-3">🎤</div>
               <p className="text-xl font-bold">نشاط هذا الدرس يكون معاً في الفصل مع معلمك!</p>
-              <Link onClick={() => finish("practice")} to="/lab" className="inline-block mt-5 rounded-full bg-amber-400 px-6 py-3 font-extrabold shadow-chunky">
+              <Link to="/lab" className="inline-block mt-5 rounded-full bg-amber-400 px-6 py-3 font-extrabold shadow-chunky">
                 أو جرّب المختبر الموسيقي 🎹
               </Link>
             </div>
