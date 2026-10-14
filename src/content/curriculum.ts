@@ -489,7 +489,7 @@ const grade4: Grade = {
           ],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
-            { type: 'wordwall', url: '', title: 'لعبة Wordwall للدرس', description: 'مكان مخصص لإضافة لعبة Wordwall الخاصة بالدرس.' },
+            { type: 'wordwall', url: 'https://wordwall.net/ar/embed/4795b35cc9d54e58b0415dc25e50dee8?themeId=1&templateId=22&fontStackId=0', title: 'نشاط Wordwall: آلة الأورج', description: 'نشاط تفاعلي للتدرب على درس آلة الأورج.' },
           ],
         },
         {
