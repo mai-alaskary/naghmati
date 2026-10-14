@@ -164,32 +164,7 @@ const grade1: Grade = {
             'شَاهِدْ شَرْحَ الدَّرْسِ، ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ، وَبَعْدَهَا انْتَقِلْ إِلَى التَّطْبِيقِ أَوِ الْمُخْتَبَرِ.',
           ],
           teacher: { url: '' },
-          quiz: [
-            {
-              question: 'أيّ مما يلي يمثّل الرسم الصحيح لمفتاح صول؟', emoji: '🎼',
-              options: ['مفتاح صول', 'مفتاح فا', 'مفتاح دو', 'علامة إيقاعية'],
-              answer: 0, hint: 'مفتاح صول له شكل مميّز يلتف حول خط صول في المدرج.',
-              visualOptions: ['clef-treble', 'clef-bass', 'clef-alto', 'clef-percussion'],
-            },
-            {
-              question: 'كم عدد خطوط المدرج الموسيقي؟', emoji: '🎼',
-              options: ['ثلاثة خطوط', 'أربعة خطوط', 'خمسة خطوط', 'ستة خطوط'],
-              answer: 2, hint: 'عدّ الخطوط الأفقية من أسفل المدرج إلى أعلاه.',
-              visualOptions: ['staff-3-lines', 'staff-4-lines', 'staff-5-lines', 'staff-6-lines'],
-            },
-            {
-              question: 'اختر أسماء خطوط المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', emoji: '🎵',
-              options: ['مي – صول – سي – ري – فا', 'فا – ري – سي – صول – مي', 'فا – لا – دو – مي', 'دو – ري – مي – فا – صول'],
-              answer: 0, hint: 'تذكّر ترتيب أسماء الخطوط في الرسم من اليسار إلى اليمين صعودًا: مي، صول، سي، ري، فا.',
-              visualOptions: ['line-names-correct', 'line-names-reversed', 'line-names-spaces', 'line-names-random'],
-            },
-            {
-              question: 'اختر أسماء مسافات المدرج الموسيقي الصحيحة من اليسار إلى اليمين، صعودًا من أسفل إلى أعلى.', emoji: '🎵',
-              options: ['فا – لا – دو – مي', 'مي – صول – سي – ري – فا', 'مي – دو – لا – فا', 'فا – سي – ري – صول'],
-              answer: 0, hint: 'تذكّر ترتيب أسماء المسافات في الرسم من اليسار إلى اليمين صعودًا: فا، لا، دو، مي.',
-              visualOptions: ['space-names-correct', 'space-names-reversed', 'space-names-lines', 'space-names-random'],
-            },
-          ],
+          quiz: [],
           activities: [
             { type: 'lab', tool: 'piano', title: 'جرّب في المختبر الموسيقي', description: 'طبّق الفكرة الموسيقية التي تعلمتها باستخدام أدوات المختبر.' },
             { type: 'wordwall', url: '', title: 'لعبة Wordwall للدرس', description: 'مكان مخصص لإضافة لعبة Wordwall الخاصة بالدرس.' },
