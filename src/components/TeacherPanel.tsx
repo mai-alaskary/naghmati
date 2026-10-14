@@ -19,6 +19,20 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
   const [staffVideoStep, setStaffVideoStep] = useState(0)
 
   useEffect(() => {
+    const handleVideoMessage = (event: MessageEvent) => {
+      if (!event.origin.includes('youtube.com')) return
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+        if (data?.event === 'onStateChange' && data?.info === 1) onVideoStart?.()
+      } catch {
+        // Ignore unrelated iframe messages.
+      }
+    }
+    window.addEventListener('message', handleVideoMessage)
+    return () => window.removeEventListener('message', handleVideoMessage)
+  }, [onVideoStart])
+
+  useEffect(() => {
     setSpeechOk(canSpeak())
     setStep(0)
     return () => stopSpeaking()
@@ -165,12 +179,13 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
               <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
                 <div className="relative w-full aspect-video">
                   <iframe
-                    src={embed || anthemVideo}
+                    src={(embed || anthemVideo).includes("youtube.com/embed/") ? `${embed || anthemVideo}${(embed || anthemVideo).includes("?") ? "&" : "?"}enablejsapi=1` : (embed || anthemVideo)}
                     title={lesson.teacher.title || `شرح ${lesson.title}`}
                     className="absolute inset-0 w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                     allowFullScreen
                     loading="lazy"
+                    onLoad={(event) => { if ((embed || anthemVideo).includes("youtube.com/embed/")) event.currentTarget.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*") }}
                   />
                 </div>
               </div>
