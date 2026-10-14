@@ -503,7 +503,7 @@ const grade4: Grade = {
             'هذا المحتوى مرتبط بترتيب منهج المهارات الموسيقية العماني كما ورد في دليل المعلم المرفق.',
             'شَاهِدْ شَرْحَ الدَّرْسِ، ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ، وَبَعْدَهَا انْتَقِلْ إِلَى التَّطْبِيقِ أَوِ الْمُخْتَبَرِ.',
           ],
-          teacher: { url: '' },
+          teacher: { url: 'https://www.youtube.com/embed/atyPT5BUozQ?si=JpHBWQl81Y63Pat7' },
           warmupVideoUrl: 'https://ict.moe.gov.om/video/videos/4/Arts/p1/cls4_TB_Organ_machine_p1.mp4',
           quiz: [
             {
