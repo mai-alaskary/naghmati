@@ -50,7 +50,7 @@ function playNote(index: number) {
   }
 }
 
-function Staff({ noteY, balloon = false }: { noteY: number; balloon?: boolean }) {
+function Staff({ noteY }: { noteY: number }) {
   const lines = balloon ? [80, 95, 110, 125, 140] : [80, 95, 110, 125, 140]
   return <svg viewBox="0 0 180 160" className="mx-auto block w-full max-w-[180px]" role="img" aria-label="نغمة مرسومة على مدرج موسيقي بمفتاح صول">
     {lines.map(y => <line key={y} x1="12" x2="168" y1={y} y2={y} stroke="#334155" strokeWidth="1.6" />)}
