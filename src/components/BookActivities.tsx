@@ -169,29 +169,13 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  </>}
  </div>}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
- <h4 className="font-extrabold text-lg">ورشة المكعبات الإيقاعية 🎵</h4>
- <p className="my-2">تعرّف على الشكل الصحيح لكل علامة موسيقية. لاحظ عدد الرايات المتصلة بالساق، فهو ما يميّز الكروش عن الدبل كروش.</p>
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" dir="rtl">
- {[{id:'whole',name:'النوار',color:'#8bc96f',duration:'زمن واحد',flags:0},{id:'eighth',name:'الكروش',color:'#ed4938',duration:'نصف زمن',flags:1},{id:'sixteenth',name:'الدبل كروش',color:'#4d91d7',duration:'ربع زمن',flags:2}].map(note=><div key={note.id} className="rounded-2xl border-2 border-slate-200 bg-white p-4 text-center shadow-sm">
- <div className="mx-auto mb-3 flex h-24 items-center justify-center rounded-xl" style={{backgroundColor:note.color}}>
- <svg viewBox="0 0 120 90" role="img" aria-label={'شكل علامة '+note.name} className="h-20 w-28">
- <ellipse cx="43" cy="64" rx="13" ry="8" transform="rotate(-25 43 64)" fill="#111827"/>
- <path d="M54 62 V15" stroke="#111827" strokeWidth="4" strokeLinecap="round" fill="none"/>
- {note.flags>=1&&<path d="M54 16 C88 22 83 40 57 43 L57 35 C72 32 72 24 54 23 Z" fill="#111827"/>}
- {note.flags>=2&&<path d="M54 29 C82 35 78 49 57 52 L57 44 C69 41 68 36 54 36 Z" fill="#111827"/>}
- </svg>
+ <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
+ <p className="my-2">نفّذ النشاط داخل الإطار. بعد الانتهاء، حدّد أنك أكملته ثم سلّم البيانات للمعلمة عبر واتساب.</p>
+ <div className="relative w-full overflow-hidden rounded-xl bg-slate-100" style={{ aspectRatio: '4 / 3', minHeight: '420px' }}>
+ <iframe src="https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html" title="النشاط التفاعلي للشكل الإيقاعي — الصف الرابع" className="absolute inset-0 h-full w-full border-0" allowFullScreen loading="lazy" />
  </div>
- <h5 className="text-xl font-extrabold">{note.name}</h5>
- <p className="mt-1 text-sm font-bold text-slate-600">{note.flags===0?'ساق من غير راية':note.flags===1?'ساق وراية واحدة':'ساق ورايتان'}</p>
- <p className="mt-2 inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-extrabold">{note.duration}</p>
- <p className="mt-2 text-xs text-slate-500">{note.flags===0?'رأس بيضاوي مملوء + ساق':note.flags===1?'رأس بيضاوي مملوء + ساق + راية':'رأس بيضاوي مملوء + ساق + رايتين'}</p>
- </div>)}
- </div>
- <div className="mt-4 rounded-xl border-2 border-violet-200 bg-white p-4">
- <h5 className="font-extrabold">تذكّر الفرق 👀</h5>
- <p className="mt-1">النوار بلا راية، والكروش له راية واحدة، والدبل كروش له رايتان. لا تخلط بين عدد الرايات وألوان المكعبات.</p>
- </div>
- <label className="mt-4 flex items-start gap-3 rounded-xl border bg-white p-3 font-bold"><input type="checkbox" className="mt-1 h-5 w-5" checked={rhythmActivityDone} onChange={e=>setRhythmActivityDone(e.target.checked)} /><span>راجعت الأشكال الصحيحة للنوار والكروش والدبل كروش.</span></label>
+ <p className="mt-3 text-sm font-semibold text-ink/60">إذا لم يظهر النشاط هنا، <a href="https://ict.moe.gov.om/library/file/Content/4/Music/cls4_p1_u1_le3_nashat/start.html" target="_blank" rel="noreferrer" className="underline text-violet-700">افتحه في نافذة جديدة</a>.</p>
+ <label className="mt-4 flex items-start gap-3 rounded-xl border bg-white p-3 font-bold"><input type="checkbox" className="mt-1 h-5 w-5" checked={rhythmActivityDone} onChange={e=>setRhythmActivityDone(e.target.checked)} /><span>أؤكد أنني أكملت النشاط التفاعلي.</span></label>
  </div>}
  {flagActivity&&<div className="rounded-2xl bg-cream p-4 mb-5"><h4 className="font-extrabold text-lg">النشاط: اسحب بطاقة العلم إلى العبارة المناسبة 🇴🇲</h4><p className="my-2">اسحب كل بطاقة ملوّنة أو رمز إلى العبارة التي تعبّر عنها. على الهاتف، اضغط على البطاقة ثم على العبارة المناسبة.</p><div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">{flagClueItems.map(item=><button key={item.id} draggable onDragStart={e=>{setFlagDragged(item.id);e.dataTransfer.setData('text/plain',item.id)}} onClick={()=>setFlagDragged(item.id)} className={'rounded-xl border-2 bg-white p-3 font-bold '+(flagDragged===item.id?'border-violet-500 bg-violet-50':'border-slate-200')}><span className={'mx-auto mb-2 block h-12 w-16 rounded border '+(item.id==='green'?'bg-green-600':item.id==='red'?'bg-red-600':item.id==='white'?'bg-white':'bg-white')} style={item.id==='emblem'?{backgroundImage:"url(https://raw.githubusercontent.com/arnoha98-hash/naghmati/main/oman-flag.jpg)",backgroundSize:"300% 300%",backgroundPosition:"0% 0%"}:undefined} />{item.label}</button>)}</div><div className="space-y-3">{flagClueItems.map(item=><div key={item.id} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const id=e.dataTransfer.getData('text/plain')||flagDragged;if(flagClueItems.some(x=>x.id===id))setFlagClues(old=>({...old,[item.id]:id}));setFlagDragged(null)}} onClick={()=>{if(flagDragged){setFlagClues(old=>({...old,[item.id]:flagDragged}));setFlagDragged(null)}}} className="flex items-center gap-3 rounded-xl border-2 border-slate-200 bg-white p-3 cursor-pointer"><span className="flex-1 font-bold">{item.meaning}</span><span className={'min-w-24 rounded-xl border-2 border-dashed p-2 text-center '+(flagClues[item.id]?(flagClues[item.id]===item.id?'bg-green-50 border-green-400':'bg-rose-50 border-rose-300'):'bg-slate-50 border-slate-300')}>{flagClues[item.id]?flagClueItems.find(x=>x.id===flagClues[item.id])?.label:'اسحب البطاقة هنا'}</span>{flagClues[item.id]&&<span className="text-sm font-bold">{flagClues[item.id]===item.id?'صحيح ✓':'حاول مرة أخرى'}</span>}</div>)}</div><button onClick={()=>{setFlagClues({});setFlagDragged(null)}} className="mt-3 rounded-full bg-white border px-4 py-2 font-bold">إعادة المحاولة</button>{flagCluesDone&&<p className="mt-3 font-extrabold text-green-700">أحسنت! طابقت معاني ألوان ورموز العلم العُماني 🎉</p>}</div>}
  {anthem&&<div className="space-y-6">
