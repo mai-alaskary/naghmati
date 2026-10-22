@@ -59,7 +59,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const flagActivity=normalizedLessonTitle.includes('علم بلادي')
  const flagClueItems=[{id:'green',label:'الأخضر',meaning:'الخضرة والزراعة في البلاد'},{id:'red',label:'الأحمر',meaning:'الحرب والمعارك'},{id:'white',label:'الأبيض',meaning:'الأمن والسلام'},{id:'emblem',label:'شعار الخنجر والسيفين',meaning:'الأسلحة التقليدية العُمانية'}]
  const flagCluesDone=flagClueItems.every(x=>flagClues[x.id]===x.id)
- const anthem=lessonTitle==='النشيد الوطني'||lessonTitle==='نشيد (عَلَم بلادي)'
+ const anthem=lessonTitle==='النشيد الوطني'||flagActivity
  const shading=lessonTitle==='تدريبات صوتية بالتظليلات'
  const rhythmActivity=lessonTitle==='الشكل الإيقاعي (♫)'
  const noteColoringActivity=lessonTitle==='العلامة الإيقاعية النوار (♩) والسكتة المقابلة لها'
