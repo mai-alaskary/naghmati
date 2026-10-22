@@ -56,7 +56,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  }
  function resetSafetyNumbers(){setSafetyNumbers({});setSelectedSafetyNumber(null);setSafetyFeedback('')}
  const normalizedLessonTitle=lessonTitle.normalize('NFD').replace(/[\u064B-\u065F\u0670]/g,'')
- const flagActivity=normalizedLessonTitle.includes('علم بلادي')
+ const flagActivity=normalizedLessonTitle.includes('علم بلادي')||normalizedLessonTitle.includes('النشيد الوطني')
  const flagClueItems=[{id:'green',label:'الأخضر',meaning:'الخضرة والزراعة في البلاد'},{id:'red',label:'الأحمر',meaning:'الحرب والمعارك'},{id:'white',label:'الأبيض',meaning:'الأمن والسلام'},{id:'emblem',label:'شعار الخنجر والسيفين',meaning:'الأسلحة التقليدية العُمانية'}]
  const flagCluesDone=flagClueItems.every(x=>flagClues[x.id]===x.id)
  const anthem=lessonTitle==='النشيد الوطني'||flagActivity
