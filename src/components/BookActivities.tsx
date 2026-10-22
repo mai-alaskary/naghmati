@@ -4,7 +4,7 @@ import StaffApplicationsActivities from './StaffApplicationsActivities'
 import OrganBookActivities from './OrganBookActivities'
 import OrganScaleDragActivity from './OrganScaleDragActivity'
 const PHONE = '96898778983'
-const INITIAL = [0,1,2,3,4,5,6,7,8]
+const INITIAL = [2,1,0,5,4,3,8,7,6]
 const PROMPTS = [
  {id:'prayer',text:'يا ربنا احفظ لنا جلالة السلطان',emoji:'🙏🏻',answer:'prayer'},
  {id:'people',text:'والشعب في الأوطان',emoji:'🧒🏻👧🏻',answer:'people'},
@@ -79,7 +79,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
  const shadingItems=[{id:'legato',name:'الليجاتو'},{id:'staccato',name:'الاستكاتو'},{id:'forte',name:'الفورتي (f)'},{id:'piano',name:'البيانو (p)'},{id:'crescendo',name:'الكريشيندو'},{id:'diminuendo',name:'الديمينويندو'}]
  const shadingDone=shadingItems.every(x=>shadingMatches[x.id]===x.id)
  const full=name.trim().split(/\s+/).filter(Boolean).length>=4
- const puzzleDone=tiles.length===9&&tiles.every((piece,slot)=>piece===slot)
+ const puzzleDone=tiles.length===INITIAL.length&&tiles.every((piece,slot)=>piece===INITIAL[slot])
  const matchDone=PROMPTS.every(p=>matches[p.id]===p.answer)
  const ready=full&&!!grade.trim()&&(!anthem||(puzzleDone&&(!flagActivity?matchDone:true)))&&(!shading||shadingDone)&&(!flagActivity||flagCluesDone)&&(!rhythmActivity||rhythmActivityDone)
  function swap(a:number,b:number){setTiles(old=>{if(a<0||b<0||a>=old.length||b>=old.length||a===b)return old;const next=[...old];[next[a],next[b]]=[next[b],next[a]];return next});setSelected(null)}
