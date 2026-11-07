@@ -240,173 +240,21 @@ const rhythmVideos = [
 ]
 
 
-const safetyStoryPages = [
-  {
-    title: 'قبل اللعب',
-    dialogue: [
-      { speaker: 'سالم', role: 'salem', line: 'يا أمي، سأذهب للعب مع أصدقائي.' },
-      { speaker: 'الأم', role: 'mother', line: 'سالم، انتظر! يجب أن تنتبه أثناء اللعب.' },
-    ],
-  },
-  {
-    title: 'سالم لا يستمع',
-    dialogue: [
-      { speaker: 'سالم', role: 'salem', line: 'انتبه؟ ههههه! أنا سألعب فقط يا أمي!' },
-      { speaker: 'سالم', role: 'salem', line: 'إلى اللقاء يا أمي!' },
-    ],
-  },
-  {
-    title: 'ماذا حدث؟',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'سالم، سالم! ماذا حدث لك يا سالم؟' },
-      { speaker: 'سالم', role: 'salem', line: 'كُنْتُ أَلْعَبُ مَعَ صَدِيقِي، ثُمَّ وَقَعْتُ وَأُصِبْتُ بِسَبَبِ اللَّعِبِ.' },
-    ],
-  },
-  {
-    title: 'نصيحة الأم',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'أَلَمْ أُخْبِرْكَ أَنْ تَنْتَبِهَ وَتَحْذَرَ أَثْنَاءَ اللَّعِبِ؟ هَلْ رَأَيْتَ مَاذَا قَدْ يَحْدُثُ إِذَا لَمْ تَسْتَمِعْ إِلَى نَصِيحَتِي؟' },
-      { speaker: 'سالم', role: 'salem', line: 'لم أتوقع أن أُصاب أثناء اللعب يا أمي.' },
-    ],
-  },
-  {
-    title: 'السلامة في كل مكان',
-    dialogue: [
-      { speaker: 'الأم', role: 'mother', line: 'عليك أن تكون حذراً دائماً، في كل وقت وأي مكان. انتبه عند الصعود إلى الحافلة المدرسية والنزول منها، وعند استخدام المقص والسكين.' },
-      { speaker: 'سالم', role: 'salem', line: 'سَأَتَذَكَّرُ نَصِيحَتَكِ يَا أُمِّي، وَسَأَسْتَخْدِمُ الْأَدَوَاتِ بِحَذَرٍ.' },
-    ],
-  },
-]
-
-const safetyStoryAudioUrls: (string | null)[] = [
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=1fe023b5-efab-4c94-8ed8-c2cbdfac0a42.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=b4d40a20-aff4-41ed-87aa-a2c618e8d05f.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=9215d9d7-7fa6-4f30-9b6a-1df667e4a1bd.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=baa654bf-ac8b-4db0-816b-8bc327e8ae28.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=a149c8d3-796d-40e8-9586-4c8806076b08.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=0b80122d-2355-48b1-b734-c6bff93ac698.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=5dff9e0b-6266-4a5a-84ab-0eddf66961c8.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=84d919d8-f201-4ce4-aae6-87568c70a92b.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/cfa6efa1cb9b46abb1dc7fb128d5622f/id=888125ff-85e7-426c-912d-8b7494d2c9b0.wav',
-  'https://resource2.heygen.ai/text_to_speech/3140377079ea44a2a47a746e4b234e53/46daee8d4d0042b184a6ce903014ac18/id=bf1a13bb-ce57-413b-8c0b-73fc5b2c0b92.wav',
-]
-
 function StoryJumperBook() {
-  const [pageIndex, setPageIndex] = useState(0)
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const playbackIdRef = useRef(0)
-  const page = safetyStoryPages[pageIndex]
-  const firstLineIndex = safetyStoryPages.slice(0, pageIndex).reduce((count, item) => count + item.dialogue.length, 0)
-  const pageAudioUrls = page.dialogue.map((_, index) => safetyStoryAudioUrls[firstLineIndex + index])
-  const pageAudioReady = pageAudioUrls.every((url): url is string => Boolean(url))
-
-  const stopNarration = () => {
-    playbackIdRef.current += 1
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-      audioRef.current = null
-    }
-    setIsSpeaking(false)
-  }
-
-  const speakPage = async () => {
-    if (!pageAudioReady) return
-    stopNarration()
-    const playbackId = playbackIdRef.current
-    setIsSpeaking(true)
-    try {
-      for (const url of pageAudioUrls) {
-        if (playbackId !== playbackIdRef.current) return
-        const audio = new Audio(url)
-        audioRef.current = audio
-        await new Promise<void>((resolve, reject) => {
-          audio.onended = () => resolve()
-          audio.onerror = () => reject(new Error('تعذّر تشغيل التسجيل الصوتي'))
-          audio.play().catch(reject)
-        })
-      }
-    } catch {
-      // The status below explains that audio is unavailable for unfinished pages.
-    } finally {
-      if (playbackId === playbackIdRef.current) {
-        audioRef.current = null
-        setIsSpeaking(false)
-      }
-    }
-  }
-
-  const changePage = (nextIndex: number) => {
-    stopNarration()
-    setPageIndex(nextIndex)
-  }
-
   return (
     <div className="mt-6 rounded-3xl bg-white p-4 md:p-6 shadow-chunky">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 className="text-xl md:text-2xl font-extrabold">📖 قصة «سلامتي هي مهمتي»</h3>
-        </div>
-        <span className="rounded-full bg-violet-100 px-4 py-2 font-extrabold text-violet-700">الصفحة {pageIndex + 1} من {safetyStoryPages.length}</span>
+      <h3 className="mb-4 text-xl font-extrabold md:text-2xl">📖 قصة «سلامتي هي مهمتي»</h3>
+      <div className="relative w-full overflow-hidden rounded-2xl bg-slate-100" style={{ aspectRatio: '16 / 9' }}>
+        <iframe
+          src="https://www.youtube.com/embed/diW-GLWMWVw?si=s8Qkn0o8pT5_e7XL"
+          title="قصة سلامتي هي مهمتي"
+          className="absolute inset-0 h-full w-full border-0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+          loading="lazy"
+        />
       </div>
-
-      <div className="overflow-hidden rounded-3xl border-2 border-amber-100 bg-gradient-to-br from-amber-50 via-white to-sky-50 p-4 md:p-7">
-        <h4 className="mb-5 text-center text-2xl font-extrabold text-violet-800">{page.title}</h4>
-        <div className="mb-6 flex items-end justify-center gap-8 md:gap-16" aria-label="شخصيات القصة">
-          <div className="flex w-28 flex-col items-center gap-2 md:w-36">
-            <div className="grid h-24 w-24 place-items-center rounded-full border-4 border-sky-200 bg-sky-100 text-6xl shadow-md md:h-32 md:w-32 md:text-7xl" role="img" aria-label="شخصية سالم">👦🏻</div>
-            <span className="rounded-full bg-sky-100 px-4 py-1 font-extrabold text-sky-800">سالم</span>
-          </div>
-          <div className="flex w-28 flex-col items-center gap-2 md:w-36">
-            <div className="grid h-24 w-24 place-items-center rounded-full border-4 border-pink-200 bg-pink-100 text-6xl shadow-md md:h-32 md:w-32 md:text-7xl" role="img" aria-label="شخصية الأم">👩🏻</div>
-            <span className="rounded-full bg-pink-100 px-4 py-1 font-extrabold text-pink-800">الأم</span>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-3xl space-y-4" aria-live="polite">
-          {page.dialogue.map((line, index) => (
-            <div key={page.title + line.role + index} className={'flex items-start gap-3 ' + (line.role === 'salem' ? 'flex-row' : 'flex-row-reverse')}>
-              <span className={'grid h-12 w-12 shrink-0 place-items-center rounded-full text-3xl ' + (line.role === 'salem' ? 'bg-sky-100' : 'bg-pink-100')} aria-hidden="true">
-                {line.role === 'salem' ? '👦🏻' : '👩🏻'}
-              </span>
-              <div className={'max-w-[88%] rounded-2xl px-4 py-3 text-lg font-semibold leading-8 shadow-sm ' + (line.role === 'salem' ? 'rounded-tr-sm bg-sky-100 text-sky-950' : 'rounded-tl-sm bg-pink-100 text-pink-950')}>
-                <div className="mb-1 text-sm font-extrabold opacity-75">{line.speaker}</div>
-                {line.line}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-        <button type="button" onClick={speakPage} disabled={!pageAudioReady} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white shadow-chunky hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40">
-          {isSpeaking ? '🔊 السرد يعمل...' : '🔊 استمع إلى الحوار'}
-        </button>
-        <button type="button" onClick={stopNarration} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold text-violet-700">⏹ إيقاف الصوت</button>
-      </div>
-      {!pageAudioReady && (
-        <p role="status" className="mt-3 text-center text-sm font-bold text-amber-700">
-          تسجيلات هذه الصفحة لم تكتمل بعد. زر الاستماع سيتفعّل عند إضافة تسجيلات جميع الجمل.
-        </p>
-      )}
-
-      <div className="mt-5 flex items-center justify-between gap-3">
-        <button type="button" onClick={() => changePage(Math.max(0, pageIndex - 1))} disabled={pageIndex === 0} className="rounded-full border-2 border-violet-200 bg-white px-5 py-3 font-extrabold disabled:cursor-not-allowed disabled:opacity-40">→ الصفحة السابقة</button>
-        <div className="flex flex-wrap justify-center gap-2" aria-label="اختيار صفحة القصة">
-          {safetyStoryPages.map((item, index) => (
-            <button key={item.title} type="button" onClick={() => changePage(index)} aria-label={item.title} aria-current={index === pageIndex ? 'step' : undefined} className={'grid h-9 w-9 place-items-center rounded-full font-extrabold ' + (index === pageIndex ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-violet-100')}>
-              {index + 1}
-            </button>
-          ))}
-        </div>
-        <button type="button" onClick={() => changePage(Math.min(safetyStoryPages.length - 1, pageIndex + 1))} disabled={pageIndex === safetyStoryPages.length - 1} className="rounded-full bg-violet-600 px-5 py-3 font-extrabold text-white disabled:cursor-not-allowed disabled:opacity-40">الصفحة التالية ←</button>
-      </div>
-
-      <p className="mt-4 text-center text-xs leading-6 text-ink/55">
-        يمكن فتح النسخة الأصلية من القصة على{' '}
-        <a href="https://www.storyjumper.com/book/read/170652271/65f75d977891f" target="_blank" rel="noreferrer" className="font-bold text-violet-700 underline underline-offset-4">StoryJumper</a>.
-      </p>
     </div>
   )
 }
