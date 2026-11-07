@@ -2,11 +2,11 @@ import { useState, type DragEvent } from 'react'
 import { speak, stopSpeaking } from '@/lib/speech'
 
 const phrases = [
-  { text: 'حَبُّوه مُوه تَدُورِي؟', emoji: '👵🔍', hint: 'الأطفال يسألون الجدة', group: 'children' },
-  { text: 'حَوْ عَلَيْش إِنْتِي وَأَوْلَادِش', emoji: '💬😮', hint: 'الجدة تردّ عليهم', group: 'grandma' },
-  { text: 'أَدُورُ إِبْرَةً', emoji: '🪡🧵', hint: 'الجدة تبحث عن إبرة', group: 'grandma' },
-  { text: 'حَالَ مُوه الْإِبْرَة؟', emoji: '🤔🪡', hint: 'الأطفال يسألون عن الإبرة', group: 'children' },
-  { text: 'حَالَ مُوه الْبَيْض؟', emoji: '🥚🧺', hint: 'الأطفال يسألون عن البيض', group: 'children' },
+  { text: 'حُبُّوهْ مُو تْدَوِّرِي،', emoji: '👵🔍', hint: 'الأطفال يسألون الجدة', group: 'children' },
+  { text: 'حُو عَلَيْش إِنْتِي وَأَوْلَادِش.', emoji: '💬😮', hint: 'الجدة تردّ عليهم', group: 'grandma' },
+  { text: 'أَدَوِّرْ إِبْرَة.', emoji: '🪡🧵', hint: 'الجدة تبحث عن إبرة', group: 'grandma' },
+  { text: 'حَالْ مُوه الإِبْرَة.', emoji: '🤔🪡', hint: 'الأطفال يسألون عن الإبرة', group: 'children' },
+  { text: 'حَالْ مُوه البِيْض', emoji: '🥚🧺', hint: 'الأطفال يسألون عن البيض', group: 'children' },
 ] as const
 
 export default function GrandmaPhraseMatch() {
