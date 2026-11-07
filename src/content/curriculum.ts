@@ -97,7 +97,7 @@ const grade1: Grade = {
             'هذا المحتوى مرتبط بترتيب منهج المهارات الموسيقية العماني كما ورد في دليل المعلم المرفق.',
             'شَاهِدْ شَرْحَ الدَّرْسِ، ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ، وَبَعْدَهَا انْتَقِلْ إِلَى التَّطْبِيقِ أَوِ الْمُخْتَبَرِ.',
           ],
-          teacher: { url: 'https://www.youtube.com/embed/I5nx-iQj0e8' },
+          teacher: { url: 'https://ict.moe.gov.om/video/videos/1/Arts/p1/cls1_TB_Mygrandma_Searching_p1.mp4' },
           warmupVideoUrl: 'https://ict.moe.gov.om/video/videos/1/Arts/p1/cls1_TB_Popular_Game_p1.mp4',
           quiz: [
             { question: 'أثناء أداء لعبة «حبّوه موه تدوري»، ما الذي يساعد المجموعة على اللعب معًا؟', emoji: '🎯',
