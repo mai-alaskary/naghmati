@@ -3,6 +3,7 @@ import StaffBookActivities from './StaffBookActivities'
 import StaffApplicationsActivities from './StaffApplicationsActivities'
 import OrganBookActivities from './OrganBookActivities'
 import OrganScaleDragActivity from './OrganScaleDragActivity'
+import SafetyHandMatch from './SafetyHandMatch'
 const PHONE = '96898778983'
 const INITIAL = [2,1,0,5,4,3,8,7,6]
 const PROMPTS = [
@@ -171,6 +172,7 @@ export default function BookActivities({lessonTitle,onSubmit}:{lessonTitle:strin
   <img src={`${import.meta.env.BASE_URL}grade1-u1-l2-tracing.jpg`} alt="ورقة نشاط تتبّع الخطوط وكتابة الأرقام داخل المربعات" className="block h-auto w-full"/>
  </>}
  </div>}
+ {lessonTitle === 'نشيد (سلامتي)' && <SafetyHandMatch />}
  {rhythmActivity&&<div className="rounded-2xl bg-cream p-4 mb-5">
  <h4 className="font-extrabold text-lg">النشاط التفاعلي: الشكل الإيقاعي 🎵</h4>
  <p className="my-2">نفّذ النشاط داخل الإطار. بعد الانتهاء، حدّد أنك أكملته ثم سلّم البيانات للمعلمة عبر واتساب.</p>
