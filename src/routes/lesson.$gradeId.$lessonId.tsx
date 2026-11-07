@@ -11,6 +11,7 @@ import ActivityCard, { isActivityReady } from '@/components/ActivityCard'
 import BookActivities from '@/components/BookActivities'
 import RhythmFigure from '@/components/RhythmFigure'
 import StaffPositionQuiz from '@/components/StaffPositionQuiz'
+import GrandmaPhraseMatch from '@/components/GrandmaPhraseMatch'
 
 export const Route = createFileRoute('/lesson/$gradeId/$lessonId')({
   loader: ({ params }) => {
@@ -130,6 +131,7 @@ function LessonPage() {
                 <iframe src="https://wordwall.net/embed/cd8de31fc2c6471fb356bd654f053838?themeId=65&templateId=30&fontStackId=0" title="سؤال تفاعلي: حبّوه موه تدوري" className="absolute inset-0 h-full w-full border-0" allowFullScreen loading="lazy" />
               </div>
             </div>
+            <GrandmaPhraseMatch />
           ) : lesson.title !== 'الشكل الإيقاعي (♫)' && lesson.quiz.length > 0 && <Quiz key={`${unit.id}-${lesson.id}`} questions={lesson.quiz} progressKey={progressKey} onFinish={() => finish("quiz")} />}
           {lesson.title === 'تدريبات صوتية بالتظليلات' && (
             <RhythmVideoActivity index={rhythmVideoIndex} onIndexChange={setRhythmVideoIndex} />
