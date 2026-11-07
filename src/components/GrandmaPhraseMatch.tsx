@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type DragEvent } from 'react'
 import { speak, stopSpeaking } from '@/lib/speech'
 
 const phrases = [
@@ -36,7 +36,7 @@ export default function GrandmaPhraseMatch() {
 
   const currentPlaced = (i: number, state: Record<number, string>, group: string) => state[i] === group
 
-  const acceptDrop = (event: React.DragEvent<HTMLDivElement>, group: string) => {
+  const acceptDrop = (event: DragEvent<HTMLDivElement>, group: string) => {
     event.preventDefault()
     const value = event.dataTransfer.getData('text/plain')
     if (value !== '') place(Number(value), group)
