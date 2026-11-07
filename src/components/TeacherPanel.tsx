@@ -178,15 +178,29 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
             <>
               <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
                 <div className="relative w-full aspect-video">
-                  <iframe
-                    src={(embed || anthemVideo).includes("youtube.com/embed/") ? `${embed || anthemVideo}${(embed || anthemVideo).includes("?") ? "&" : "?"}enablejsapi=1` : (embed || anthemVideo)}
-                    title={lesson.teacher.title || `شرح ${lesson.title}`}
-                    className="absolute inset-0 w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                    allowFullScreen
-                    loading="lazy"
-                    onLoad={(event) => { if ((embed || anthemVideo).includes("youtube.com/embed/")) event.currentTarget.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*") }}
-                  />
+                  {(embed || anthemVideo).toLowerCase().split("?")[0].endsWith(".mp4") ? (
+                    <video
+                      src={embed || anthemVideo}
+                      title={lesson.teacher.title || `شرح ${lesson.title}`}
+                      className="absolute inset-0 w-full h-full"
+                      controls
+                      playsInline
+                      preload="metadata"
+                      onPlay={() => onVideoStart?.()}
+                    >
+                      المتصفح لا يدعم تشغيل الفيديو.
+                    </video>
+                  ) : (
+                    <iframe
+                      src={(embed || anthemVideo).includes("youtube.com/embed/") ? `${embed || anthemVideo}${(embed || anthemVideo).includes("?") ? "&" : "?"}enablejsapi=1` : (embed || anthemVideo)}
+                      title={lesson.teacher.title || `شرح ${lesson.title}`}
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                      allowFullScreen
+                      loading="lazy"
+                      onLoad={(event) => { if ((embed || anthemVideo).includes("youtube.com/embed/")) event.currentTarget.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*") }}
+                    />
+                  )}
                 </div>
               </div>
               <p className="text-ink/60 text-sm text-center pt-2">🎬 {providerName(embed || anthemVideo)}</p>
