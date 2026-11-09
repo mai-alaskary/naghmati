@@ -12,6 +12,13 @@ import RhythmFigure from '@/components/RhythmFigure'
  */
 export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { lesson: Lesson; onVideoStart?: () => void; onIntroNext?: () => void }) {
   const embed = toEmbedUrl(lesson.teacher.url)
+  const teacherVideos = [
+    ...(lesson.teacher.url ? [{ url: lesson.teacher.url, title: lesson.teacher.title || `شرح ${lesson.title}` }] : []),
+    ...(lesson.teacher.additionalVideos ?? []),
+  ]
+  const [teacherVideoIndex, setTeacherVideoIndex] = useState(0)
+  const activeTeacherVideo = teacherVideos[teacherVideoIndex]
+  const activeTeacherEmbed = activeTeacherVideo ? toEmbedUrl(activeTeacherVideo.url) : ''
   const anthemVideo = lesson.anthem?.explanationVideoUrl ? toEmbedUrl(lesson.anthem.explanationVideoUrl) : ''
   const [step, setStep] = useState(0)
   const [talking, setTalking] = useState(false)
@@ -35,6 +42,7 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
   useEffect(() => {
     setSpeechOk(canSpeak())
     setStep(0)
+    setTeacherVideoIndex(0)
     return () => stopSpeaking()
   }, [lesson.id])
 
@@ -174,9 +182,54 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
       ) : (
         <div className="rounded-[2rem] bg-white p-4 md:p-5 shadow-chunky">
           <div className="font-extrabold text-lg mb-3">🎬 فيديو شرح الدرس</div>
-          {embed || anthemVideo ? (
-            <>
+          {teacherVideos.length > 1 ? (
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="rounded-full bg-violet-100 px-4 py-2 font-extrabold text-violet-700">الفيديو {teacherVideoIndex + 1} من {teacherVideos.length}</span>
+                <span className="font-bold">{activeTeacherVideo?.title}</span>
+              </div>
               <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
+                <div className="relative w-full aspect-video">
+                  {activeTeacherEmbed.toLowerCase().split("?")[0].endsWith(".mp4") ? (
+                    <video
+                      key={activeTeacherVideo?.url}
+                      src={activeTeacherEmbed}
+                      title={activeTeacherVideo?.title || lesson.title}
+                      className="absolute inset-0 w-full h-full"
+                      controls
+                      playsInline
+                      preload="metadata"
+                      onPlay={() => onVideoStart?.()}
+                    >
+                      المتصفح لا يدعم تشغيل الفيديو.
+                    </video>
+                  ) : (
+                    <iframe
+                      key={activeTeacherVideo?.url}
+                      src={activeTeacherEmbed.includes("youtube.com/embed/") ? `${activeTeacherEmbed}${activeTeacherEmbed.includes("?") ? "&" : "?"}enablejsapi=1` : activeTeacherEmbed}
+                      title={activeTeacherVideo?.title || lesson.title}
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      loading="lazy"
+                      onLoad={(event) => { if (activeTeacherEmbed.includes("youtube.com/embed/")) event.currentTarget.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "addEventListener", args: ["onStateChange"] }), "*") }}
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <button type="button" disabled={teacherVideoIndex === 0} onClick={() => setTeacherVideoIndex((index) => Math.max(0, index - 1))} className="rounded-full bg-white px-5 py-2.5 font-extrabold shadow-chunky disabled:cursor-not-allowed disabled:opacity-40">→ السابق</button>
+                <div className="flex gap-2" aria-label="اختيار الفيديو">
+                  {teacherVideos.map((item, index) => (
+                    <button key={item.url} type="button" onClick={() => setTeacherVideoIndex(index)} aria-label={`الفيديو ${index + 1}`} aria-current={index === teacherVideoIndex ? "step" : undefined} className={`h-3 w-3 rounded-full ${index === teacherVideoIndex ? "bg-violet-600 ring-4 ring-violet-100" : "bg-slate-300"}`} />
+                  ))}
+                </div>
+                <button type="button" disabled={teacherVideoIndex === teacherVideos.length - 1} onClick={() => setTeacherVideoIndex((index) => Math.min(teacherVideos.length - 1, index + 1))} className="rounded-full bg-violet-600 px-5 py-2.5 font-extrabold text-white shadow-chunky disabled:cursor-not-allowed disabled:opacity-40">التالي ←</button>
+              </div>
+            </div>
+          ) : embed || anthemVideo ? (
+            <>
+              <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()>
                 <div className="relative w-full aspect-video">
                   {(embed || anthemVideo).toLowerCase().split("?")[0].endsWith(".mp4") ? (
                     <video
