@@ -229,7 +229,7 @@ export default function TeacherPanel({ lesson, onVideoStart, onIntroNext }: { le
             </div>
           ) : embed || anthemVideo ? (
             <>
-              <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()>
+              <div className="rounded-[1.5rem] overflow-hidden bg-black" onClick={() => onVideoStart?.()}>
                 <div className="relative w-full aspect-video">
                   {(embed || anthemVideo).toLowerCase().split("?")[0].endsWith(".mp4") ? (
                     <video
