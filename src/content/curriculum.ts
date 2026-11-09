@@ -1,6 +1,6 @@
 export type LabTool = 'piano' | 'xylophone' | 'drums' | 'rhythm'
 
-export type TeacherMedia = { url: string; title?: string }
+export type TeacherMedia = { url: string; title?: string; additionalVideos?: { url: string; title: string }[] }
 export type AnthemMedia = { explanationVideoUrl: string; listeningAudioUrl: string; listeningVideoUrl: string }
 export type Question = { question: string; emoji?: string; options: string[]; answer: number; hint?: string; visualOptions?: ('legato' | 'staccato' | 'piano' | 'forte' | 'crescendo' | 'diminuendo' | 'clef-treble' | 'clef-bass' | 'clef-alto' | 'clef-percussion' | 'staff-3-lines' | 'staff-4-lines' | 'staff-5-lines' | 'staff-6-lines' | 'line-names-correct' | 'line-names-reversed' | 'line-names-spaces' | 'line-names-random' | 'space-names-correct' | 'space-names-reversed' | 'space-names-lines' | 'space-names-random')[] }
 export type Activity =
@@ -97,7 +97,12 @@ const grade1: Grade = {
             'هذا المحتوى مرتبط بترتيب منهج المهارات الموسيقية العماني كما ورد في دليل المعلم المرفق.',
             'شَاهِدْ شَرْحَ الدَّرْسِ، ثُمَّ أَجِبْ عَنِ الْأَسْئِلَةِ، وَبَعْدَهَا انْتَقِلْ إِلَى التَّطْبِيقِ أَوِ الْمُخْتَبَرِ.',
           ],
-          teacher: { url: 'https://ict.moe.gov.om/video/videos/1/Arts/p1/cls1_TB_Mygrandma_Searching_p1.mp4' },
+          teacher: {
+            url: 'https://ict.moe.gov.om/video/videos/1/Arts/p1/cls1_TB_Mygrandma_Searching_p1.mp4',
+            additionalVideos: [
+              { url: 'https://www.youtube.com/embed/I5nx-iQj0e8?si=bZGLTcMT0_B4D0QA', title: 'فيديو شرح إضافي: حبّوه موه تدوري' },
+            ],
+          },
           warmupVideoUrl: 'https://ict.moe.gov.om/video/videos/1/Arts/p1/cls1_TB_Popular_Game_p1.mp4',
           quiz: [
             { question: 'أثناء أداء لعبة «حبّوه موه تدوري»، ما الذي يساعد المجموعة على اللعب معًا؟', emoji: '🎯',
